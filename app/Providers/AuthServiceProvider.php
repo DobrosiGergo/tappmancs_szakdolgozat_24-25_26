@@ -10,9 +10,5 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Shelter::class => \App\Policies\ShelterPolicy::class,
     ];
 
-   
-    public function boot(): void
-    {
-        
-    }
+    public function boot(): void {}
 }

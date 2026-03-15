@@ -2,16 +2,18 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use App\Models\Specie;
 use App\Models\Breed;
+use App\Models\Specie;
+use Livewire\Component;
 
 class PetSpeciesBreedSelect extends Component
 {
     public $species = [];
+
     public $breeds = [];
 
     public $species_id = null;
+
     public $breed_id = null;
 
     public function mount($speciesId = null, $breedId = null)
@@ -19,15 +21,15 @@ class PetSpeciesBreedSelect extends Component
         $this->species = Specie::orderBy('name')->get(['id', 'name'])->toArray();
 
         $this->species_id = $speciesId ?? (old('species_id') ?: ($this->species[0]['id'] ?? null));
-        $this->breed_id = $breedId ?? old('breed_id');
+        $this->breed_id   = $breedId   ?? old('breed_id');
 
         $this->loadBreeds();
 
-        if ($this->breed_id && !collect($this->breeds)->pluck('id')->contains((int) $this->breed_id)) {
+        if ($this->breed_id && ! collect($this->breeds)->pluck('id')->contains((int) $this->breed_id)) {
             $this->breed_id = null;
         }
 
-        if (!$this->breed_id) {
+        if (! $this->breed_id) {
             $this->setDefaultBreed();
         }
     }

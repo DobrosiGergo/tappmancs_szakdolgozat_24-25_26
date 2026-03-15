@@ -16,7 +16,6 @@ class UserSeeder extends Seeder
     {
         $faker = Faker::create();
 
-
         // Developer
         User::create([
             'name'              => 'Developer User',
@@ -56,7 +55,6 @@ class UserSeeder extends Seeder
             'type'              => 'User',
             'email_verified_at' => now(),
         ]);
-
 
         // 10 random User
         for ($i = 0; $i < 10; $i++) {

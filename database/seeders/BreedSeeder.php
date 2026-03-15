@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Breed;
 use App\Models\Specie;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class BreedSeeder extends Seeder
@@ -18,27 +18,27 @@ class BreedSeeder extends Seeder
                 'Labrador Retriever',
                 'Német juhász',
                 'Golden Retriever',
-                ],
+            ],
             'Macska' => [
                 'Keverék',
                 'Ismeretlen',
                 'Európai rövidszőrű',
                 'Maine Coon',
                 'Brit rövidszőrű',
-                ],
+            ],
         ];
 
         foreach ($data as $specieName => $breeds) {
             $specie = Specie::where('name', $specieName)->first();
 
-            if (!$specie) {
+            if (! $specie) {
                 continue;
             }
 
             foreach ($breeds as $breedName) {
                 Breed::updateOrCreate(
                     [
-                        'name' => $breedName,
+                        'name'       => $breedName,
                         'species_id' => $specie->id,
                     ],
                     [
