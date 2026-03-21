@@ -26,23 +26,7 @@
 
             <input type="hidden" name="status" value="free">
 
-            <div>
-              <label class="block text-sm font-medium mb-1">Faj</label>
-              <select name="species_id" class="w-full rounded-lg border-neutral-300 focus:border-neutral-800 focus:ring-neutral-800">
-                @foreach($species as $sp)
-                  <option value="{{ $sp->id }}" @selected(old('species_id')==$sp->id)>{{ $sp->name }}</option>
-                @endforeach
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium mb-1">Fajta</label>
-              <select name="breed_id" class="w-full rounded-lg border-neutral-300 focus:border-neutral-800 focus:ring-neutral-800">
-                @foreach($breeds as $br)
-                  <option value="{{ $br->id }}" @selected(old('breed_id')==$br->id)>{{ $br->name }}</option>
-                @endforeach
-              </select>
-            </div>
+            @livewire('pet-species-breed-select')
 
             <x-ui.input-floating id="age" name="age" type="number" step="0.1" min="0" max="20"
               label="Életkor (év, 0–20)*" required="true" :value="old('age')"

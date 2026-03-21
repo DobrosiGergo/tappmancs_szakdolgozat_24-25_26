@@ -13,7 +13,16 @@ Route::get('/shelters/{shelter:uuid}', [ShelterController::class, 'show'])
     ->whereUuid('shelter')
     ->name('shelters.show');
 
+Route::prefix('pets')->name('pets.')->group(function () {
+    Route::get('/', [PetController::class, 'index'])->name('index');
+
+    Route::get('/{pet:uuid}', [PetController::class, 'show'])
+        ->whereUuid('pet')
+        ->name('show');
+});
+
 Route::middleware(['auth'])->group(function () {
+
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
     Route::prefix('settings')->name('settings.')->controller(SettingsController::class)->group(function () {
@@ -26,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('shelter')->name('shelter.')->group(function () {
+
         Route::get('/create', [ShelterController::class, 'create'])->name('create');
         Route::post('/', [ShelterController::class, 'store'])->name('store');
         Route::get('/setup', [ShelterController::class, 'setup'])->name('setup');
@@ -42,19 +52,25 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('pets')->name('pets.')->group(function () {
+
         Route::get('/create', [PetController::class, 'create'])->name('create');
+
         Route::post('/', [PetController::class, 'store'])->name('store');
-        Route::get('/{pet:uuid}', [PetController::class, 'show'])->name('show');
+
     });
+
 });
 
 Route::get('/shelters/{id}', function ($id) {
+
     if (! ctype_digit((string) $id)) {
         abort(404);
     }
+
     $shelter = \App\Models\Shelter::findOrFail((int) $id);
 
     return redirect()->route('shelters.show', $shelter, 301);
+
 })->whereNumber('id');
 
 require __DIR__ . '/auth.php';

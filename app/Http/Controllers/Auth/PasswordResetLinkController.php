@@ -15,7 +15,6 @@ class PasswordResetLinkController extends Controller
         return view('auth.forgot-password');
     }
 
-
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
