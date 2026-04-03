@@ -45,20 +45,29 @@ class ShelterController extends Controller
 
         if (session()->has('shelter_temp_images')) {
             $uploadedImages = [];
+
             foreach (session('shelter_temp_images') as $tmpImagePath) {
                 $filename = basename($tmpImagePath);
                 $newPath  = 'shelters/' . $shelter->uuid . '/' . $filename;
+
                 if (Storage::disk('public')->exists($tmpImagePath)) {
                     Storage::disk('public')->move($tmpImagePath, $newPath);
                     $uploadedImages[] = $newPath;
                 }
             }
+
             $shelter->images = $uploadedImages;
             $shelter->save();
+
             session()->forget('shelter_temp_images');
         }
 
-        return redirect()->route('dashboard');
+        return redirect()
+            ->route('dashboard')
+            ->with('flash', [
+                'message' => 'A menhely sikeresen létrejött.',
+                'type'    => 'success',
+            ]);
     }
 
     public function edit(Shelter $shelter)
@@ -84,13 +93,20 @@ class ShelterController extends Controller
 
         $existing = $shelter->images_safe;
         $remove   = collect($validated['remove_images'] ?? []);
-        $kept     = collect($existing)->reject(fn ($p) => $remove->contains($p))->values()->all();
+        $kept     = [];
 
+        foreach ($existing as $imagePath) {
+            if (! $remove->contains($imagePath)) {
+                $kept[] = $imagePath;
+            }
+        }
         $newUploaded = [];
+
         if (session()->has('shelter_temp_images')) {
             foreach (session('shelter_temp_images') as $tmpImagePath) {
                 $filename = basename($tmpImagePath);
                 $newPath  = 'shelters/' . $shelter->uuid . '/' . $filename;
+
                 if (Storage::disk('public')->exists($tmpImagePath)) {
                     Storage::disk('public')->move($tmpImagePath, $newPath);
                     $newUploaded[] = $newPath;
@@ -108,6 +124,11 @@ class ShelterController extends Controller
 
         session()->forget('shelter_temp_images');
 
-        return redirect()->route('shelters.show', $shelter);
+        return redirect()
+            ->route('shelters.show', $shelter)
+            ->with('flash', [
+                'message' => 'A menhely adatai sikeresen frissítve lettek.',
+                'type'    => 'success',
+            ]);
     }
 }
