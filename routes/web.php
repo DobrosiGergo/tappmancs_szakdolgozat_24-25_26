@@ -54,11 +54,22 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('pets')->name('pets.')->group(function () {
 
         Route::get('/create', [PetController::class, 'create'])->name('create');
-
         Route::post('/', [PetController::class, 'store'])->name('store');
 
-    });
+        Route::get('/manage', [PetController::class, 'updateIndex'])->name('update.index');
 
+        Route::get('/{pet:uuid}/edit', [PetController::class, 'edit'])
+            ->whereUuid('pet')
+            ->name('edit');
+
+        Route::put('/{pet:uuid}', [PetController::class, 'update'])
+            ->whereUuid('pet')
+            ->name('update');
+
+        Route::delete('/{pet:uuid}', [PetController::class, 'destroy'])
+            ->whereUuid('pet')
+            ->name('destroy');
+    });
 });
 
 Route::get('/shelters/{id}', function ($id) {

@@ -8,55 +8,71 @@ use Livewire\Component;
 
 class PetSpeciesBreedSelect extends Component
 {
-    public $species = [];
+    public array $species = [];
 
-    public $breeds = [];
+    public array $breeds = [];
 
-    public $species_id = null;
+    public $species_id = '';
 
-    public $breed_id = null;
+    public $breed_id = '';
 
-    public function mount($speciesId = null, $breedId = null)
+    public function mount($speciesId = null, $breedId = null): void
     {
-        $this->species = Specie::orderBy('name')->get(['id', 'name'])->toArray();
+        $this->species = Specie::query()
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->toArray();
 
-        $this->species_id = $speciesId ?? (old('species_id') ?: ($this->species[0]['id'] ?? null));
-        $this->breed_id   = $breedId   ?? old('breed_id');
+        $incomingSpeciesId = old('species_id', $speciesId);
+        $incomingBreedId   = old('breed_id', $breedId);
+
+        if (! empty($incomingSpeciesId)) {
+            $this->species_id = (string) $incomingSpeciesId;
+        } elseif (! empty($this->species)) {
+            $this->species_id = (string) $this->species[0]['id'];
+        }
 
         $this->loadBreeds();
 
-        if ($this->breed_id && ! collect($this->breeds)->pluck('id')->contains((int) $this->breed_id)) {
-            $this->breed_id = null;
+        if (! empty($incomingBreedId)) {
+            $breedExistsForSpecies = collect($this->breeds)
+                ->pluck('id')
+                ->map(fn ($id) => (string) $id)
+                ->contains((string) $incomingBreedId);
+
+            $this->breed_id = $breedExistsForSpecies
+                ? (string) $incomingBreedId
+                : '';
         }
 
-        if (! $this->breed_id) {
-            $this->setDefaultBreed();
+        if ($this->breed_id === '' && ! empty($this->breeds)) {
+            $this->breed_id = (string) $this->breeds[0]['id'];
         }
     }
 
-    public function updatedSpeciesId()
+    public function updatedSpeciesId($value): void
     {
-        $this->breed_id = null;
+        $this->species_id = (string) ($value ?? '');
         $this->loadBreeds();
-        $this->setDefaultBreed();
+
+        $this->breed_id = ! empty($this->breeds)
+            ? (string) $this->breeds[0]['id']
+            : '';
     }
 
-    private function loadBreeds(): void
+    protected function loadBreeds(): void
     {
-        $this->breeds = $this->species_id
-            ? Breed::where('species_id', $this->species_id)->orderBy('name')->get(['id', 'name'])->toArray()
-            : [];
-    }
+        if ($this->species_id === '') {
+            $this->breeds = [];
 
-    private function setDefaultBreed(): void
-    {
-        $mix = collect($this->breeds)->firstWhere('name', 'Keverék')
-            ?? collect($this->breeds)->firstWhere('name', 'Ismeretlen')
-            ?? ($this->breeds[0] ?? null);
-
-        if ($mix) {
-            $this->breed_id = $mix['id'];
+            return;
         }
+
+        $this->breeds = Breed::query()
+            ->where('species_id', $this->species_id)
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->toArray();
     }
 
     public function render()

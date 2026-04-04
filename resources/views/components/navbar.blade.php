@@ -85,6 +85,10 @@
               <x-navbar.link :href="route('pets.index')" class="text-white hover:text-black hover:font-bold">
                 Összes kisállat
               </x-navbar.link>
+
+              <x-navbar.link :href="route('pets.update.index')" class="text-white hover:text-black hover:font-bold">
+                Saját kisállatok
+              </x-navbar.link>
             </x-navbar.section>
           </div>
 

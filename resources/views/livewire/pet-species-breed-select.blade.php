@@ -1,9 +1,13 @@
-<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div class="space-y-5 md:col-span-2">
   <div>
-    <label class="block text-sm font-medium mb-1">Faj</label>
+    <label for="species_id" class="mb-1 block text-sm font-medium text-neutral-700">
+      Válassz fajt*
+    </label>
+
     <select
+      id="species_id"
       wire:model.live="species_id"
-      class="w-full rounded-lg border-neutral-300 focus:border-neutral-800 focus:ring-neutral-800"
+      class="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-neutral-900 shadow-sm transition focus:border-neutral-800 focus:ring-neutral-800"
     >
       @foreach($species as $sp)
         <option value="{{ $sp['id'] }}">{{ $sp['name'] }}</option>
@@ -11,14 +15,21 @@
     </select>
 
     <input type="hidden" name="species_id" value="{{ $species_id }}">
+
+    @error('species_id')
+      <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+    @enderror
   </div>
 
   <div>
-    <label class="block text-sm font-medium mb-1">Fajta</label>
+    <label for="breed_id" class="mb-1 block text-sm font-medium text-neutral-700">
+      Válassz fajtát*
+    </label>
+
     <select
+      id="breed_id"
       wire:model.live="breed_id"
-      class="w-full rounded-lg border-neutral-300 focus:border-neutral-800 focus:ring-neutral-800"
-      @disabled(empty($breeds))
+      class="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-neutral-900 shadow-sm transition focus:border-neutral-800 focus:ring-neutral-800"
     >
       @foreach($breeds as $br)
         <option value="{{ $br['id'] }}">{{ $br['name'] }}</option>
@@ -26,5 +37,9 @@
     </select>
 
     <input type="hidden" name="breed_id" value="{{ $breed_id }}">
+
+    @error('breed_id')
+      <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+    @enderror
   </div>
 </div>
