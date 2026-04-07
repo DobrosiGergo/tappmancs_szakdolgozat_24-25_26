@@ -3,6 +3,7 @@
     "type": "module",
     "scripts": {
         "dev": "concurrently \"php artisan serve\" \"npm run dev:vite\"",
+        "dev:db": "php artisan migrate:fresh && php artisan db:seed",
         "dev:vite": "vite",
         "build": "vite build",
         "test:feature": "php artisan test --testsuite=Feature",

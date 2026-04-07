@@ -116,4 +116,22 @@ class Pet extends Model
 
         return count($arr) ? asset('storage/' . $arr[0]) : null;
     }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return match ($this->status) {
+            'adopted' => 'Örökbefogadott',
+            'free' => 'Elérhető',
+            default => 'Ismeretlen',
+        };
+    }
+    
+    public function getStatusClassAttribute(): string
+    {
+        return match ($this->status) {
+            'adopted' => 'bg-neutral-100 text-neutral-500 ring-neutral-200',
+            'free' => 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+            default => 'bg-neutral-100 text-neutral-500 ring-neutral-200',
+        };
+    }
 }
