@@ -1,16 +1,12 @@
 <div class="space-y-4">
-    @php
-        $currentIndex = $selectedImage ? array_search($selectedImage, $images, true) : false;
-        $currentIndex = $currentIndex === false ? 0 : $currentIndex;
-    @endphp
-
+@php $selectedImage = $images[$currentIndex] ?? null; @endphp
     @if($selectedImage)
         <div class="overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm">
             <div class="grid items-start gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_180px]">
                 <div class="relative overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-100">
                     <button
                         type="button"
-                        wire:click="openLightbox"
+                        wire:click="openLightbox({{ $currentIndex }})"
                         class="block h-full w-full text-left"
                         aria-label="Kép megnyitása nagy méretben"
                     >
@@ -43,11 +39,7 @@
                             class="absolute left-4 top-1/2 z-20 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-neutral-200 bg-white/90 text-neutral-800 shadow transition hover:bg-white"
                             aria-label="Előző kép"
                         >
-                            <img
-                                src="{{ asset('images/prev.svg') }}"
-                                alt="Előző"
-                                class="h-5 w-5 object-contain"
-                            >
+                            <img src="{{ asset('images/prev.svg') }}" alt="Előző" class="h-5 w-5 object-contain">
                         </button>
 
                         <button
@@ -56,11 +48,7 @@
                             class="absolute right-4 top-1/2 z-20 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-neutral-200 bg-white/90 text-neutral-800 shadow transition hover:bg-white"
                             aria-label="Következő kép"
                         >
-                            <img
-                                src="{{ asset('images/next.svg') }}"
-                                alt="Következő"
-                                class="h-5 w-5 object-contain"
-                            >
+                            <img src="{{ asset('images/next.svg') }}" alt="Következő" class="h-5 w-5 object-contain">
                         </button>
                     @endif
                 </div>
@@ -68,18 +56,18 @@
                 @if(count($images) > 1)
                     <div class="lg:h-[560px] lg:overflow-y-auto lg:pr-1">
                         <div class="grid grid-cols-3 gap-3 lg:grid-cols-1">
-                            @foreach($images as $image)
+                            @foreach($images as $index => $image)
                                 <button
                                     type="button"
-                                    wire:click="selectImage('{{ $image }}')"
-                                    class="relative overflow-hidden rounded-2xl border bg-neutral-50 transition focus:outline-none focus:ring-2 focus:ring-neutral-400 {{ $selectedImage === $image ? 'border-neutral-300 ring-2 ring-neutral-300 shadow-sm' : 'border-neutral-200 hover:border-neutral-300 hover:bg-white' }}"
+                                    wire:click="selectImage({{ $index }})"
+                                    class="relative overflow-hidden rounded-2xl border bg-neutral-50 transition focus:outline-none focus:ring-2 focus:ring-neutral-400 {{ $currentIndex === $index ? 'border-neutral-300 ring-2 ring-neutral-300 shadow-sm' : 'border-neutral-200 hover:border-neutral-300 hover:bg-white' }}"
                                     aria-label="Kép kiválasztása"
                                 >
                                     <div class="flex aspect-[4/3] items-center justify-center bg-neutral-100 p-2">
                                         <img
                                             src="{{ \Illuminate\Support\Facades\Storage::url($image) }}"
                                             alt="{{ $name }} bélyegkép"
-                                            class="h-full w-full object-contain transition duration-300 hover:scale-[1.02]"
+                                            class="h-full w-full object-contain transition duration-300"
                                         >
                                     </div>
                                 </button>
@@ -110,11 +98,7 @@
                     class="absolute right-4 top-4 z-30 grid h-11 w-11 place-items-center rounded-full border border-neutral-200 bg-white/90 text-neutral-700 shadow-sm transition hover:bg-white"
                     aria-label="Bezárás"
                 >
-                    <img
-                        src="{{ asset('images/delete.svg') }}"
-                        alt="Bezárás"
-                        class="h-5 w-5 object-contain"
-                    >
+                    <img src="{{ asset('images/delete.svg') }}" alt="Bezárás" class="h-5 w-5 object-contain">
                 </button>
 
                 <div class="grid min-h-[70vh] gap-4 bg-white/95 p-4 lg:grid-cols-[minmax(0,1fr)_210px]">
@@ -132,11 +116,7 @@
                                 class="absolute left-4 top-1/2 z-20 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-neutral-200 bg-white/90 text-neutral-700 shadow-sm transition hover:bg-white"
                                 aria-label="Előző kép"
                             >
-                                <img
-                                    src="{{ asset('images/prev.svg') }}"
-                                    alt="Előző"
-                                    class="h-5 w-5 object-contain"
-                                >
+                                <img src="{{ asset('images/prev.svg') }}" alt="Előző" class="h-5 w-5 object-contain">
                             </button>
 
                             <button
@@ -145,11 +125,7 @@
                                 class="absolute right-4 top-1/2 z-20 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-neutral-200 bg-white/90 text-neutral-700 shadow-sm transition hover:bg-white"
                                 aria-label="Következő kép"
                             >
-                                <img
-                                    src="{{ asset('images/next.svg') }}"
-                                    alt="Következő"
-                                    class="h-5 w-5 object-contain"
-                                >
+                                <img src="{{ asset('images/next.svg') }}" alt="Következő" class="h-5 w-5 object-contain">
                             </button>
                         @endif
 
@@ -161,18 +137,18 @@
                     @if(count($images) > 1)
                         <div class="max-h-[78vh] overflow-y-auto pr-1">
                             <div class="grid grid-cols-3 gap-3 lg:grid-cols-1">
-                                @foreach($images as $image)
+                                @foreach($images as $index => $image)
                                     <button
                                         type="button"
-                                        wire:click="selectImage('{{ $image }}')"
-                                        class="relative overflow-hidden rounded-3xl border bg-neutral-50 transition {{ $selectedImage === $image ? 'border-neutral-300 ring-2 ring-neutral-300 shadow-sm' : 'border-neutral-200 hover:border-neutral-300 hover:bg-white' }}"
+                                        wire:click="selectImage({{ $index }})"
+                                        class="relative overflow-hidden rounded-3xl border bg-neutral-50 transition {{ $currentIndex === $index ? 'border-neutral-300 ring-2 ring-neutral-300 shadow-sm' : 'border-neutral-200 hover:border-neutral-300 hover:bg-white' }}"
                                         aria-label="Kép kiválasztása lightboxban"
                                     >
                                         <div class="flex aspect-[4/3] items-center justify-center bg-neutral-100 p-2">
                                             <img
                                                 src="{{ \Illuminate\Support\Facades\Storage::url($image) }}"
                                                 alt="{{ $name }} bélyegkép"
-                                                class="h-full w-full object-contain transition duration-300 hover:scale-[1.02]"
+                                                class="h-full w-full object-contain transition duration-300"
                                             >
                                         </div>
                                     </button>

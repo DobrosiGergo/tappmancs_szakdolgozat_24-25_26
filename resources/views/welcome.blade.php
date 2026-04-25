@@ -23,7 +23,7 @@
       </div>
 
       <x-ui.home.image-frame
-        :src="asset('images/41b6d401-3bc6-4fea-b5f8-f02cce22a6ac_removalai_preview.svg')"
+        :src="asset('images/berner.png')"
         alt="Örökbefogadás"
       />
     </div>

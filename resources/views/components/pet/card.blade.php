@@ -71,9 +71,7 @@
           </div>
 
           <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-neutral-300 text-neutral-600 transition group-hover:bg-neutral-900 group-hover:text-white">
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M13.17 12 8.58 7.41 10 6l6 6-6 6-1.41-1.41L13.17 12z"/>
-            </svg>
+            <img src="{{ asset('images/next.svg') }}" alt="" class="h-4 w-4">
           </span>
         </div>
 

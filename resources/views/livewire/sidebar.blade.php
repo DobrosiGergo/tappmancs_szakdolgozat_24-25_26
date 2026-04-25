@@ -25,9 +25,7 @@
                     <span>Kisállatok</span>
                 </a>
                 <a href="#" class="flex items-center px-4 py-2 text-[#333333] hover:bg-blue-200 hover:rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+                    <img src="{{ asset('images/search.svg') }}" alt="" class="h-5 w-5 mr-3">
                     <span>Keresés</span>
                 </a>
             </nav>
@@ -94,9 +92,7 @@
                     <img src="{{ asset('images/pet-svgrepo-com.svg') }}" class="h-5 w-5 mr-2">
                 </a>
                 <a href="#" class="text-gray-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+                    <img src="{{ asset('images/search.svg') }}" alt="" class="h-6 w-6">
                 </a>
             </div>
             

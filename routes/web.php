@@ -51,7 +51,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('update');
     });
 
-    Route::prefix('pets')->name('pets.')->group(function () {
+    Route::prefix('pets')->name('pets.')->middleware('role:Shelterowner,Shelterworker')->group(function () {
 
         Route::get('/create', [PetController::class, 'create'])->name('create');
         Route::post('/', [PetController::class, 'store'])->name('store');

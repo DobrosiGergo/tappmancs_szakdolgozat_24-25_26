@@ -4,9 +4,7 @@
     <div class="bg-white shadow-sm rounded-2xl p-8 border border-red-200">
       <div class="flex items-center gap-4">
         <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-red-100 text-red-600">
-          <svg class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M6 7h12v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7Zm3-4h6l1 2h4v2H4V5h4l1-2Z"/>
-          </svg>
+          <img src="{{ asset('images/delete.svg') }}" alt="" class="h-8 w-8">
         </div>
         <div>
           <h2 class="text-2xl font-semibold text-red-700">Fiók törlése</h2>

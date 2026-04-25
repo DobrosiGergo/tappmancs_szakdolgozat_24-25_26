@@ -17,13 +17,13 @@ class PetFactory extends Factory
     {
         return [
             'name'         => $this->faker->firstName(),
-            'slug'         => $this->faker->slug(),
-            'age'          => $this->faker->randomFloat(1, 0, 15),
+            'birth_date'   => $this->faker->dateTimeBetween('-15 years', 'now')->format('Y-m-d'),
             'arrival_date' => now(),
             'employee_id'  => User::factory(),
             'shelter_id'   => Shelter::factory(),
             'species_id'   => Specie::factory(),
             'breed_id'     => Breed::factory(),
+            'gender'       => $this->faker->randomElement(['male', 'female', 'unknown']),
             'status'       => 'free',
             'description'  => $this->faker->sentence(10),
             'images'       => [],

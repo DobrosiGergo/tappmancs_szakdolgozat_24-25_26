@@ -4,9 +4,7 @@
     <div class="bg-white shadow-sm rounded-2xl p-8 border border-neutral-200">
       <div class="flex items-center gap-4 mb-6">
         <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
-          <svg class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm6-6V9a6 6 0 1 0-12 0v2H4v10h16V11h-2ZM8 9a4 4 0 1 1 8 0v2H8V9Z"/>
-          </svg>
+          <img src="{{ asset('images/lock.svg') }}" alt="" class="h-8 w-8">
         </div>
         <div>
           <h2 class="text-2xl font-semibold text-neutral-900">Jelszó módosítása</h2>
@@ -67,10 +65,7 @@
               x-init="setTimeout(() => show = false, 2000)"
               class="inline-flex items-center gap-2 text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1"
             >
-            <svg class="h-4 w-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" class="text-emerald-600" />
-                <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+            <img src="{{ asset('images/check.svg') }}" alt="" class="h-4 w-4">
             <span>Sikeresen frissítve</span>
             </div>
           @endif

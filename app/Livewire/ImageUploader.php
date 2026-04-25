@@ -67,25 +67,33 @@ class ImageUploader extends Component
 
     public function updatedImages(): void
     {
+        $totalAfter = count($this->previews) + count($this->existingImages) + count($this->images);
+    
+        if ($totalAfter > $this->max) {
+            $this->addError('images', "Legfeljebb {$this->max} kép tölthető fel összesen.");
+            $this->images = [];
+            return;
+        }
+    
         $this->validate([
             'images'   => 'array|max:' . $this->max,
-            'images.*' => 'image|max:' . $this->maxSize,
+            'images.*' => 'image|mimes:jpeg,jpg,png|max:' . $this->maxSize,
         ]);
-
+    
         foreach ($this->images as $image) {
             $path = $image->store($this->tempDir(), 'public');
-
+    
             $this->previews[] = [
                 'name' => $image->getClientOriginalName(),
                 'path' => $path,
             ];
         }
-
+    
         session()->put(
             $this->sessionKey(),
             collect($this->previews)->pluck('path')->toArray()
         );
-
+    
         $this->images = [];
     }
 
@@ -125,6 +133,12 @@ class ImageUploader extends Component
         if (! $pet) {
             return;
         }
+
+        abort_unless(
+            $pet->employee_id === auth()->id()
+            || $pet->shelter?->owner_id === auth()->id(),
+            403
+        );
 
         $images = collect((array) $pet->images)->values();
 

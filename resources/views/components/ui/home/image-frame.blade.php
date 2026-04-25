@@ -5,7 +5,7 @@
   <x-ui.lazy-image
             src="{{ $src }}"
             alt="{{ $alt }}"
-            class="rounded-[350px] h-[800px] w-[99%] object-cover"
+            class="rounded-[350px] h-[800px] w-[98%] object-cover"
             />
   </div>
 </div>

@@ -21,16 +21,12 @@
 
                 <div class="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-neutral-500">
                     <span class="flex items-center gap-1.5">
-                        <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 12a5 5 0 1 0-5-5 5.006 5.006 0 0 0 5 5Zm0 2c-3.33 0-10 1.667-10 5v1h20v-1c0-3.333-6.67-5-10-5Z"/>
-                        </svg>
+                        <img src="{{ asset('images/profile.svg') }}" alt="" class="h-3.5 w-3.5 shrink-0">
                         {{ $ownerName }}
                     </span>
 
                     <span class="flex items-center gap-1.5">
-                        <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V10h14ZM5 8V6h14v2Z"/>
-                        </svg>
+                        <img src="{{ asset('images/calendar.svg') }}" alt="" class="h-3.5 w-3.5 shrink-0">
                         {{ $shelter->created_at->format('Y.m.d.') }}
                     </span>
                 </div>
@@ -122,9 +118,7 @@
                                     >
                                 @else
                                     <div class="flex h-full w-full items-center justify-center">
-                                        <svg class="h-6 w-6 text-neutral-300" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z"/>
-                                        </svg>
+                                        <img src="{{ asset('images/pet-placeholder.png') }}" alt="" class="h-12 w-12 object-contain opacity-70">
                                     </div>
                                 @endif
                             </div>
@@ -145,15 +139,7 @@
                                 {{ $pet->status_label }}
                             </span>
 
-                            <svg
-                                class="h-4 w-4 shrink-0 text-neutral-300 transition group-hover:translate-x-0.5 group-hover:text-neutral-500"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                            >
-                                <path d="M9 18l6-6-6-6"/>
-                            </svg>
+                            <img src="{{ asset('images/next.svg') }}" alt="" class="h-4 w-4 shrink-0 transition group-hover:translate-x-0.5">
                         </a>
                     @endforeach
                 </div>

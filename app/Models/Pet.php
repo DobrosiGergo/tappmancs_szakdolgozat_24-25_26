@@ -17,9 +17,9 @@ class Pet extends Model
     protected $fillable = [
         'uuid',
         'name',
-        'slug',
-        'age',
+        'birth_date',
         'breed_id',
+        'gender',
         'status',
         'description',
         'images',
@@ -29,10 +29,17 @@ class Pet extends Model
         'arrival_date',
     ];
 
+    public const GENDERS = [
+        'unknown' => 'Ismeretlen',
+        'male' => 'Hím',
+        'female' => 'Nőstény',
+    ];
+
     protected function casts()
     {
         return [
-            'arrival_date' => 'datetime',
+            'arrival_date' => 'date',
+            'birth_date'   => 'date',
             'images'       => 'array',
         ];
     }
@@ -116,6 +123,22 @@ class Pet extends Model
 
         return count($arr) ? asset('storage/' . $arr[0]) : null;
     }
+    
+    public static function genderOptions(): array
+    {
+        return collect(self::GENDERS)
+            ->map(fn ($label, $value) => [
+                'value' => $value,
+                'label' => $label,
+            ])
+            ->values()
+            ->toArray();
+    }
+
+    public function getGenderLabelAttribute(): string
+    {
+        return self::GENDERS[$this->gender] ?? 'Ismeretlen';
+    }
 
     public function getStatusLabelAttribute(): string
     {
@@ -134,4 +157,13 @@ class Pet extends Model
             default => 'bg-neutral-100 text-neutral-500 ring-neutral-200',
         };
     }
+
+    public function getAgeAttribute(): ?float
+{
+    if (! $this->birth_date) {
+        return null;
+    }
+
+    return round($this->birth_date->diffInDays(now()) / 365, 1);
+}
 }

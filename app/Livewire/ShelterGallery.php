@@ -7,39 +7,24 @@ use Livewire\Component;
 class ShelterGallery extends Component
 {
     public array $images = [];
-
-    public string $name = 'Menhely';
-
-    public ?string $selectedImage = null;
-
+    public string $name = '';
+    public int $currentIndex = 0;
     public bool $isLightboxOpen = false;
 
-    public function mount(array $images = [], string $name = 'Menhely'): void
+    public function mount(array $images, string $name): void
     {
         $this->images = array_values($images);
         $this->name = $name;
-        $this->selectedImage = $this->images[0] ?? null;
     }
 
-    public function selectImage(string $image): void
+    public function selectImage(int $index): void
     {
-        if (! in_array($image, $this->images, true)) {
-            return;
-        }
-
-        $this->selectedImage = $image;
+        $this->currentIndex = $index;
     }
 
-    public function openLightbox(?string $image = null): void
+    public function openLightbox(int $index): void
     {
-        if ($image !== null && in_array($image, $this->images, true)) {
-            $this->selectedImage = $image;
-        }
-
-        if (! $this->selectedImage) {
-            return;
-        }
-
+        $this->currentIndex = $index;
         $this->isLightboxOpen = true;
     }
 
@@ -48,44 +33,16 @@ class ShelterGallery extends Component
         $this->isLightboxOpen = false;
     }
 
-    public function previousImage(): void
-    {
-        if (count($this->images) <= 1 || ! $this->selectedImage) {
-            return;
-        }
-
-        $currentIndex = array_search($this->selectedImage, $this->images, true);
-
-        if ($currentIndex === false) {
-            $this->selectedImage = $this->images[0] ?? null;
-            return;
-        }
-
-        $previousIndex = $currentIndex === 0
-            ? count($this->images) - 1
-            : $currentIndex - 1;
-
-        $this->selectedImage = $this->images[$previousIndex];
-    }
-
     public function nextImage(): void
     {
-        if (count($this->images) <= 1 || ! $this->selectedImage) {
-            return;
-        }
+        $count = count($this->images);
+        $this->currentIndex = ($this->currentIndex + 1) % $count;
+    }
 
-        $currentIndex = array_search($this->selectedImage, $this->images, true);
-
-        if ($currentIndex === false) {
-            $this->selectedImage = $this->images[0] ?? null;
-            return;
-        }
-
-        $nextIndex = $currentIndex === count($this->images) - 1
-            ? 0
-            : $currentIndex + 1;
-
-        $this->selectedImage = $this->images[$nextIndex];
+    public function previousImage(): void
+    {
+        $count = count($this->images);
+        $this->currentIndex = ($this->currentIndex - 1 + $count) % $count;
     }
 
     public function render()

@@ -9,9 +9,11 @@
 @endphp
 
 <x-guest-layout>
-  <div class="max-w-7xl mx-auto px-6">
-    <x-ui.stepper active="images" role="shelter" roleShelter="shelterOwner" class="mb-8" />
-  </div>
+  @if (!$isEdit)
+    <div class="max-w-7xl mx-auto px-6">
+      <x-ui.stepper active="images" role="shelter" roleShelter="shelterOwner" class="mb-8" />
+    </div>
+  @endif
 
   <section class="max-w-7xl mx-auto px-6 pb-12">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">

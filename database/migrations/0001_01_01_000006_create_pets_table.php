@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('pets', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slug');
             $table->foreignId('species_id')->references('id')->on('species');
-            $table->double('age');
-            $table->dateTime('arrival_date');
+            $table->date('birth_date');
+            $table->date('arrival_date');
             $table->foreignId('employee_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('shelter_id')->references('id')->on('shelter')->onDelete('cascade');
             $table->enum('status', ['adopted', 'free']);
             $table->mediumText('description');
             $table->json('images');
             $table->foreignId('breed_id')->references('id')->on('breeds');
+            $table->enum('gender', ['male', 'female', 'unknown'])->default('unknown');
             $table->timestamps();
         });
     }

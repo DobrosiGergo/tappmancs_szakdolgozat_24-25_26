@@ -13,7 +13,7 @@ class PetController extends Controller
     public function create()
     {
         $shelter = Shelter::where('owner_id', auth()->id())->firstOrFail();
-
+        abort_unless(in_array(auth()->user()->type, ['Shelterowner', 'Shelterworker']), 403);
         return view('pets.create', compact('shelter'));
     }
 
@@ -101,14 +101,12 @@ class PetController extends Controller
         $data    = $request->validated();
         $shelter = Shelter::where('owner_id', auth()->id())->firstOrFail();
 
-        $slug = Str::slug($data['name']);
-
         $pet = Pet::create([
             'name'         => $data['name'],
-            'slug'         => $slug,
             'species_id'   => $data['species_id'],
-            'age'          => $data['age'],
+            'birth_date'   => $data['birth_date'],
             'arrival_date' => $data['arrival_date'] ?? now(),
+            'gender'       => $data['gender'],
             'employee_id'  => auth()->id(),
             'shelter_id'   => $shelter->id,
             'status'       => $data['status'] ?? 'free',
@@ -160,8 +158,6 @@ class PetController extends Controller
 
         $data = $request->validated();
 
-        $slug = Str::slug($data['name']);
-
         $currentImages = is_array($pet->images)
             ? $pet->images
             : json_decode($pet->images ?? '[]', true);
@@ -186,11 +182,11 @@ class PetController extends Controller
 
         $pet->update([
             'name'         => $data['name'],
-            'slug'         => $slug,
             'species_id'   => $data['species_id'],
             'breed_id'     => $data['breed_id'],
-            'age'          => $data['age'],
+            'birth_date'   => $data['birth_date'],
             'arrival_date' => $data['arrival_date'] ?? $pet->arrival_date,
+            'gender'       => $data['gender'],
             'status'       => $data['status']       ?? $pet->status,
             'description'  => $data['description'],
             'images'       => array_merge($currentImages, $newImages),

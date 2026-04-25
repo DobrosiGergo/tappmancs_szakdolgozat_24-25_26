@@ -20,7 +20,7 @@
     </div>
     <div class="self-center">
       <span class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 group-hover:bg-neutral-900 group-hover:text-white transition">
-        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M13.17 12 8.58 7.41 10 6l6 6-6 6-1.41-1.41L13.17 12z"/></svg>
+        <img src="{{ asset('images/next.svg') }}" alt="" class="h-4 w-4">
       </span>
     </div>
   </div>
