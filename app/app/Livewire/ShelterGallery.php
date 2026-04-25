@@ -7,14 +7,17 @@ use Livewire\Component;
 class ShelterGallery extends Component
 {
     public array $images = [];
+
     public string $name = '';
+
     public int $currentIndex = 0;
+
     public bool $isLightboxOpen = false;
 
     public function mount(array $images, string $name): void
     {
         $this->images = array_values($images);
-        $this->name = $name;
+        $this->name   = $name;
     }
 
     public function selectImage(int $index): void
@@ -24,7 +27,7 @@ class ShelterGallery extends Component
 
     public function openLightbox(int $index): void
     {
-        $this->currentIndex = $index;
+        $this->currentIndex   = $index;
         $this->isLightboxOpen = true;
     }
 
@@ -35,13 +38,13 @@ class ShelterGallery extends Component
 
     public function nextImage(): void
     {
-        $count = count($this->images);
+        $count              = count($this->images);
         $this->currentIndex = ($this->currentIndex + 1) % $count;
     }
 
     public function previousImage(): void
     {
-        $count = count($this->images);
+        $count              = count($this->images);
         $this->currentIndex = ($this->currentIndex - 1 + $count) % $count;
     }
 

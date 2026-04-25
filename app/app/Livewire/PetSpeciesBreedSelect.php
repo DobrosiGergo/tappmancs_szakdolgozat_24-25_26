@@ -22,7 +22,7 @@ class PetSpeciesBreedSelect extends Component
             ->orderBy('name')
             ->get(['id', 'name'])
             ->map(fn ($specie) => [
-                'id' => (string) $specie->id,
+                'id'   => (string) $specie->id,
                 'name' => $specie->name,
             ])
             ->toArray();
@@ -31,8 +31,8 @@ class PetSpeciesBreedSelect extends Component
             ->orderBy('name')
             ->get(['id', 'name', 'species_id'])
             ->map(fn ($breed) => [
-                'id' => (string) $breed->id,
-                'name' => $breed->name,
+                'id'         => (string) $breed->id,
+                'name'       => $breed->name,
                 'species_id' => (string) $breed->species_id,
             ])
             ->toArray();

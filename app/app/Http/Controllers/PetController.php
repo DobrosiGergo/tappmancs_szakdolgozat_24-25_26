@@ -6,7 +6,6 @@ use App\Http\Requests\PetStoreRequest;
 use App\Models\Pet;
 use App\Models\Shelter;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class PetController extends Controller
 {
@@ -14,6 +13,7 @@ class PetController extends Controller
     {
         $shelter = Shelter::where('owner_id', auth()->id())->firstOrFail();
         abort_unless(in_array(auth()->user()->type, ['Shelterowner', 'Shelterworker']), 403);
+
         return view('pets.create', compact('shelter'));
     }
 
@@ -187,7 +187,7 @@ class PetController extends Controller
             'birth_date'   => $data['birth_date'],
             'arrival_date' => $data['arrival_date'] ?? $pet->arrival_date,
             'gender'       => $data['gender'],
-            'status'       => $data['status']       ?? $pet->status,
+            'status'       => $data['status'] ?? $pet->status,
             'description'  => $data['description'],
             'images'       => array_merge($currentImages, $newImages),
         ]);

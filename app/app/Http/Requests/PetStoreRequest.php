@@ -23,7 +23,7 @@ class PetStoreRequest extends FormRequest
             'status'       => ['nullable', 'in:adopted,free'],
             'description'  => ['required', 'string', 'min:20'],
             'images'       => ['nullable', 'array', 'max:10'],
-            'images.*' => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:4096'],
+            'images.*'     => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:4096'],
         ];
     }
 }

@@ -31,8 +31,8 @@ class Pet extends Model
 
     public const GENDERS = [
         'unknown' => 'Ismeretlen',
-        'male' => 'Hím',
-        'female' => 'Nőstény',
+        'male'    => 'Hím',
+        'female'  => 'Nőstény',
     ];
 
     protected function casts()
@@ -123,7 +123,7 @@ class Pet extends Model
 
         return count($arr) ? asset('storage/' . $arr[0]) : null;
     }
-    
+
     public static function genderOptions(): array
     {
         return collect(self::GENDERS)
@@ -144,26 +144,26 @@ class Pet extends Model
     {
         return match ($this->status) {
             'adopted' => 'Örökbefogadott',
-            'free' => 'Elérhető',
-            default => 'Ismeretlen',
+            'free'    => 'Elérhető',
+            default   => 'Ismeretlen',
         };
     }
-    
+
     public function getStatusClassAttribute(): string
     {
         return match ($this->status) {
             'adopted' => 'bg-neutral-100 text-neutral-500 ring-neutral-200',
-            'free' => 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-            default => 'bg-neutral-100 text-neutral-500 ring-neutral-200',
+            'free'    => 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+            default   => 'bg-neutral-100 text-neutral-500 ring-neutral-200',
         };
     }
 
     public function getAgeAttribute(): ?float
-{
-    if (! $this->birth_date) {
-        return null;
-    }
+    {
+        if (! $this->birth_date) {
+            return null;
+        }
 
-    return round($this->birth_date->diffInDays(now()) / 365, 1);
-}
+        return round($this->birth_date->diffInDays(now()) / 365, 1);
+    }
 }
