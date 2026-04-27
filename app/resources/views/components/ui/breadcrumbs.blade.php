@@ -15,8 +15,7 @@
 
     @foreach($items as $i => $item)
       <li class="flex items-center gap-2">
-        <img src="{{ asset('images/next.svg') }}" alt="" class="h-4 w-4">
-
+       /
         @php $isLast = $i === count($items) - 1; @endphp
 
         @if(!empty($item['href']))

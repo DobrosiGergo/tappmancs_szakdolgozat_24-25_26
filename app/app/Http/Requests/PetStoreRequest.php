@@ -20,7 +20,7 @@ class PetStoreRequest extends FormRequest
             'birth_date'   => ['required', 'date', 'before_or_equal:today', 'after:' . now()->subYears(30)->toDateString()],
             'gender'       => ['required', 'in:male,female,unknown'],
             'arrival_date' => ['required', 'date', 'before_or_equal:today', 'after_or_equal:birth_date'],
-            'status'       => ['nullable', 'in:adopted,free'],
+            'status'       => ['nullable', 'in:adopted,free,reserved'],
             'description'  => ['required', 'string', 'min:20'],
             'images'       => ['nullable', 'array', 'max:10'],
             'images.*'     => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:4096'],

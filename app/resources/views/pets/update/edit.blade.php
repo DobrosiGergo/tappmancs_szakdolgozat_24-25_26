@@ -30,7 +30,6 @@
         <form method="POST" action="{{ route('pets.update', $pet) }}" enctype="multipart/form-data">
           @csrf
           @method('PUT')
-          <input type="hidden" name="status" value="{{ old('status', $pet->status ?? 'free') }}">
           <input type="hidden" name="shelter_id" value="{{ $shelter->id }}">
 
           <div class="divide-y divide-neutral-100">
@@ -56,7 +55,7 @@
 
             <div class="p-8 space-y-5">
               <p class="text-xs font-semibold uppercase tracking-wider text-neutral-400">Részletek</p>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <x-ui.input-select
                   id="gender"
                   name="gender"
@@ -65,6 +64,16 @@
                   :value="old('gender', $pet->gender ?? 'unknown')"
                   :options="\App\Models\Pet::genderOptions()"
                 />
+                <x-ui.input-select
+                  id="status"
+                  name="status"
+                  label="Státusz*"
+                  required="true"
+                  :value="old('status', $pet->status)"
+                  :options="\App\Models\Pet::statusOptions()"
+                />
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <x-ui.input-date
                   id="birth_date"
                   name="birth_date"

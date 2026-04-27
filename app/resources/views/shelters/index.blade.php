@@ -24,9 +24,7 @@
     @endforelse
   </div>
 
-  @if(method_exists($shelters, 'links'))
   <div class="mt-6">
-  {{ $shelters->withQueryString()->onEachSide(1)->links() }}
+    {{ $shelters->withQueryString()->onEachSide(1)->links() }}
   </div>
-  @endif
 </x-app-layout>

@@ -1,13 +1,15 @@
-<div class="flex flex-col gap-2">
+<div class="flex flex-col gap-1.5">
   @guest
-    <x-navbar.link :href="route('login')" class="text-white hover:text-black hover:font-bold">Bejelentkezés</x-navbar.link>
-    <x-navbar.link :href="route('role')" class="text-white hover:text-black hover:font-bold">Regisztráció</x-navbar.link>
+    <x-navbar.link :href="route('login')">Bejelentkezés</x-navbar.link>
+    <x-navbar.link :href="route('role')">Regisztráció</x-navbar.link>
   @endguest
   @auth
-    <x-navbar.link :href="route('settings.index')" class="text-white hover:text-black hover:font-bold">Beállítások</x-navbar.link>
+    <x-navbar.link :href="route('settings.index')">Beállítások</x-navbar.link>
     <form method="POST" action="{{ route('logout') }}">
       @csrf
-      <button type="submit" class="text-left w-full text-white hover:text-black hover:font-bold transition">Kijelentkezés</button>
+      <button type="submit" class="text-sm text-white/80 hover:text-white hover:font-semibold transition-colors duration-150 text-left w-full">
+        Kijelentkezés
+      </button>
     </form>
   @endauth
 </div>

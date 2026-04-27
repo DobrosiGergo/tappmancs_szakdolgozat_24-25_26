@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Shelter;
+use App\Policies\ShelterPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
     protected $policies = [
-        \App\Models\Shelter::class => \App\Policies\ShelterPolicy::class,
+        Shelter::class => ShelterPolicy::class,
     ];
-
-    public function boot(): void {}
 }

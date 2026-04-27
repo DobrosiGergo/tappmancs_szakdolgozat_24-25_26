@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('arrival_date');
             $table->foreignId('employee_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('shelter_id')->references('id')->on('shelter')->onDelete('cascade');
-            $table->enum('status', ['adopted', 'free']);
+            $table->enum('status', ['adopted', 'free', 'reserved'])->default('free');
             $table->mediumText('description');
             $table->json('images');
             $table->foreignId('breed_id')->references('id')->on('breeds');

@@ -158,11 +158,7 @@ class PetController extends Controller
 
         $data = $request->validated();
 
-        $currentImages = is_array($pet->images)
-            ? $pet->images
-            : json_decode($pet->images ?? '[]', true);
-
-        $currentImages = is_array($currentImages) ? $currentImages : [];
+        $currentImages = $pet->images;
 
         $newImages = [];
 

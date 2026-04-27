@@ -35,6 +35,12 @@ class Pet extends Model
         'female'  => 'Nőstény',
     ];
 
+    public const STATUSES = [
+        'free'     => 'Elérhető',
+        'reserved' => 'Foglalva',
+        'adopted'  => 'Örökbefogadott',
+    ];
+
     protected function casts()
     {
         return [
@@ -135,6 +141,17 @@ class Pet extends Model
             ->toArray();
     }
 
+    public static function statusOptions(): array
+    {
+        return collect(self::STATUSES)
+            ->map(fn ($label, $value) => [
+                'value' => $value,
+                'label' => $label,
+            ])
+            ->values()
+            ->toArray();
+    }
+
     public function getGenderLabelAttribute(): string
     {
         return self::GENDERS[$this->gender] ?? 'Ismeretlen';
@@ -143,18 +160,20 @@ class Pet extends Model
     public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
-            'adopted' => 'Örökbefogadott',
-            'free'    => 'Elérhető',
-            default   => 'Ismeretlen',
+            'adopted'  => 'Örökbefogadott',
+            'reserved' => 'Foglalva',
+            'free'     => 'Elérhető',
+            default    => 'Ismeretlen',
         };
     }
 
     public function getStatusClassAttribute(): string
     {
         return match ($this->status) {
-            'adopted' => 'bg-neutral-100 text-neutral-500 ring-neutral-200',
-            'free'    => 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-            default   => 'bg-neutral-100 text-neutral-500 ring-neutral-200',
+            'adopted'  => 'bg-neutral-100 text-neutral-500 ring-neutral-200',
+            'reserved' => 'bg-amber-50 text-amber-600 ring-amber-200',
+            'free'     => 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+            default    => 'bg-neutral-100 text-neutral-500 ring-neutral-200',
         };
     }
 

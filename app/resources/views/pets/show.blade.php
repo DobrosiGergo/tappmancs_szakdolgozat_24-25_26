@@ -1,17 +1,11 @@
 <x-app-layout>
     @php
-        $images = $pet->images_safe ?? [];
-
-        $statusLabel = match($pet->status) {
-            'adopted' => 'Örökbefogadott',
-            'reserved' => 'Foglalva',
-            default => 'Elérhető',
-        };
+        $images = $pet->images_safe;
 
         $statusClasses = match($pet->status) {
-            'adopted' => 'bg-neutral-900 text-white',
+            'adopted'  => 'bg-neutral-900 text-white',
             'reserved' => 'bg-amber-100 text-amber-800 ring-1 ring-amber-200',
-            default => 'bg-emerald-100 text-emerald-800 ring-1 ring-emerald-200',
+            default    => 'bg-emerald-100 text-emerald-800 ring-1 ring-emerald-200',
         };
     @endphp
 
@@ -35,7 +29,7 @@
                     <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
                         <div class="mb-4 flex flex-wrap items-center gap-3">
                             <span class="inline-flex rounded-full px-3 py-1 text-sm font-medium {{ $statusClasses }}">
-                                {{ $statusLabel }}
+                                {{ $pet->status_label }}
                             </span>
 
                             @if($pet->arrival_date)

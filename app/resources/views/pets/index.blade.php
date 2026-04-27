@@ -12,10 +12,9 @@
       @php
         $desc = \Illuminate\Support\Str::limit($pet->description ?? '', 120);
 
-        $imgs = is_array($pet->images) ? $pet->images : json_decode($pet->images ?? '[]', true);
-        $image = $imgs[0] ?? null;
+        $image = $pet->images_safe[0] ?? null;
 
-        $badge = $pet->status === 'adopted' ? 'Örökbefogadott' : 'Elérhető';
+        $badge = $pet->status_label;
 
         $meta = [
           'Faj' => $pet->species?->name,
@@ -38,9 +37,7 @@
     @endforelse
   </div>
 
-  @if(method_exists($pets, 'links'))
-    <div class="mt-6">
-      {{ $pets->withQueryString()->onEachSide(1)->links() }}
-    </div>
-  @endif
+  <div class="mt-6">
+    {{ $pets->withQueryString()->onEachSide(1)->links() }}
+  </div>
 </x-app-layout>

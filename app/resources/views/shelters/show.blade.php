@@ -101,7 +101,7 @@
                 <div class="flex flex-col gap-3">
                     @foreach($pets as $pet)
                         @php
-                            $images = $pet->images_safe ?? (is_array($pet->images) ? $pet->images : json_decode($pet->images ?? '[]', true));
+                            $images = $pet->images_safe;
                             $image = $images[0] ?? null;
                         @endphp
 

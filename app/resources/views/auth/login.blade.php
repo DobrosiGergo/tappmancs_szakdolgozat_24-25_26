@@ -4,12 +4,11 @@
       <div class="absolute inset-0 bg-[#333333]"></div>
       <div class="absolute inset-0" style="clip-path: polygon(58% 0,100% 0,100% 100%,30% 100%); background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));"></div>
       <div class="relative z-10 max-w-md text-white px-12">
-        <h1 class="text-3xl font-semibold tracking-tight">Üdv újra a Központban</h1>
+        <h1 class="text-3xl font-semibold tracking-tight">Üdv újra</h1>
         <p class="mt-2 text-neutral-200/90">Jelentkezz be, kezeld a menhelyed adatait, tölts fel képeket és segíts gazdit találni.</p>
         <div class="mt-10">
           <x-ui.lazy-image
             src="{{ asset('images/pet-svgrepo-com.svg') }}"
-            alt="Kutya nyakörv"
             w="640" h="420"
           />
         </div>

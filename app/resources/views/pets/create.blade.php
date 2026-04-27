@@ -5,6 +5,7 @@
       <a href="{{ route('pets.update.index') }}"
          class="inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900 transition mb-3">
 
+        <img src="{{ asset('images/prev.svg') }}" alt="" class="h-4 w-4">
         Vissza
       </a>
       <h1 class="text-2xl md:text-3xl font-semibold text-neutral-900">Új kisállat felvétele</h1>

@@ -167,6 +167,27 @@ class ImageUploader extends Component
 
     public function render()
     {
-        return view('livewire.image-uploader');
+        $used      = count($this->existingImages) + count($this->previews);
+        $isAtMax   = $used               >= $this->max;
+        $isNearMax = ! $isAtMax && $used >= (int) ceil($this->max * 0.8);
+
+        return view('livewire.image-uploader', [
+            'used'          => $used,
+            'isAtMax'       => $isAtMax,
+            'isNearMax'     => $isNearMax,
+            'fileSizeLabel' => $this->maxSize >= 1024
+                ? round($this->maxSize / 1024) . ' MB'
+                : $this->maxSize . ' KB',
+            'badgeClass' => match (true) {
+                $isAtMax   => 'bg-red-50 text-red-600 ring-red-200',
+                $isNearMax => 'bg-amber-50 text-amber-600 ring-amber-200',
+                default    => 'bg-neutral-100 text-neutral-600 ring-neutral-200',
+            },
+            'barClass' => match (true) {
+                $isAtMax   => 'bg-red-500',
+                $isNearMax => 'bg-amber-400',
+                default    => 'bg-neutral-900',
+            },
+        ]);
     }
 }

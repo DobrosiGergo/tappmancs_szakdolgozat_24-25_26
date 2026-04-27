@@ -15,7 +15,7 @@ class ShelterController extends Controller
 
     public function index()
     {
-        $shelters = Shelter::with('owner')->paginate(20);
+        $shelters = Shelter::with('owner')->withCount('pets')->paginate(20);
 
         return view('shelters.index', compact('shelters'));
     }
