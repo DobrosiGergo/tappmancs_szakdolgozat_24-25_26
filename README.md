@@ -1,6 +1,13 @@
-# Állatmenhely – Szakdolgozat (2024–26)
+# Tappmancs – Szakdolgozat (2024–26)
 
-Laravel 11 + Livewire 3 + Alpine.js + Tailwind CSS alapú webalkalmazás állatmenhelyek és örökbefogadható kisállatok kezelésére.
+Állatmenhelyek és örökbefogadható kisállatok kezelésére szolgáló webalkalmazás.
+
+## Monorepo struktúra
+
+| Könyvtár | Leírás |
+|---|---|
+| `app/` | Laravel 11 + Livewire 3 backend + frontend |
+| `app-e2e/` | Playwright végponttól végpontig tesztek |
 
 ## Követelmények
 
@@ -11,11 +18,10 @@ Laravel 11 + Livewire 3 + Alpine.js + Tailwind CSS alapú webalkalmazás állatm
 ## Telepítés
 
 ```bash
-composer install
 npm install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate --seed
+cd app && composer install
+cp app/.env.example app/.env
+cd app && php artisan key:generate && php artisan migrate --seed
 ```
 
 ## Helyi fejlesztés
@@ -24,13 +30,14 @@ php artisan migrate --seed
 npm run dev
 ```
 
-Ez a parancs egyszerre indítja el a PHP fejlesztői szervert (`php artisan serve`) és a Vite HMR szervert. Az alkalmazás a [http://localhost:8000](http://localhost:8000) címen érhető el.
+Az alkalmazás a [http://localhost:8000](http://localhost:8000) címen érhető el.
 
-## Egyéb parancsok
+## Parancsok
 
 | Parancs | Leírás |
 |---|---|
-| `npm run dev:db` | Adatbázis visszaállítása és újraseedelése |
+| `npm run dev` | Laravel + Vite fejlesztői szerver indítása |
 | `npm run build` | Frontend eszközök éles fordítása |
-| `npm run test:all` | Összes teszt futtatása |
-| `npm run lint:pint` | Kódstílus ellenőrzése (Laravel Pint) |
+| `npm run test` | Unit és feature tesztek futtatása |
+| `npm run test:e2e` | Playwright e2e tesztek futtatása |
+| `npm run lint` | Kódstílus ellenőrzése (Laravel Pint) |
