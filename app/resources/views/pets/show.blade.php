@@ -24,7 +24,7 @@
 
             <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
                 <div class="space-y-6 lg:col-span-2">
-                    <livewire:pet.image-gallery :images="$images" />
+                    <x-ui.image-gallery :images="$images" :alt="$pet->name" />
 
                     <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
                         <div class="mb-4 flex flex-wrap items-center gap-3">

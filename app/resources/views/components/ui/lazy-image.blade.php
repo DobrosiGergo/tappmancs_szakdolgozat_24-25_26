@@ -10,7 +10,7 @@
 <img
   src="{{ $src }}"
   alt="{{ $alt }}"
-  {{ $eager ? 'loading=eager fetchpriority=high' : 'loading=lazy' }}
+  @if($eager) loading="eager" fetchpriority="high" @else loading="lazy" @endif
   decoding="async"
   @if($w) width="{{ $w }}" @endif
   @if($h) height="{{ $h }}" @endif

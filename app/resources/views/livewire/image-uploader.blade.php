@@ -27,7 +27,7 @@
             <span class="mt-1 text-xs text-neutral-400">Törölj egy képet az újabb feltöltéséhez</span>
         @else
             <img src="{{ asset('images/upload.svg') }}" alt="" class="mb-2 h-10 w-10">
-            <span class="font-medium">Válassza ki képeit vagy húzza ide</span>
+            <span class="font-medium">Válassza ki képeit</span>
             <span class="mt-1 text-xs text-neutral-400">JPEG, JPG, PNG · max {{ $fileSizeLabel }} / kép</span>
             @if ($isNearMax)
                 <span class="mt-2 inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-600 ring-1 ring-inset ring-amber-200">
