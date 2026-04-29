@@ -1,34 +1,36 @@
-# Tappmancs
+# Állatmenhely – Szakdolgozat (2024–26)
 
-Pet shelter adoption management system. Monorepo with two workspaces:
+Laravel 11 + Livewire 3 + Alpine.js + Tailwind CSS alapú webalkalmazás állatmenhelyek és örökbefogadható kisállatok kezelésére.
 
-- **`app/`** — Laravel 11 application (PHP, Livewire, Tailwind, Vite)
-- **`app-e2e/`** — Playwright end-to-end tests
+## Követelmények
 
-## Setup
+- PHP 8.2+
+- Node.js 18+
+- Composer
+
+## Telepítés
 
 ```bash
-# Install JS deps for both workspaces
+composer install
 npm install
-
-# Install PHP deps (run inside app/)
-cd app && composer install && cd ..
-
-# Set up the Laravel app
-cp app/.env.example app/.env
-cd app && php artisan key:generate && php artisan storage:link && cd ..
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
 ```
 
-## Common commands
+## Helyi fejlesztés
 
-Run from the repo root:
+```bash
+npm run dev
+```
 
-| Command              | What it does                                 |
-| -------------------- | -------------------------------------------- |
-| `npm run dev`        | Start Laravel + Vite dev servers             |
-| `npm run build`      | Build production assets                      |
-| `npm run test`       | Run all PHPUnit tests                        |
-| `npm run test:e2e`   | Run Playwright tests against the dev server  |
-| `npm run lint`       | Run Pint (PHP code formatter)                |
+Ez a parancs egyszerre indítja el a PHP fejlesztői szervert (`php artisan serve`) és a Vite HMR szervert. Az alkalmazás a [http://localhost:8000](http://localhost:8000) címen érhető el.
 
-For commands not exposed at the root, `cd` into the workspace and run directly.
+## Egyéb parancsok
+
+| Parancs | Leírás |
+|---|---|
+| `npm run dev:db` | Adatbázis visszaállítása és újraseedelése |
+| `npm run build` | Frontend eszközök éles fordítása |
+| `npm run test:all` | Összes teszt futtatása |
+| `npm run lint:pint` | Kódstílus ellenőrzése (Laravel Pint) |
