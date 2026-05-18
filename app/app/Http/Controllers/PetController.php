@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PetStoreRequest;
 use App\Models\Pet;
 use App\Models\Shelter;
+use App\Models\Specie;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class PetController extends Controller
@@ -17,12 +19,26 @@ class PetController extends Controller
         return view('pets.create', compact('shelter'));
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $pets = Pet::query()
-            ->with(['shelter:id,name', 'species:id,name', 'breed:id,name'])
-            ->latest()
-            ->paginate(12);
+        $query = Pet::query()->with(['shelter:id,name', 'species:id,name', 'breed:id,name']);
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+        if ($request->filled('species')) {
+            $query->where('species_id', $request->species);
+        }
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->gender);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $query->latest();
+
+        $pets = $query->paginate(12);
 
         return view('pets.index', compact('pets'));
     }
@@ -105,7 +121,7 @@ class PetController extends Controller
             'name'         => $data['name'],
             'species_id'   => $data['species_id'],
             'birth_date'   => $data['birth_date'],
-            'arrival_date' => $data['arrival_date'] ?? now(),
+            'arrival_date' => $data['arrival_date'],
             'gender'       => $data['gender'],
             'employee_id'  => auth()->id(),
             'shelter_id'   => $shelter->id,

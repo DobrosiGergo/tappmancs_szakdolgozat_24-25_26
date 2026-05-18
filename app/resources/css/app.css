@@ -2,15 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --dark:      23  23  23; /* #171717 — fő sötét */
+    --dark-mid:  51  51  51; /* #333333 — közepes sötét (CTA, panel bg) */
+    --dark-soft: 64  64  64; /* #404040 — halvány sötét (hover) */
+
+    --light:        255 255 255; /* #ffffff */
+    --light-off:    250 250 250; /* #fafafa */
+    --light-dim:    245 245 245; /* #f5f5f5 */
+    --light-border: 229 229 229; /* #e5e5e5 */
+
+    --muted:       115 115 115; /* #737373 — szekunder szöveg */
+    --muted-light: 163 163 163; /* #a3a3a3 — halvány */
+    --muted-dark:   82  82  82; /* #525252 — sötétebb */
+  }
+}
+
 [x-cloak] { display: none !important; }
 
-[data-reveal] {
-    opacity: 0;
-    transform: translateY(26px);
-    transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+
+.shelter-dots {
+    background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+    background-size: 18px 18px;
 }
-[data-reveal].in-view {
-    opacity: 1;
-    transform: none;
-}
+
+

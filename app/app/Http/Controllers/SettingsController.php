@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use App\Helpers\Tools;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
@@ -34,7 +35,9 @@ class SettingsController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('settings.profile')->with('status', 'profile-updated');
+        Tools::flash('Profil sikeresen frissítve.');
+
+        return Redirect::route('settings.profile');
     }
 
     public function editPassword(): View

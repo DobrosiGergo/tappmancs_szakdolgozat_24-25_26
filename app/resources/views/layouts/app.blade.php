@@ -6,12 +6,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', config('app.name', 'Laravel'))</title>
-    <link rel="icon" href="{{ asset('pet-svgrepo-com.svg') }}" type="image/svg+xml">
-    <link rel="shortcut icon" href="{{ asset('pet-svgrepo-com.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ asset('images/pet-svgrepo-com.svg') }}" type="image/svg+xml">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
   </head>
@@ -22,7 +20,7 @@
     @if (session('flash'))
       <x-flash-message
         :message="session('flash')['message']"
-        :type="session('flash')['type'] ?? 'info'"
+        :type="session('flash')['type']"
       />
     @endif
 
@@ -36,6 +34,7 @@
       {{ $slot }}
     </main>
 
+    <x-ui.footer />
     @livewireScripts
   </body>
 </html>

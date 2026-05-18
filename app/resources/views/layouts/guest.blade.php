@@ -4,27 +4,34 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link rel="icon" href="{{ asset('pet-svgrepo-com.svg') }}" type="image/svg+xml">
-        <link rel="shortcut icon" href="{{ asset('pet-svgrepo-com.svg') }}" type="image/svg+xml">
+        <link rel="icon" href="{{ asset('images/pet-svgrepo-com.svg') }}" type="image/svg+xml">
         <title>@yield('title', config('app.name', 'Tappmancs'))</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
         @livewireStyles
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @stack('head')
     </head>
-    <body >
+    <body>
     <x-navbar />
+    @if (session('flash'))
+        <x-flash-message
+            :message="session('flash')['message']"
+            :type="session('flash')['type']"
+        />
+    @endif
                 @isset($header)
                     <header>
                             {{ $header }}
                     </header>
                 @endisset
-                <main >
+                <main>
                     {{ $slot }}
                 </main>
+    <x-ui.footer />
     @livewireScripts
+    @stack('scripts')
     </body>
 </html>

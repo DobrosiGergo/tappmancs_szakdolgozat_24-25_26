@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\Tools;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -80,7 +81,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $role        = $validated['role'];
-        $roleShelter = $validated['role_shelter'] ?? null;
+        $roleShelter = $validated['role_shelter'];
 
         $map = [
             'shelterOwner'  => 'Shelterowner',
@@ -97,7 +98,7 @@ class RegisteredUserController extends Controller
             'name'        => $validated['name'],
             'email'       => $validated['email'],
             'password'    => Hash::make($validated['password']),
-            'phoneNumber' => $validated['phoneNumber'] ?? null,
+            'phoneNumber' => $validated['phoneNumber'],
         ]);
 
         Auth::login($user);
@@ -110,6 +111,8 @@ class RegisteredUserController extends Controller
         }
 
         event(new Registered($user));
+
+        Tools::flash('Sikeres regisztráció, üdvözlünk!');
 
         return redirect()->route('dashboard');
     }

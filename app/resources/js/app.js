@@ -13,38 +13,30 @@ Alpine.data('speciesBreedSelect', (species, breeds, speciesId, breedId) => ({
     breedId,
 
     get selectedSpeciesLabel() {
-        return this.species.find(i => i.id === this.speciesId)?.name ?? 'Válassz fajt'
+        const match = this.species.find(s => s.id === this.speciesId);
+        return match?.name ?? 'Válassz fajt';
     },
+
     get filteredBreeds() {
-        return this.breeds.filter(i => i.species_id === this.speciesId)
+        return this.breeds.filter(b => b.species_id === this.speciesId);
     },
+
     get selectedBreedLabel() {
-        return this.filteredBreeds.find(i => i.id === this.breedId)?.name ?? 'Válassz fajtát'
+        const match = this.filteredBreeds.find(b => b.id === this.breedId);
+        return match?.name ?? 'Válassz fajtát';
     },
 
     selectSpecies(id) {
-        this.speciesId = id
-        this.breedId = this.filteredBreeds[0]?.id ?? ''
-        this.speciesOpen = false
-        this.breedOpen = false
+        this.speciesId = id;
+        this.breedId = this.filteredBreeds[0]?.id ?? '';
+        this.speciesOpen = false;
+        this.breedOpen = false;
     },
+
     selectBreed(id) {
-        this.breedId = id
-        this.breedOpen = false
+        this.breedId = id;
+        this.breedOpen = false;
     },
-}))
+}));
 
 Alpine.start();
-
-document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in-view');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.07 });
-
-    document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
-});

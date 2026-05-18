@@ -1,13 +1,4 @@
 <x-app-layout>
-    @php
-        $images = $pet->images_safe;
-
-        $statusClasses = match($pet->status) {
-            'adopted'  => 'bg-neutral-900 text-white',
-            'reserved' => 'bg-amber-100 text-amber-800 ring-1 ring-amber-200',
-            default    => 'bg-emerald-100 text-emerald-800 ring-1 ring-emerald-200',
-        };
-    @endphp
 
     <div class="py-10">
         <x-ui.container>
@@ -24,11 +15,11 @@
 
             <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
                 <div class="space-y-6 lg:col-span-2">
-                    <x-ui.image-gallery :images="$images" :alt="$pet->name" />
+                    <x-ui.image-gallery :images="$pet->images_safe" :alt="$pet->name" />
 
                     <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
                         <div class="mb-4 flex flex-wrap items-center gap-3">
-                            <span class="inline-flex rounded-full px-3 py-1 text-sm font-medium {{ $statusClasses }}">
+                            <span class="inline-flex rounded-full px-3 py-1 text-sm font-medium {{ $pet->status_badge_class }}">
                                 {{ $pet->status_label }}
                             </span>
 
@@ -57,23 +48,27 @@
                             <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
                                 <dt class="text-sm text-neutral-500">Faj</dt>
                                 <dd class="text-right text-sm font-medium text-neutral-900">
-                                    {{ $pet->species?->name ?? 'Nincs megadva' }}
+                                    {{ $pet->species->name }}
                                 </dd>
                             </div>
 
+                            @if($pet->breed)
                             <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
                                 <dt class="text-sm text-neutral-500">Fajta</dt>
                                 <dd class="text-right text-sm font-medium text-neutral-900">
-                                    {{ $pet->breed?->name ?? 'Nincs megadva' }}
+                                    {{ $pet->breed->name }}
                                 </dd>
                             </div>
+                            @endif
 
+                            @if($pet->age_label)
                             <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
                                 <dt class="text-sm text-neutral-500">Kor</dt>
                                 <dd class="text-right text-sm font-medium text-neutral-900">
-                                    {{ isset($pet->age) ? $pet->age . ' év' : 'Nincs megadva' }}
+                                    {{ $pet->age_label }}
                                 </dd>
                             </div>
+                            @endif
 
                             <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
                                 <dt class="text-sm text-neutral-500">Menhely</dt>
@@ -94,7 +89,7 @@
                             <div class="flex items-start justify-between gap-4">
                                 <dt class="text-sm text-neutral-500">Feltöltötte</dt>
                                 <dd class="text-right text-sm font-medium text-neutral-900">
-                                    {{ $pet->employee?->username ?? $pet->employee?->name ?? 'Ismeretlen' }}
+                                    {{ $pet->employee_name }}
                                 </dd>
                             </div>
                         </dl>
@@ -126,29 +121,14 @@
 
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                         @foreach($relatedPets as $relatedPet)
-                            @php
-                                $desc = \Illuminate\Support\Str::limit($relatedPet->description ?? '', 120);
-                                $image = $relatedPet->images_safe[0] ?? null;
-                                $badge = match($relatedPet->status) {
-                                    'adopted' => 'Örökbefogadott',
-                                    'reserved' => 'Foglalva',
-                                    default => 'Elérhető',
-                                };
-                                $meta = [
-                                    'Faj' => $relatedPet->species?->name,
-                                    'Fajta' => $relatedPet->breed?->name,
-                                    'Kor' => isset($relatedPet->age) ? ($relatedPet->age . ' év') : null,
-                                ];
-                            @endphp
-
                             <x-pet.card
                                 :href="route('pets.show', $relatedPet)"
                                 :title="$relatedPet->name"
-                                :description="$desc"
-                                :image="$image"
-                                :badge="$badge"
+                                :description="$relatedPet->excerpt"
+                                :image="$relatedPet->first_image_path"
+                                :badge="$relatedPet->status_label"
                                 :shelterName="$relatedPet->shelter?->name"
-                                :meta="$meta"
+                                :meta="['Faj' => $relatedPet->species?->name, 'Fajta' => $relatedPet->breed?->name, 'Kor' => $relatedPet->age_label]"
                             />
                         @endforeach
                     </div>

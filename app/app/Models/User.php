@@ -37,12 +37,6 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::bootHasUuid();
-    }
-
     public function getRouteKeyName(): string
     {
         return 'uuid';

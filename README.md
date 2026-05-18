@@ -1,4 +1,4 @@
-# Tappmancs – Szakdolgozat (2024–26)
+# Tappmancs Szakdolgozat (2024–26)
 
 Állatmenhelyek és örökbefogadható kisállatok kezelésére szolgáló webalkalmazás.
 

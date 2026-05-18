@@ -13,16 +13,26 @@ class ShelterController extends Controller
         return view('auth.registration.shelter.setup');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $shelters = Shelter::with('owner')->withCount('pets')->paginate(20);
+        $query = Shelter::with('owner')->withCount('pets');
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $shelters = $query->paginate(20);
 
         return view('shelters.index', compact('shelters'));
     }
 
     public function show(Shelter $shelter)
     {
-        return view('shelters.show', compact('shelter'));
+        $shelter->load('owner');
+        $pets     = $shelter->pets()->latest()->get();
+        $petCount = $pets->count();
+
+        return view('shelters.show', compact('shelter', 'pets', 'petCount'));
     }
 
     public function create()

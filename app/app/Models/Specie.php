@@ -19,15 +19,18 @@ class Specie extends Model
 
     public $timestamps = false;
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::bootHasUuid();
-    }
-
     public function getRouteKeyName(): string
     {
         return 'uuid';
+    }
+
+    public static function selectOptions(): array
+    {
+        $options = [];
+        foreach (static::orderBy('name')->get(['id', 'name']) as $specie) {
+            $options[] = ['value' => (string) $specie->id, 'label' => $specie->name];
+        }
+        return $options;
     }
 
     public function pets()

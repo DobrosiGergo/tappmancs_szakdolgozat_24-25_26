@@ -57,18 +57,6 @@
         <div class="flex items-center gap-4">
           <x-primary-button class="px-6 py-2 text-lg">Mentés</x-primary-button>
 
-          @if (session('status') === 'password-updated')
-            <div
-              x-data="{ show: true }"
-              x-show="show"
-              x-transition
-              x-init="setTimeout(() => show = false, 2000)"
-              class="inline-flex items-center gap-2 text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1"
-            >
-            <img src="{{ asset('images/check.svg') }}" alt="" class="h-4 w-4">
-            <span>Sikeresen frissítve</span>
-            </div>
-          @endif
         </div>
       </form>
     </div>
