@@ -1,8 +1,16 @@
-@props(['value' => '', 'label' => '', 'class' => ''])
-<div class="relative inline-block md:mt-8 md:w-[450px] md:h-[130px] {{ $class }}">
-  <div class="absolute top-4 left-4 w-full h-full bg-neutral-500 rounded-3xl"></div>
-  <div class="relative bg-[#333333] text-white p-10 rounded-3xl text-center w-full md:w-[450px]">
-    <p class="text-2xl text-white">{{ $value }}</p>
+@props(['value' => '', 'label' => '', 'class' => '', 'target' => null, 'suffix' => '', 'href' => null])
+
+@php $displayValue = $target !== null ? number_format($target, 0, ',', ' ') . $suffix : $value; @endphp
+
+@php
+  $tag = $href ? 'a' : 'div';
+@endphp
+
+<{{ $tag }} @if($href) href="{{ $href }}" @endif
+  class="group relative inline-block md:mt-8 md:w-[450px] md:h-[130px] {{ $class }}">
+  <div aria-hidden="true" class="absolute top-4 left-4 w-full h-full bg-muted rounded-3xl"></div>
+  <div class="relative bg-dark-mid group-hover:bg-dark-soft text-white p-10 rounded-3xl text-center w-full md:w-[450px] shadow-md transition-all duration-300 ease-out group-hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+    <p class="text-2xl text-white">{{ $displayValue }}</p>
     <p class="text-md text-white">{{ $label }}</p>
   </div>
-</div>
+</{{ $tag }}>

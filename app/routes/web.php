@@ -5,7 +5,7 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShelterController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
 
 Route::get('/shelters', [ShelterController::class, 'index'])->name('shelters.index');
 

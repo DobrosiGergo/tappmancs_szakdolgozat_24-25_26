@@ -41,7 +41,7 @@ class Pet extends Model
         'adopted'  => 'Örökbefogadott',
     ];
 
-    protected function casts()
+protected function casts()
     {
         return [
             'arrival_date' => 'date',
@@ -56,12 +56,6 @@ class Pet extends Model
         'status' => 'free',
         'images' => '[]',
     ];
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::bootHasUuid();
-    }
 
     public function getRouteKeyName(): string
     {
@@ -130,26 +124,41 @@ class Pet extends Model
         return count($arr) ? asset('storage/' . $arr[0]) : null;
     }
 
+    public function getFirstImagePathAttribute(): ?string
+    {
+        return collect($this->images_safe)->first();
+    }
+
+    public function getEmployeeNameAttribute(): string
+    {
+        return $this->employee->name ?? '';
+    }
+
+    public function getStatusBadgeClassAttribute(): string
+    {
+        return match ($this->status) {
+            'adopted'  => 'bg-neutral-900 text-white',
+            'reserved' => 'bg-amber-100 text-amber-800 ring-1 ring-amber-200',
+            default    => 'bg-emerald-100 text-emerald-800 ring-1 ring-emerald-200',
+        };
+    }
+
     public static function genderOptions(): array
     {
-        return collect(self::GENDERS)
-            ->map(fn ($label, $value) => [
-                'value' => $value,
-                'label' => $label,
-            ])
-            ->values()
-            ->toArray();
+        $options = [];
+        foreach (self::GENDERS as $value => $label) {
+            $options[] = ['value' => $value, 'label' => $label];
+        }
+        return $options;
     }
 
     public static function statusOptions(): array
     {
-        return collect(self::STATUSES)
-            ->map(fn ($label, $value) => [
-                'value' => $value,
-                'label' => $label,
-            ])
-            ->values()
-            ->toArray();
+        $options = [];
+        foreach (self::STATUSES as $value => $label) {
+            $options[] = ['value' => $value, 'label' => $label];
+        }
+        return $options;
     }
 
     public function getGenderLabelAttribute(): string
@@ -184,5 +193,15 @@ class Pet extends Model
         }
 
         return round($this->birth_date->diffInDays(now()) / 365, 1);
+    }
+
+    public function getAgeLabelAttribute(): ?string
+    {
+        return $this->age ? $this->age . ' év' : null;
+    }
+
+    public function getExcerptAttribute(): string
+    {
+        return \Illuminate\Support\Str::limit($this->description ?? '', 120);
     }
 }

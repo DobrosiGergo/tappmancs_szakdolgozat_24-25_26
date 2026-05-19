@@ -21,12 +21,6 @@ class Comment extends Model
         'content',
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::bootHasUuid();
-    }
-
     public function getRouteKeyName(): string
     {
         return 'uuid';

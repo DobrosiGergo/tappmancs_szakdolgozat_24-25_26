@@ -19,12 +19,6 @@ class Breed extends Model
 
     public $timestamps = false;
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::bootHasUuid();
-    }
-
     public function getRouteKeyName(): string
     {
         return 'uuid';

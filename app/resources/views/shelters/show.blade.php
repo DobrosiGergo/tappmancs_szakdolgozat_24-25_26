@@ -1,9 +1,4 @@
 <x-app-layout>
-    @php
-        $pets      = $shelter->pets()->latest()->get();
-        $ownerName = $shelter->owner?->username ?? $shelter->owner?->name ?? 'Ismeretlen';
-        $petCount  = $pets->count();
-    @endphp
 
     <section class="relative overflow-hidden bg-[#333333]">
 
@@ -14,7 +9,7 @@
 
         <div class="relative mx-auto max-w-7xl px-6 py-16 sm:py-20 lg:px-8">
 
-            <nav class="animate-fade-up [animation-delay:0ms] mb-10 flex items-center gap-2 text-xs font-medium"
+            <nav class="mb-10 flex items-center gap-2 text-xs font-medium"
                  aria-label="Breadcrumb">
                 <a href="{{ route('shelters.index') }}"
                    class="text-neutral-500 transition-colors hover:text-neutral-300">
@@ -27,18 +22,18 @@
             <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
 
                 <div class="max-w-3xl">
-                    <p class="animate-fade-up [animation-delay:80ms] mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">
+                    <p class="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">
                         Állatmenhely
                     </p>
 
-                    <h1 class="animate-fade-up [animation-delay:160ms] text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
+                    <h1 class="text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
                         {{ $shelter->name }}
                     </h1>
 
-                    <div class="animate-fade-up [animation-delay:280ms] mt-8 flex flex-wrap gap-3">
+                    <div class="mt-8 flex flex-wrap gap-3">
                         <x-ui.badge>
                             <img src="{{ asset('images/profile.svg') }}" alt="" class="h-3.5 w-3.5 opacity-70">
-                            {{ $ownerName }}
+                            {{ $shelter->owner_name }}
                         </x-ui.badge>
 
                         <x-ui.badge>
@@ -55,7 +50,7 @@
                     </div>
                 </div>
 
-                <div class="animate-fade-up [animation-delay:380ms] flex shrink-0 flex-wrap gap-3">
+                <div class="flex shrink-0 flex-wrap gap-3">
                     <a href="#contact"
                        class="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-neutral-100">
                         Kapcsolatfelvétel
@@ -80,7 +75,7 @@
 
             <div class="space-y-8 lg:col-span-2">
 
-                <x-ui.card data-reveal>
+                <x-ui.card>
                     <h2 class="mb-4 text-xl font-semibold text-neutral-900">A menhelyről</h2>
                     <p class="whitespace-pre-line text-base leading-relaxed text-neutral-600">
                         {{ $shelter->description }}
@@ -88,13 +83,13 @@
                 </x-ui.card>
 
                 @if(!empty($shelter->images_safe))
-                    <x-ui.card data-reveal pad="p-6">
+                    <x-ui.card pad="p-6">
                         <h2 class="mb-5 text-xl font-semibold text-neutral-900">Galéria</h2>
                         <x-ui.image-gallery :images="$shelter->images_safe" :alt="$shelter->name" />
                     </x-ui.card>
                 @endif
 
-                <x-ui.card data-reveal>
+                <x-ui.card>
                     <div class="mb-5 flex items-baseline gap-3">
                         <h2 class="text-xl font-semibold text-neutral-900">Kisállatok</h2>
                         @if($petCount)
@@ -106,19 +101,13 @@
 
                     @if($petCount)
                         <div class="flex flex-col gap-3">
-                            @foreach($pets as $index => $pet)
-                                @php
-                                    $images = $pet->images_safe;
-                                    $image  = $images[0] ?? null;
-                                @endphp
+                            @foreach($pets as $pet)
                                 <a href="{{ route('pets.show', $pet) }}"
-                                   data-reveal
-                                   style="transition-delay: {{ $index * 55 }}ms"
                                    class="group flex items-center gap-4 rounded-xl bg-neutral-50 px-5 py-4 ring-1 ring-black/5 transition hover:bg-white hover:shadow-md hover:ring-black/10">
 
                                     <div class="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-neutral-100">
-                                        @if($image)
-                                            <img src="{{ asset('storage/' . $image) }}"
+                                        @if($pet->first_image_url)
+                                            <img src="{{ $pet->first_image_url }}"
                                                  alt="{{ $pet->name }}"
                                                  loading="lazy"
                                                  class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
@@ -134,7 +123,7 @@
 
                                     <div class="min-w-0 flex-1">
                                         <p class="truncate text-base font-semibold text-neutral-900">
-                                            {{ $pet->name ?? 'Ismeretlen' }}
+                                            {{ $pet->name }}
                                         </p>
                                         @if(!empty($pet->description))
                                             <p class="mt-0.5 truncate text-sm text-neutral-400">
@@ -165,17 +154,16 @@
 
             <div class="flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
 
-                <div data-reveal class="rounded-2xl bg-[#333333] px-6 py-6 shadow-sm">
+                <div class="rounded-2xl bg-[#333333] px-6 py-6 shadow-sm">
                     <p class="mb-4 text-xs font-semibold uppercase tracking-widest text-neutral-500">
                         Tulajdonos
                     </p>
                     <div class="flex items-center gap-3">
-                        <div class="grid h-12 w-12 shrink-0 place-items-center rounded-full text-lg font-bold text-neutral-900"
-                             style="background-color: {{ $shelter->avatar_bg }}">
-                            {{ $shelter->initials }}
+                        <div class="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white">
+                            <img src="{{ asset('images/profile.svg') }}" alt="" class="h-6 w-6">
                         </div>
                         <div>
-                            <p class="font-semibold text-white">{{ $ownerName }}</p>
+                            <p class="font-semibold text-white">{{ $shelter->owner_name }}</p>
                             <p class="text-xs text-neutral-400">
                                 Tag {{ $shelter->created_at->format('Y') }} óta
                             </p>
@@ -183,7 +171,7 @@
                     </div>
                 </div>
 
-                <x-ui.card data-reveal style="transition-delay: 80ms" pad="px-6 py-5">
+                <x-ui.card pad="px-6 py-5">
                     <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-400">
                         Részletek
                     </p>
@@ -209,8 +197,6 @@
 
                 @unless(auth()->check() && in_array(auth()->user()->type, ['Shelterowner', 'Shelterworker']))
                     <a href="#contact"
-                       data-reveal
-                       style="transition-delay: 160ms"
                        class="flex items-center justify-center gap-2 rounded-2xl bg-[#333333] px-6 py-4 text-sm font-semibold text-white shadow-sm ring-1 ring-white/10 transition hover:bg-neutral-700">
                         <img src="{{ asset('images/mail.svg') }}" alt="" class="h-4 w-4 brightness-0 invert">
                         Kapcsolatfelvétel

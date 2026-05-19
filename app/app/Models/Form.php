@@ -20,12 +20,6 @@ class Form extends Model
 
     protected $hidden = ['user_id'];
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::bootHasUuid();
-    }
-
     public function getRouteKeyName(): string
     {
         return 'uuid';

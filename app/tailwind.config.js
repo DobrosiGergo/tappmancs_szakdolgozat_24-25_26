@@ -14,14 +14,23 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
-            keyframes: {
-                fadeUp: {
-                    '0%':   { opacity: '0', transform: 'translateY(22px)' },
-                    '100%': { opacity: '1', transform: 'translateY(0)' },
+            colors: {
+                dark: {
+                    DEFAULT: 'rgb(var(--dark) / <alpha-value>)',
+                    mid:     'rgb(var(--dark-mid) / <alpha-value>)',
+                    soft:    'rgb(var(--dark-soft) / <alpha-value>)',
                 },
-            },
-            animation: {
-                'fade-up': 'fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                light: {
+                    DEFAULT: 'rgb(var(--light) / <alpha-value>)',
+                    off:     'rgb(var(--light-off) / <alpha-value>)',
+                    dim:     'rgb(var(--light-dim) / <alpha-value>)',
+                    border:  'rgb(var(--light-border) / <alpha-value>)',
+                },
+                muted: {
+                    DEFAULT: 'rgb(var(--muted) / <alpha-value>)',
+                    light:   'rgb(var(--muted-light) / <alpha-value>)',
+                    dark:    'rgb(var(--muted-dark) / <alpha-value>)',
+                },
             },
         },
     },

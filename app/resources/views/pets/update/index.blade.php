@@ -17,29 +17,15 @@
 
   <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
     @forelse($pets as $pet)
-      @php
-        $desc = \Illuminate\Support\Str::limit($pet->description ?? '', 120);
-
-        $image = $pet->images_safe[0] ?? null;
-
-        $badge = $pet->status_label;
-
-        $meta = [
-          'Faj' => $pet->species?->name,
-          'Fajta' => $pet->breed?->name,
-          'Kor' => isset($pet->age) ? ($pet->age . ' év') : null,
-        ];
-      @endphp
-
       <div class="relative">
         <x-pet.card
           :href="route('pets.show', $pet)"
           :title="$pet->name"
-          :description="$desc"
-          :image="$image"
-          :badge="$badge"
+          :description="$pet->excerpt"
+          :image="$pet->first_image_path"
+          :badge="$pet->status_label"
           :shelterName="$pet->shelter?->name"
-          :meta="$meta"
+          :meta="['Faj' => $pet->species?->name, 'Fajta' => $pet->breed?->name, 'Kor' => $pet->age_label]"
         />
 
         <div class="absolute right-4 top-4 z-10 flex items-center gap-2">

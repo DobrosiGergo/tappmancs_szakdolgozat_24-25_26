@@ -10,7 +10,7 @@
    ]) }}>
   <div class="flex gap-4">
     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700">
-      {{ $icon ?? '' }}
+      @isset($icon){{ $icon }}@endisset
     </div>
     <div class="flex-1">
       <h3 class="text-xl md:text-2xl font-semibold text-neutral-900 group-hover:underline">{{ $title }}</h3>

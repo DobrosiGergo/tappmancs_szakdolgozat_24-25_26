@@ -7,7 +7,7 @@
 @endphp
 
 @unless($isShelterStaff)
-    <x-ui.card id="contact" data-reveal class="scroll-mt-8" pad="p-8" x-data="{ sent: false, loading: false }">
+    <x-ui.card id="contact" class="scroll-mt-8" pad="p-8" x-data="{ sent: false, loading: false }">
 
         <h2 class="mb-1 text-xl font-semibold text-neutral-900">Kapcsolatfelvétel</h2>
         <p class="mb-8 text-sm text-neutral-500">{{ $subtitle }}</p>
@@ -69,7 +69,7 @@
                     Adataidat kizárólag a kapcsolatfelvételhez használjuk.
                 </p>
                 <button type="submit"
-                        class="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#333333] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-700 disabled:opacity-60"
+                        class="inline-flex shrink-0 items-center gap-2 rounded-full bg-dark-mid px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-dark-soft disabled:opacity-60"
                         :disabled="loading">
                     <span x-show="!loading">Üzenet küldése</span>
                     <span x-show="loading" x-cloak>Küldés...</span>
