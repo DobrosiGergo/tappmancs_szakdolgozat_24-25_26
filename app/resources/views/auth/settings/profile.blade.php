@@ -4,7 +4,7 @@
     <div class="bg-white shadow-sm rounded-2xl p-8 border border-neutral-200">
       <div class="flex items-center gap-4 mb-6">
         <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
-          <img src="{{ asset('images/profile.svg') }}" alt="" class="h-8 w-8">
+          <x-icon name="user" class="h-8 w-8" />
         </div>
         <div>
           <h2 class="text-2xl font-semibold text-neutral-900">Profiladatok módosítása</h2>
@@ -68,7 +68,7 @@
                   x-init="setTimeout(() => show = false, 2000)"
                   class="mt-2 inline-flex items-center gap-2 text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1"
                 >
-                <img src="{{ asset('images/check.svg') }}" alt="" class="h-4 w-4">
+                <x-icon name="check" class="h-4 w-4" />
                 <span>Hitelesítő link elküldve</span>
                 </div>
               @endif

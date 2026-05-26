@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Traits\HasUuid;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -22,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'phoneNumber',
         'password',
         'type',
+        'shelter_id',
     ];
 
     protected $hidden = [
@@ -45,6 +47,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function shelter(): HasOne
     {
         return $this->hasOne(Shelter::class, 'owner_id');
+    }
+
+    public function worksAt(): BelongsTo
+    {
+        return $this->belongsTo(Shelter::class, 'shelter_id');
     }
 
     public function pets()

@@ -23,11 +23,7 @@
                    focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2"
           >
             <span class="flex h-16 w-16 items-center justify-center rounded-2xl bg-neutral-100 text-neutral-700">
-            <x-ui.lazy-image
-            src="{{ asset('images/profile.svg') }}"
-            alt=""
-            class="h-7 w-7"
-            />
+            <x-icon name="user" class="h-7 w-7" />
             </span>
             <span class="block text-xl font-semibold text-neutral-900">Menhely dolgozó</span>
             <span class="text-sm text-neutral-600">Kattints a folytatáshoz</span>
@@ -49,7 +45,7 @@
             <x-ui.lazy-image
             src="{{ asset('images/pet-shelter-svgrepo-com.svg') }}"
             alt=""
-            class="h-7 w-7"
+            class="h-7 w-7 pointer-events-none"
             />
             </span>
             <span class="block text-xl font-semibold text-neutral-900">Menhely tulajdonos</span>

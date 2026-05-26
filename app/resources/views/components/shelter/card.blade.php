@@ -1,15 +1,13 @@
 @props([
   'href' => '#',
-  'title' => null,
-  'name' => null,
+  'name' => '',
   'description' => '',
   'badge' => null,
   'image' => null,
 ])
 
 @php
-  $heading = $title ?? $name ?? '';
-  $imgUrl = $image ? \Illuminate\Support\Facades\Storage::url($image) : null;
+  $imgUrl = $image ? \Illuminate\Support\Facades\Storage::url($image) : '';
 @endphp
 
 <a href="{{ $href }}" class="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 rounded-2xl">
@@ -19,7 +17,7 @@
       @if($imgUrl)
         <img
           src="{{ $imgUrl }}"
-          alt="{{ $heading }}"
+          alt="{{ $name }}"
           class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 opacity-70"
         />
         <div class="absolute inset-0 bg-gradient-to-t from-neutral-900/60 to-transparent pointer-events-none"></div>
@@ -32,7 +30,7 @@
 
     <div class="flex flex-1 flex-col p-5">
       <h3 class="text-xl font-semibold leading-snug text-neutral-900 transition-colors duration-200 group-hover:text-neutral-600">
-        {{ $heading }}
+        {{ $name }}
       </h3>
 
       @if($description)
@@ -51,7 +49,7 @@
         @endif
 
         <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-all duration-300 group-hover:bg-neutral-900 group-hover:border-neutral-900 group-hover:translate-x-0.5" aria-hidden="true">
-          <img src="{{ asset('images/next.svg') }}" alt="" class="h-4 w-4 transition-all duration-300 group-hover:brightness-0 group-hover:invert">
+          <x-icon name="arrow-right" class="h-4 w-4 transition-colors duration-300 group-hover:text-white" />
         </span>
       </div>
     </div>

@@ -75,7 +75,7 @@
                             class="pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-neutral-900 shadow-sm transition hover:bg-white"
                             aria-label="Nagyítás"
                         >
-                            <img src="{{ asset('images/search.svg') }}" alt="" class="h-4 w-4">
+                            <x-icon name="search" class="h-4 w-4" />
                         </button>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                     aria-label="Előző kép"
                     class="absolute left-3 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-neutral-900 shadow-sm transition hover:bg-white"
                 >
-                    <img src="{{ asset('images/prev.svg') }}" alt="" class="h-5 w-5">
+                    <x-icon name="arrow-left" class="h-5 w-5" />
                 </button>
 
                 <button
@@ -97,7 +97,7 @@
                     aria-label="Következő kép"
                     class="absolute right-3 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-neutral-900 shadow-sm transition hover:bg-white"
                 >
-                    <img src="{{ asset('images/next.svg') }}" alt="" class="h-5 w-5">
+                    <x-icon name="arrow-right" class="h-5 w-5" />
                 </button>
             </div>
         </div>
@@ -152,7 +152,7 @@
                             aria-label="Bezárás"
                             class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
                         >
-                            <img src="{{ asset('images/delete.svg') }}" alt="" class="h-4 w-4 brightness-0 invert">
+                            <x-icon name="delete" class="h-4 w-4 text-white" />
                         </button>
                     </div>
 
@@ -171,7 +171,7 @@
                             aria-label="Előző kép"
                             class="absolute left-0 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-neutral-900 shadow-sm transition hover:bg-white sm:left-3"
                         >
-                            <img src="{{ asset('images/prev.svg') }}" alt="" class="h-5 w-5">
+                            <x-icon name="arrow-left" class="h-5 w-5" />
                         </button>
 
                         <button
@@ -181,7 +181,7 @@
                             aria-label="Következő kép"
                             class="absolute right-0 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-neutral-900 shadow-sm transition hover:bg-white sm:right-3"
                         >
-                            <img src="{{ asset('images/next.svg') }}" alt="" class="h-5 w-5">
+                            <x-icon name="arrow-right" class="h-5 w-5" />
                         </button>
                     </div>
 

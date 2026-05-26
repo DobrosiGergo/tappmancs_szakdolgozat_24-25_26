@@ -1,9 +1,17 @@
 <?php
 
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShelterController;
+use App\Http\Controllers\StaffingController;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Publikus route-ok (auth nélkül is elérhetők)
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
 
@@ -21,10 +29,23 @@ Route::prefix('pets')->name('pets.')->group(function () {
         ->name('show');
 });
 
-Route::middleware(['auth'])->group(function () {
+/*
+|--------------------------------------------------------------------------
+| Hitelesített route-ok
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
 
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
+    Route::get('/notifications', [NotificationsController::class, 'index'])
+        ->name('notifications.index');
+
+    /*
+    | Fiókbeállítások – verified nélkül is elérhető,
+    | hogy a felhasználó el tudja küldeni az email-megerősítést.
+    */
     Route::prefix('settings')->name('settings.')->controller(SettingsController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/profile', 'editProfile')->name('profile');
@@ -34,11 +55,17 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/delete', 'deleteAccount')->name('delete.confirm');
     });
 
+    /*
+    | Menhely-kezelés – email-megerősítés kötelező.
+    | A shelter.setup a regisztrációs folyamathoz szükséges,
+    | de a tényleges létrehozás/szerkesztés verified-et igényel.
+    */
     Route::prefix('shelter')->name('shelter.')->group(function () {
+
+        Route::get('/setup', [ShelterController::class, 'setup'])->name('setup');
 
         Route::get('/create', [ShelterController::class, 'create'])->name('create');
         Route::post('/', [ShelterController::class, 'store'])->name('store');
-        Route::get('/setup', [ShelterController::class, 'setup'])->name('setup');
 
         Route::get('/{shelter:uuid}/edit', [ShelterController::class, 'edit'])
             ->whereUuid('shelter')
@@ -49,39 +76,69 @@ Route::middleware(['auth'])->group(function () {
             ->whereUuid('shelter')
             ->middleware('can:update,shelter')
             ->name('update');
+
+        Route::get('/{shelter:uuid}/staffing', [StaffingController::class, 'index'])
+            ->whereUuid('shelter')
+            ->middleware('can:manageStaff,shelter')
+            ->name('staffing.index');
+
+        Route::post('/{shelter:uuid}/staffing', [StaffingController::class, 'store'])
+            ->whereUuid('shelter')
+            ->middleware('can:manageStaff,shelter')
+            ->name('staffing.store');
+
+        Route::delete('/{shelter:uuid}/staffing/{worker:uuid}', [StaffingController::class, 'destroy'])
+            ->whereUuid('shelter')
+            ->whereUuid('worker')
+            ->middleware('can:manageStaff,shelter')
+            ->withoutScopedBindings()
+            ->name('staffing.destroy');
     });
 
-    Route::prefix('pets')->name('pets.')->middleware('role:Shelterowner,Shelterworker')->group(function () {
+    /*
+    | Kisállat-kezelés – csak menhely-tulajdonos vagy munkatárs,
+    | email-megerősítés kötelező.
+    */
+    Route::prefix('pets')->name('pets.')
+        ->middleware(['role:Shelterowner,Shelterworker'])
+        ->group(function () {
 
-        Route::get('/create', [PetController::class, 'create'])->name('create');
-        Route::post('/', [PetController::class, 'store'])->name('store');
+            Route::get('/create', [PetController::class, 'create'])->name('create');
+            Route::post('/', [PetController::class, 'store'])->name('store');
 
-        Route::get('/manage', [PetController::class, 'updateIndex'])->name('update.index');
+            Route::get('/manage', [PetController::class, 'updateIndex'])->name('update.index');
 
-        Route::get('/{pet:uuid}/edit', [PetController::class, 'edit'])
-            ->whereUuid('pet')
-            ->name('edit');
+            Route::get('/{pet:uuid}/edit', [PetController::class, 'edit'])
+                ->whereUuid('pet')
+                ->name('edit');
 
-        Route::put('/{pet:uuid}', [PetController::class, 'update'])
-            ->whereUuid('pet')
-            ->name('update');
+            Route::put('/{pet:uuid}', [PetController::class, 'update'])
+                ->whereUuid('pet')
+                ->name('update');
 
-        Route::delete('/{pet:uuid}', [PetController::class, 'destroy'])
-            ->whereUuid('pet')
-            ->name('destroy');
-    });
+            Route::delete('/{pet:uuid}', [PetController::class, 'destroy'])
+                ->whereUuid('pet')
+                ->name('destroy');
+        });
+
+    /*
+    | Munkatárs önkéntes kilépés a menhelyből.
+    */
+    Route::delete('/staffing/leave', [StaffingController::class, 'leave'])
+        ->middleware('role:Shelterworker')
+        ->name('staffing.leave');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Legacy ID-alapú redirect (régi numerikus URL-ek visszafelé-kompatibilitás)
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/shelters/{id}', function ($id) {
-
-    if (! ctype_digit((string) $id)) {
-        abort(404);
-    }
-
     $shelter = \App\Models\Shelter::findOrFail((int) $id);
 
     return redirect()->route('shelters.show', $shelter, 301);
-
 })->whereNumber('id');
 
 require __DIR__ . '/auth.php';

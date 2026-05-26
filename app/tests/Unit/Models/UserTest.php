@@ -23,3 +23,22 @@ it('has many pets as employee', function () {
     expect($user->pets)->toHaveCount(1)
         ->and($user->pets->first()->is($pet))->toBeTrue();
 });
+
+it('worksAt returns the shelter when shelter_id is set', function () {
+    $shelter = Shelter::factory()->create();
+    $worker  = User::factory()->shelterWorker()->create(['shelter_id' => $shelter->id]);
+
+    expect($worker->worksAt->is($shelter))->toBeTrue();
+});
+
+it('worksAt returns null when shelter_id is not set', function () {
+    $worker = User::factory()->shelterWorker()->create(['shelter_id' => null]);
+
+    expect($worker->worksAt)->toBeNull();
+});
+
+it('shelterworker factory state sets type to Shelterworker', function () {
+    $user = User::factory()->shelterWorker()->make();
+
+    expect($user->type)->toBe('Shelterworker');
+});

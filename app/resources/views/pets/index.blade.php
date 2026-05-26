@@ -29,7 +29,7 @@
         @forelse($pets as $pet)
           <x-pet.card
             :href="route('pets.show', $pet)"
-            :title="$pet->name"
+            :name="$pet->name"
             :description="$pet->excerpt"
             :image="$pet->first_image_path"
             :badge="$pet->status_label"

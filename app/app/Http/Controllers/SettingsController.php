@@ -60,17 +60,19 @@ class SettingsController extends Controller
 
         if ($user->type === 'Shelterowner') {
             $shelter = $user->shelter;
-            if ($shelter && $shelter->images) {
-                $images = $shelter->images;
-                foreach ($images as $imagePath) {
-                    if (Storage::disk('public')->exists($imagePath)) {
-                        Storage::disk('public')->delete($imagePath);
-                    }
+
+            if ($shelter) {
+                $shelter->workers()->update(['shelter_id' => null]);
+
+                $petShelterFolder = 'pets/' . $shelter->uuid;
+                if (Storage::disk('public')->exists($petShelterFolder)) {
+                    Storage::disk('public')->deleteDirectory($petShelterFolder);
                 }
-            }
-            $folder = 'shelters/' . $shelter->id;
-            if (Storage::disk('public')->exists($folder)) {
-                Storage::disk('public')->deleteDirectory($folder);
+
+                $shelterFolder = 'shelters/' . $shelter->uuid;
+                if (Storage::disk('public')->exists($shelterFolder)) {
+                    Storage::disk('public')->deleteDirectory($shelterFolder);
+                }
             }
         }
 

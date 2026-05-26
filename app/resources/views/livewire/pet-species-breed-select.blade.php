@@ -13,7 +13,7 @@
                 class="w-full flex items-center justify-between rounded-xl border bg-white px-4 py-3 text-sm text-neutral-900 shadow-sm transition focus:outline-none"
             >
                 <span x-text="selectedSpeciesLabel" class="truncate text-left"></span>
-                <img src="{{ asset('images/next.svg') }}" alt="" class="ml-2 h-4 w-4 shrink-0 rotate-90 transition-transform duration-200" :class="{ 'rotate-180': speciesOpen }">
+                <x-icon name="arrow-right" class="ml-2 h-4 w-4 shrink-0 rotate-90 transition-transform duration-200" x-bind:class="{ 'rotate-180': speciesOpen }" />
             </button>
 
             <input type="hidden" name="species_id" :value="speciesId">
@@ -28,7 +28,7 @@
                             class="flex w-full items-center justify-between px-4 py-2.5 text-sm transition"
                         >
                             <span x-text="item.name"></span>
-                            <img x-show="speciesId === item.id" src="{{ asset('images/check.svg') }}" alt="" class="h-4 w-4 shrink-0 brightness-0 invert">
+                            <x-icon name="check" x-show="speciesId === item.id" class="h-4 w-4 shrink-0" />
                         </button>
                     </template>
                 </div>
@@ -52,7 +52,7 @@
                 :disabled="!filteredBreeds.length"
             >
                 <span x-text="selectedBreedLabel" class="truncate text-left"></span>
-                <img src="{{ asset('images/next.svg') }}" alt="" class="ml-2 h-4 w-4 shrink-0 rotate-90 transition-transform duration-200" :class="{ 'rotate-180': breedOpen }">
+                <x-icon name="arrow-right" class="ml-2 h-4 w-4 shrink-0 rotate-90 transition-transform duration-200" x-bind:class="{ 'rotate-180': breedOpen }" />
             </button>
 
             <input type="hidden" name="breed_id" :value="breedId">
@@ -67,7 +67,7 @@
                             class="flex w-full items-center justify-between px-4 py-2.5 text-sm transition"
                         >
                             <span x-text="item.name"></span>
-                            <img x-show="breedId === item.id" src="{{ asset('images/check.svg') }}" alt="" class="h-4 w-4 shrink-0 brightness-0 invert">
+                            <x-icon name="check" x-show="breedId === item.id" class="h-4 w-4 shrink-0" />
                         </button>
                     </template>
 

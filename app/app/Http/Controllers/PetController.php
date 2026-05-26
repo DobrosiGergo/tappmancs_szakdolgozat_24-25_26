@@ -13,8 +13,14 @@ class PetController extends Controller
 {
     public function create()
     {
-        $shelter = Shelter::where('owner_id', auth()->id())->firstOrFail();
-        abort_unless(in_array(auth()->user()->type, ['Shelterowner', 'Shelterworker']), 403);
+        $user = auth()->user();
+        abort_unless(in_array($user->type, ['Shelterowner', 'Shelterworker']), 403);
+
+        $shelter = $user->type === 'Shelterowner'
+            ? Shelter::where('owner_id', $user->id)->firstOrFail()
+            : $user->worksAt;
+
+        abort_if(! $shelter, 403);
 
         return view('pets.create', compact('shelter'));
     }
@@ -90,7 +96,8 @@ class PetController extends Controller
 
     public function edit(Pet $pet)
     {
-        $userId = auth()->id();
+        $user   = auth()->user();
+        $userId = $user->id;
 
         $pet->load([
             'shelter:id,name,owner_id',
@@ -98,12 +105,14 @@ class PetController extends Controller
             'breed:id,name',
         ]);
 
-        $isOwner    = $pet->shelter && $pet->shelter->owner_id === $userId;
-        $isEmployee = $pet->employee_id                        === $userId;
+        $isOwner  = $pet->shelter && $pet->shelter->owner_id === $userId;
+        $isWorker = $user->type === 'Shelterworker'
+            && $user->shelter_id !== null
+            && $user->shelter_id === $pet->shelter_id;
 
-        abort_unless($isOwner || $isEmployee, 403);
+        abort_unless($isOwner || $isWorker, 403);
 
-        $shelter = Shelter::where('owner_id', auth()->id())->first();
+        $shelter = Shelter::where('owner_id', $userId)->first();
 
         if (! $shelter && $pet->shelter) {
             $shelter = $pet->shelter;
@@ -114,8 +123,14 @@ class PetController extends Controller
 
     public function store(PetStoreRequest $request)
     {
-        $data    = $request->validated();
-        $shelter = Shelter::where('owner_id', auth()->id())->firstOrFail();
+        $data = $request->validated();
+        $user = auth()->user();
+
+        $shelter = $user->type === 'Shelterowner'
+            ? Shelter::where('owner_id', $user->id)->firstOrFail()
+            : $user->worksAt;
+
+        abort_if(! $shelter, 403);
 
         $pet = Pet::create([
             'name'         => $data['name'],
@@ -161,16 +176,19 @@ class PetController extends Controller
 
     public function update(PetStoreRequest $request, Pet $pet)
     {
-        $userId = auth()->id();
+        $user   = auth()->user();
+        $userId = $user->id;
 
         $pet->load([
             'shelter:id,name,uuid,owner_id',
         ]);
 
-        $isOwner    = $pet->shelter && $pet->shelter->owner_id === $userId;
-        $isEmployee = $pet->employee_id                        === $userId;
+        $isOwner  = $pet->shelter && $pet->shelter->owner_id === $userId;
+        $isWorker = $user->type === 'Shelterworker'
+            && $user->shelter_id !== null
+            && $user->shelter_id === $pet->shelter_id;
 
-        abort_unless($isOwner || $isEmployee, 403);
+        abort_unless($isOwner || $isWorker, 403);
 
         $data = $request->validated();
 
@@ -214,16 +232,19 @@ class PetController extends Controller
 
     public function destroy(Pet $pet)
     {
-        $userId = auth()->id();
+        $user   = auth()->user();
+        $userId = $user->id;
 
         $pet->load([
             'shelter:id,name,uuid,owner_id',
         ]);
 
-        $isOwner    = $pet->shelter && $pet->shelter->owner_id === $userId;
-        $isEmployee = $pet->employee_id                        === $userId;
+        $isOwner  = $pet->shelter && $pet->shelter->owner_id === $userId;
+        $isWorker = $user->type === 'Shelterworker'
+            && $user->shelter_id !== null
+            && $user->shelter_id === $pet->shelter_id;
 
-        abort_unless($isOwner || $isEmployee, 403);
+        abort_unless($isOwner || $isWorker, 403);
 
         $petFolder     = 'pets/' . $pet->shelter->uuid . '/' . $pet->uuid;
         $shelterFolder = 'pets/' . $pet->shelter->uuid;

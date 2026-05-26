@@ -20,7 +20,7 @@
     </div>
     <div class="self-center">
       <span class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 group-hover:bg-neutral-900 group-hover:text-white transition">
-        <img src="{{ asset('images/next.svg') }}" alt="" class="h-4 w-4">
+        <x-icon name="arrow-right" class="h-4 w-4" />
       </span>
     </div>
   </div>

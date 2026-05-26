@@ -30,7 +30,7 @@
       class="w-full flex items-center justify-between rounded-xl border bg-white px-4 py-3 text-sm text-neutral-900 shadow-sm transition focus:outline-none"
     >
       <span x-text="lbl" class="truncate text-left"></span>
-      <img src="{{ asset('images/next.svg') }}" alt="" class="ml-2 h-4 w-4 shrink-0 rotate-90 transition-transform duration-200" :class="{ 'rotate-180': open }">
+      <x-icon name="arrow-right" class="ml-2 h-4 w-4 shrink-0 rotate-90 transition-transform duration-200" x-bind:class="{ 'rotate-180': open }" />
     </button>
 
     <input type="hidden" name="{{ $name }}" :value="val">

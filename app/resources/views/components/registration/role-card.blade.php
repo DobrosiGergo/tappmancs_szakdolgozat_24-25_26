@@ -21,11 +21,11 @@
     <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700
                 transition-colors group-hover:bg-neutral-200">
       @if($icon)
-      <x-ui.lazy-image
-        src="{{ $icon }}"
-        alt=""
-        class="h-7 w-7 opacity-90 group-hover:opacity-100"
-        />
+        @if(str_starts_with($icon, 'http') || str_starts_with($icon, '/'))
+          <x-ui.lazy-image src="{{ $icon }}" alt="" class="h-7 w-7 opacity-90 group-hover:opacity-100 pointer-events-none" />
+        @else
+          <x-icon :name="$icon" class="h-7 w-7 opacity-90 group-hover:opacity-100" />
+        @endif
       @endif
     </div>
 

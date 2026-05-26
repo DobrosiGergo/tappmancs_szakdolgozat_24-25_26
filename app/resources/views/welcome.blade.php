@@ -88,9 +88,7 @@
           Összes kisállat
           <span class="inline-flex items-center justify-center w-7 h-7 rounded-full border border-neutral-300
                        group-hover:bg-neutral-900 group-hover:border-neutral-900 transition-all duration-300">
-            <svg class="w-3 h-3 stroke-neutral-500 group-hover:stroke-white transition-all duration-300" fill="none" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-            </svg>
+            <x-icon name="chevron-right" class="w-3 h-3 text-neutral-500 group-hover:text-white transition-colors duration-300" />
           </span>
         </a>
       </div>
@@ -133,9 +131,7 @@
           Összes menhely
           <span class="inline-flex items-center justify-center w-7 h-7 rounded-full border border-white/20
                        group-hover:bg-white group-hover:border-white transition-all duration-300">
-            <svg class="w-3 h-3 stroke-white/60 group-hover:stroke-neutral-900 transition-all duration-300" fill="none" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-            </svg>
+            <x-icon name="chevron-right" class="w-3 h-3 text-white/60 group-hover:text-neutral-900 transition-colors duration-300" />
           </span>
         </a>
       </div>

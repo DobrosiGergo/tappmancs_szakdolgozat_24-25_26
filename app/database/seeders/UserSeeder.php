@@ -16,7 +16,6 @@ class UserSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // Developer
         User::create([
             'name'              => 'Developer User',
             'email'             => 'developer@exapmle.com',
@@ -26,7 +25,6 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // Shelterowner
         User::create([
             'name'              => 'Shelter Owner',
             'email'             => 'shelterowner@example.com',
@@ -36,7 +34,6 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // Shelterworker
         User::create([
             'name'              => 'Shelter Worker',
             'email'             => 'shelterworker@example.com',
@@ -46,7 +43,6 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // Regular User
         User::create([
             'name'              => 'Regular User',
             'email'             => 'user@example.com',
@@ -56,19 +52,17 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // 10 random User
         for ($i = 0; $i < 10; $i++) {
             User::create([
                 'name'              => $faker->name,
                 'email'             => $faker->unique()->safeEmail,
-                'password'          => Hash::make('RandomUserPassword123'), // ugyanaz a jelszó, hogy ha kell belépni tudd
+                'password'          => Hash::make('RandomUserPassword123'),
                 'phoneNumber'       => $faker->phoneNumber,
                 'type'              => 'User',
                 'email_verified_at' => now(),
             ]);
         }
 
-        // 3 random Shelterworker
         for ($i = 0; $i < 3; $i++) {
             User::create([
                 'name'              => $faker->name,
@@ -80,8 +74,7 @@ class UserSeeder extends Seeder
             ]);
         }
 
-        // 2 random Shelterowner (extra)
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 8; $i++) {
             User::create([
                 'name'              => $faker->name,
                 'email'             => $faker->unique()->safeEmail,

@@ -9,24 +9,18 @@ use Illuminate\Database\Seeder;
 
 class ShelterSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $faker = Faker::create();
+        $faker = Faker::create('hu_HU');
 
         $shelterOwners = User::where('type', 'Shelterowner')->get();
 
         foreach ($shelterOwners as $owner) {
-
-            $numShelters = rand(1, 3);
-
-            for ($i = 0; $i < $numShelters; $i++) {
+            for ($i = 0; $i < 3; $i++) {
                 Shelter::create([
-                    'name'        => $faker->company . ' Shelter',
+                    'name'        => $faker->company,
                     'owner_id'    => $owner->id,
-                    'description' => $faker->paragraph(3),
+                    'description' => $faker->paragraphs(3, true),
                     'images'      => [],
                 ]);
             }

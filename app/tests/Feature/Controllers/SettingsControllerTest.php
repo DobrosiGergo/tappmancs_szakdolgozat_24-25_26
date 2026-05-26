@@ -41,7 +41,7 @@ it('updates profile without changing email keeps verification date', function ()
     ]);
 
     $resp->assertRedirect(route('settings.profile'));
-    $resp->assertSessionHas('status', 'profile-updated');
+    $resp->assertSessionHas('flash', fn ($f) => $f['type'] === 'success');
 
     $user->refresh();
     expect($user->name)->toBe('New Name');
@@ -92,8 +92,8 @@ it('deletes shelterowner account, removes shelter images & folder, logs out and 
         'images'   => [],
     ]);
 
-    $finalA = "shelters/{$shelter->id}/a.jpg";
-    $finalB = "shelters/{$shelter->id}/b.jpg";
+    $finalA = "shelters/{$shelter->uuid}/a.jpg";
+    $finalB = "shelters/{$shelter->uuid}/b.jpg";
     Storage::disk('public')->put($finalA, 'x');
     Storage::disk('public')->put($finalB, 'y');
     $shelter->images = [$finalA, $finalB];
@@ -109,7 +109,7 @@ it('deletes shelterowner account, removes shelter images & folder, logs out and 
 
     Storage::disk('public')->assertMissing($finalA);
     Storage::disk('public')->assertMissing($finalB);
-    Storage::disk('public')->assertMissing("shelters/{$shelter->id}");
+    Storage::disk('public')->assertMissing("shelters/{$shelter->uuid}");
 
     get(route('settings.index'))->assertRedirect(route('login'));
 });

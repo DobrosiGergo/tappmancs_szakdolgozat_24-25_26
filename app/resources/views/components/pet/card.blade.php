@@ -1,7 +1,6 @@
 @props([
   'href' => '#',
-  'title' => null,
-  'name' => null,
+  'name' => '',
   'description' => '',
   'badge' => null,
   'image' => null,
@@ -10,9 +9,7 @@
 ])
 
 @php
-  $heading = $title ?: ($name ?: '');
-
-  $imgUrl = $image ? \Illuminate\Support\Facades\Storage::url($image) : null;
+  $imgUrl = $image ? \Illuminate\Support\Facades\Storage::url($image) : '';
 
   $metaRows = [];
   foreach ($meta as $key => $value) {
@@ -29,7 +26,7 @@
       @if($imgUrl)
         <img
           src="{{ $imgUrl }}"
-          alt="{{ $heading }}"
+          alt="{{ $name }}"
           class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
       @else
@@ -58,7 +55,7 @@
     <div class="flex flex-1 flex-col p-5">
 
       <h3 class="text-xl font-semibold leading-snug text-neutral-900 transition-colors duration-200 group-hover:text-neutral-600 line-clamp-1">
-        {{ $heading }}
+        {{ $name }}
       </h3>
 
       @if(!empty($shelterName))
@@ -88,7 +85,7 @@
 
     <div class="absolute bottom-4 right-4">
       <span class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-neutral-500 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:bg-neutral-900 group-hover:border-neutral-900" aria-hidden="true">
-        <img src="{{ asset('images/next.svg') }}" alt="" class="h-3.5 w-3.5 group-hover:brightness-0 group-hover:invert">
+        <x-icon name="arrow-right" class="h-3.5 w-3.5 transition-colors group-hover:text-white" />
       </span>
     </div>
 

@@ -15,7 +15,7 @@
     @forelse($shelters as $shelter)
       <x-shelter.card
         :href="route('shelters.show', $shelter)"
-        :title="$shelter->name"
+        :name="$shelter->name"
         :description="$shelter->excerpt"
         :badge="$shelter->pets_count . ' kisállat'"
         :image="$shelter->cover_image"

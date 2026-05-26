@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ShelterSeeder::class,
             SpecieSeeder::class,
             BreedSeeder::class,
+            PetSeeder::class,
         ]);
     }
 }

@@ -123,7 +123,7 @@
                         @foreach($relatedPets as $relatedPet)
                             <x-pet.card
                                 :href="route('pets.show', $relatedPet)"
-                                :title="$relatedPet->name"
+                                :name="$relatedPet->name"
                                 :description="$relatedPet->excerpt"
                                 :image="$relatedPet->first_image_path"
                                 :badge="$relatedPet->status_label"
