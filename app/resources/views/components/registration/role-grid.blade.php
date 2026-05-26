@@ -3,7 +3,7 @@
   'rightLabel' => 'Menhely',
   'leftRole'   => 'User',
   'rightRole'  => 'shelter',
-  'leftIcon'   => asset('images/profile.svg'),
+  'leftIcon'   => 'user',
   'rightIcon'  => asset('images/pet-shelter-svgrepo-com.svg'),
   'class'      => '',
 ])

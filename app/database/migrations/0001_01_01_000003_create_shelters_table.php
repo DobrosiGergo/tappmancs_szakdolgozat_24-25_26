@@ -20,6 +20,10 @@ return new class extends Migration
             $table->json('images')->nullable();
             $table->timestamps();
         });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('shelter_id')->references('id')->on('shelter')->onDelete('set null');
+        });
     }
 
     /**
@@ -27,6 +31,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['shelter_id']);
+        });
         Schema::dropIfExists('shelter');
     }
 };

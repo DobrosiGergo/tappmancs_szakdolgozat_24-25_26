@@ -15,7 +15,7 @@
                    class="text-neutral-500 transition-colors hover:text-neutral-300">
                     Menhelyek
                 </a>
-                <img src="{{ asset('images/next.svg') }}" alt="" class="h-3 w-3 opacity-50">
+                <x-icon name="arrow-right" class="h-3 w-3 opacity-50" />
                 <span class="text-neutral-400">{{ $shelter->name }}</span>
             </nav>
 
@@ -32,19 +32,26 @@
 
                     <div class="mt-8 flex flex-wrap gap-3">
                         <x-ui.badge>
-                            <img src="{{ asset('images/profile.svg') }}" alt="" class="h-3.5 w-3.5 opacity-70">
+                            <x-icon name="user" class="h-3.5 w-3.5 opacity-70" />
                             {{ $shelter->owner_name }}
                         </x-ui.badge>
 
                         <x-ui.badge>
-                            <img src="{{ asset('images/calendar.svg') }}" alt="" class="h-3.5 w-3.5 opacity-70">
+                            <x-icon name="calendar" class="h-3.5 w-3.5 opacity-70" />
                             {{ $shelter->created_at->format('Y') }} óta aktív
                         </x-ui.badge>
 
                         @if($petCount > 0)
                             <x-ui.badge variant="emerald">
-                                <img src="{{ asset('images/heart.svg') }}" alt="" class="h-3.5 w-3.5">
+                                <x-icon name="heart" class="h-3.5 w-3.5" />
                                 {{ $petCount }} kisállat
+                            </x-ui.badge>
+                        @endif
+
+                        @if($shelter->owner->email_verified_at)
+                            <x-ui.badge variant="emerald">
+                                <x-icon name="check" class="h-3.5 w-3.5" />
+                                Ellenőrzött
                             </x-ui.badge>
                         @endif
                     </div>
@@ -54,13 +61,13 @@
                     <a href="#contact"
                        class="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-neutral-100">
                         Kapcsolatfelvétel
-                        <img src="{{ asset('images/next.svg') }}" alt="" class="h-4 w-4">
+                        <x-icon name="arrow-right" class="h-4 w-4" />
                     </a>
 
                     @can('update', $shelter)
                         <a href="{{ route('shelter.edit', $shelter) }}"
                            class="inline-flex items-center gap-2 rounded-full bg-white/10 px-6 py-3 text-sm font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/15">
-                            <img src="{{ asset('images/pencil.svg') }}" alt="" class="h-4 w-4 brightness-0 invert">
+                            <x-icon name="pencil" class="h-4 w-4 text-white" />
                             Szerkesztés
                         </a>
                     @endcan
@@ -136,13 +143,13 @@
                                         {{ $pet->status_label }}
                                     </span>
 
-                                    <img src="{{ asset('images/next.svg') }}" alt="" class="h-4 w-4 shrink-0 opacity-60 transition group-hover:translate-x-0.5 group-hover:opacity-100">
+                                    <x-icon name="arrow-right" class="h-4 w-4 shrink-0 opacity-60 transition group-hover:translate-x-0.5 group-hover:opacity-100" />
                                 </a>
                             @endforeach
                         </div>
                     @else
                         <div class="rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-8 py-12 text-center">
-                            <img src="{{ asset('images/heart.svg') }}" alt="" class="mx-auto mb-3 h-8 w-8 opacity-30">
+                            <x-icon name="heart" class="mx-auto mb-3 h-8 w-8 opacity-30" />
                             <p class="text-sm text-neutral-400">A menhely még nem töltött fel kisállatot.</p>
                         </div>
                     @endif
@@ -160,7 +167,7 @@
                     </p>
                     <div class="flex items-center gap-3">
                         <div class="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white">
-                            <img src="{{ asset('images/profile.svg') }}" alt="" class="h-6 w-6">
+                            <x-icon name="user" class="h-6 w-6 text-neutral-700" />
                         </div>
                         <div>
                             <p class="font-semibold text-white">{{ $shelter->owner_name }}</p>
@@ -198,7 +205,7 @@
                 @unless(auth()->check() && in_array(auth()->user()->type, ['Shelterowner', 'Shelterworker']))
                     <a href="#contact"
                        class="flex items-center justify-center gap-2 rounded-2xl bg-[#333333] px-6 py-4 text-sm font-semibold text-white shadow-sm ring-1 ring-white/10 transition hover:bg-neutral-700">
-                        <img src="{{ asset('images/mail.svg') }}" alt="" class="h-4 w-4 brightness-0 invert">
+                        <x-icon name="mail" class="h-4 w-4 text-white" />
                         Kapcsolatfelvétel
                     </a>
                 @endunless

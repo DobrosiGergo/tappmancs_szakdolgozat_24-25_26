@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Specie extends Model
 {
@@ -33,8 +34,13 @@ class Specie extends Model
         return $options;
     }
 
-    public function pets()
+    public function breeds(): HasMany
     {
-        return $this->hasMany(Pet::class);
+        return $this->hasMany(Breed::class, 'species_id');
+    }
+
+    public function pets(): HasMany
+    {
+        return $this->hasMany(Pet::class, 'species_id');
     }
 }

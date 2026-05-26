@@ -20,7 +20,7 @@
       <div class="relative">
         <x-pet.card
           :href="route('pets.show', $pet)"
-          :title="$pet->name"
+          :name="$pet->name"
           :description="$pet->excerpt"
           :image="$pet->first_image_path"
           :badge="$pet->status_label"
@@ -34,11 +34,7 @@
             class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white/90 text-neutral-700 shadow-sm backdrop-blur transition hover:bg-neutral-300 hover:text-white"
             title="Módosítás"
           >
-            <img
-              src="{{ asset('images/pencil.svg') }}"
-              alt="Módosítás"
-              class="h-5 w-5"
-            >
+            <x-icon name="pencil" class="h-5 w-5" />
           </a>
 
           <button
@@ -48,11 +44,7 @@
             class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-red-200 bg-white/90 text-red-600 shadow-sm backdrop-blur transition hover:bg-red-500 hover:text-white"
             title="Törlés"
           >
-            <img
-              src="{{ asset('images/delete.svg') }}"
-              alt="Törlés"
-              class="h-5 w-5"
-            >
+            <x-icon name="delete" class="h-5 w-5" />
           </button>
         </div>
 

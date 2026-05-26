@@ -22,11 +22,11 @@
         ])
     >
         @if ($isAtMax)
-            <img src="{{ asset('images/no-entry.svg') }}" alt="" class="mb-2 h-8 w-8">
+            <x-icon name="no-entry" class="mb-2 h-8 w-8" />
             <span class="font-medium">Elérted a képfeltöltési határt</span>
             <span class="mt-1 text-xs text-neutral-400">Törölj egy képet az újabb feltöltéséhez</span>
         @else
-            <img src="{{ asset('images/upload.svg') }}" alt="" class="mb-2 h-10 w-10">
+            <x-icon name="upload" class="mb-2 h-10 w-10" />
             <span class="font-medium">Válassza ki képeit</span>
             <span class="mt-1 text-xs text-neutral-400">JPEG, JPG, PNG · max {{ $fileSizeLabel }} / kép</span>
             @if ($isNearMax)
@@ -58,7 +58,7 @@
                             wire:click="removeExistingImage({{ $index }})"
                             class="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition group-hover:opacity-100"
                         >
-                            <img src="{{ asset('images/delete.svg') }}" alt="" class="h-3.5 w-3.5">
+                            <x-icon name="delete" class="h-3.5 w-3.5" />
                         </button>
                     </div>
                 @endforeach
@@ -78,7 +78,7 @@
                             wire:click="removeImage({{ $index }})"
                             class="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition group-hover:opacity-100"
                         >
-                            <img src="{{ asset('images/delete.svg') }}" alt="" class="h-3.5 w-3.5">
+                            <x-icon name="delete" class="h-3.5 w-3.5" />
                         </button>
                     </div>
                 @endforeach

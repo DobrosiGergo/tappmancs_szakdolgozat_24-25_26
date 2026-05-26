@@ -11,4 +11,9 @@ class ShelterPolicy
     {
         return (int) $shelter->owner_id === (int) $user->id;
     }
+
+    public function manageStaff(User $user, Shelter $shelter): bool
+    {
+        return (int) $shelter->owner_id === (int) $user->id;
+    }
 }

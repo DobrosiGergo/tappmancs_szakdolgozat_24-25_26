@@ -14,7 +14,7 @@
 
         <div x-show="sent" x-cloak class="rounded-xl bg-emerald-50 px-6 py-8 text-center ring-1 ring-emerald-200">
             <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
-                <img src="{{ asset('images/check.svg') }}" alt="" class="h-5 w-5">
+                <x-icon name="check" class="h-5 w-5 text-emerald-600" />
             </div>
             <p class="text-base font-semibold text-emerald-800">Üzenet elküldve!</p>
             <p class="mt-1 text-sm text-emerald-600">
@@ -73,7 +73,7 @@
                         :disabled="loading">
                     <span x-show="!loading">Üzenet küldése</span>
                     <span x-show="loading" x-cloak>Küldés...</span>
-                    <img x-show="!loading" src="{{ asset('images/next.svg') }}" alt="" class="h-4 w-4 brightness-0 invert">
+                    <x-icon name="arrow-right" x-show="!loading" class="h-4 w-4 text-white" />
                 </button>
             </div>
         </form>

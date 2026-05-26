@@ -4,7 +4,7 @@
     <div class="bg-white shadow-sm rounded-2xl p-8 border border-neutral-200">
       <div class="flex items-center gap-4 mb-6">
         <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
-          <img src="{{ asset('images/lock.svg') }}" alt="" class="h-8 w-8">
+          <x-icon name="lock" class="h-8 w-8" />
         </div>
         <div>
           <h2 class="text-2xl font-semibold text-neutral-900">Jelszó módosítása</h2>

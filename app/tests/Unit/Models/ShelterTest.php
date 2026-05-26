@@ -24,3 +24,35 @@ it('has many pets', function () {
     expect($shelter->pets)->toHaveCount(1)
         ->and($shelter->pets->first()->is($pet))->toBeTrue();
 });
+
+it('workers returns users assigned to this shelter', function () {
+    $shelter = Shelter::factory()->create();
+    $worker  = User::factory()->shelterWorker()->create(['shelter_id' => $shelter->id]);
+
+    expect($shelter->workers)->toHaveCount(1)
+        ->and($shelter->workers->first()->is($worker))->toBeTrue();
+});
+
+it('workers does not include users from other shelters', function () {
+    $shelter      = Shelter::factory()->create();
+    $otherShelter = Shelter::factory()->create();
+    User::factory()->shelterWorker()->create(['shelter_id' => $otherShelter->id]);
+
+    expect($shelter->workers)->toBeEmpty();
+});
+
+it('workers returns empty collection when nobody is assigned', function () {
+    $shelter = Shelter::factory()->create();
+
+    expect($shelter->workers)->toBeEmpty();
+});
+
+it('workers can contain multiple users', function () {
+    $shelter  = Shelter::factory()->create();
+    $workerA  = User::factory()->shelterWorker()->create(['shelter_id' => $shelter->id]);
+    $workerB  = User::factory()->shelterWorker()->create(['shelter_id' => $shelter->id]);
+
+    expect($shelter->workers)->toHaveCount(2)
+        ->and($shelter->workers->contains($workerA))->toBeTrue()
+        ->and($shelter->workers->contains($workerB))->toBeTrue();
+});

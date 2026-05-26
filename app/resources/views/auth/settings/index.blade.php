@@ -15,7 +15,7 @@
         description="Név, e-mail, avatar frissítése."
       >
         <x-slot:icon>
-          <img src="{{ asset('images/profile.svg') }}" alt="" class="h-7 w-7">
+          <x-icon name="user" class="h-7 w-7" />
         </x-slot:icon>
       </x-ui.action-card>
 
@@ -26,7 +26,7 @@
         description="Erős, egyedi jelszót állíts be a fiókodhoz."
       >
         <x-slot:icon>
-          <img src="{{ asset('images/lock.svg') }}" alt="" class="h-7 w-7">
+          <x-icon name="lock" class="h-7 w-7" />
         </x-slot:icon>
       </x-ui.action-card>
 
@@ -37,7 +37,7 @@
         description="A fiók és az összes kapcsolódó adat végleges eltávolítása."
       >
         <x-slot:icon>
-          <img src="{{ asset('images/delete.svg') }}" alt="" class="h-7 w-7">
+          <x-icon name="delete" class="h-7 w-7" />
         </x-slot:icon>
       </x-ui.action-card>
     </div>

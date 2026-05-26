@@ -8,7 +8,7 @@
   <ol class="flex items-center gap-2 text-sm text-neutral-500">
     <li>
       <a href="{{ $homeHref }}" class="inline-flex items-center gap-2 hover:text-neutral-700">
-        <img src="{{ asset('images/home.svg') }}" alt="" class="h-4 w-4">
+        <x-icon name="home" class="h-4 w-4" />
         <span>{{ $homeLabel }}</span>
       </a>
     </li>
