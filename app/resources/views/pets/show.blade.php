@@ -113,6 +113,10 @@
                 </div>
             </div>
 
+            @if($pet->shelter)
+                <x-ui.contact-form :shelter="$pet->shelter" :pet="$pet" />
+            @endif
+
             @if($relatedPets->count())
                 <div class="mt-10">
                     <div class="mb-5">

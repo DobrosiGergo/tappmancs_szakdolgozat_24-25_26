@@ -1,9 +1,17 @@
 @props(['value' => '', 'label' => '', 'class' => '', 'target' => null, 'suffix' => '', 'href' => null])
 
-@php $displayValue = $target !== null ? number_format($target, 0, ',', ' ') . $suffix : $value; @endphp
-
 @php
-  $tag = $href ? 'a' : 'div';
+  if ($target !== null) {
+      $displayValue = number_format($target, 0, ',', ' ') . $suffix;
+  } else {
+      $displayValue = $value;
+  }
+
+  if ($href) {
+      $tag = 'a';
+  } else {
+      $tag = 'div';
+  }
 @endphp
 
 <{{ $tag }} @if($href) href="{{ $href }}" @endif

@@ -35,7 +35,6 @@
             required="true"
             value="{{ old('email') }}"
           />
-          <x-input-error :messages="$errors->get('email')" class="mt-2" />
 
           <div>
             <x-ui.input-floating
@@ -50,7 +49,6 @@
                 <a class="text-sm text-neutral-600 hover:text-neutral-900" href="{{ route('password.request') }}">Elfelejtette a jelszavát?</a>
               </div>
             @endif
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
           </div>
 
           <div class="flex items-center justify-between">

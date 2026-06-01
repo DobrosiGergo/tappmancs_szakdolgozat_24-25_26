@@ -21,7 +21,11 @@ class PetFilter extends Component
 
     public function toggle(string $filter, string $value): void
     {
-        $this->$filter = ($this->$filter === $value) ? '' : $value;
+        if ($this->$filter === $value) {
+            $this->$filter = '';
+        } else {
+            $this->$filter = $value;
+        }
 
         $this->redirect(route('pets.index', array_filter([
             'search'  => request('search'),

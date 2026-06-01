@@ -9,7 +9,7 @@
             <button
                 type="button"
                 @click="speciesOpen = !speciesOpen"
-                :class="speciesOpen ? 'border-neutral-900 ring-2 ring-neutral-900/10' : 'border-neutral-300 hover:border-neutral-500'"
+                :class="{ 'border-neutral-900 ring-2 ring-neutral-900/10': speciesOpen, 'border-neutral-300 hover:border-neutral-500': !speciesOpen }"
                 class="w-full flex items-center justify-between rounded-xl border bg-white px-4 py-3 text-sm text-neutral-900 shadow-sm transition focus:outline-none"
             >
                 <span x-text="selectedSpeciesLabel" class="truncate text-left"></span>
@@ -24,7 +24,7 @@
                         <button
                             type="button"
                             @click="selectSpecies(item.id)"
-                            :class="speciesId === item.id ? 'bg-neutral-900 text-white' : 'text-neutral-700 hover:bg-neutral-200 hover:text-neutral-950'"
+                            :class="{ 'bg-neutral-900 text-white': speciesId === item.id, 'text-neutral-700 hover:bg-neutral-200 hover:text-neutral-950': speciesId !== item.id }"
                             class="flex w-full items-center justify-between px-4 py-2.5 text-sm transition"
                         >
                             <span x-text="item.name"></span>
@@ -47,7 +47,7 @@
             <button
                 type="button"
                 @click="if (filteredBreeds.length) breedOpen = !breedOpen"
-                :class="breedOpen ? 'border-neutral-900 ring-2 ring-neutral-900/10' : 'border-neutral-300 hover:border-neutral-500'"
+                :class="{ 'border-neutral-900 ring-2 ring-neutral-900/10': breedOpen, 'border-neutral-300 hover:border-neutral-500': !breedOpen }"
                 class="w-full flex items-center justify-between rounded-xl border bg-white px-4 py-3 text-sm text-neutral-900 shadow-sm transition focus:outline-none"
                 :disabled="!filteredBreeds.length"
             >
@@ -63,7 +63,7 @@
                         <button
                             type="button"
                             @click="selectBreed(item.id)"
-                            :class="breedId === item.id ? 'bg-neutral-900 text-white' : 'text-neutral-700 hover:bg-neutral-200 hover:text-neutral-950'"
+                            :class="{ 'bg-neutral-900 text-white': breedId === item.id, 'text-neutral-700 hover:bg-neutral-200 hover:text-neutral-950': breedId !== item.id }"
                             class="flex w-full items-center justify-between px-4 py-2.5 text-sm transition"
                         >
                             <span x-text="item.name"></span>

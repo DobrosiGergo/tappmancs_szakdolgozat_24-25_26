@@ -33,7 +33,7 @@
             open(i) { this.current = i; this.lightbox = true; },
             close() { this.lightbox = false; }
         }"
-        x-effect="document.body.style.overflow = lightbox ? 'hidden' : ''"
+        x-effect="if (lightbox) { document.body.style.overflow = 'hidden' } else { document.body.style.overflow = '' }"
         @keydown.escape.window="close()"
         @keydown.arrow-left.window="lightbox && (prev(), $event.preventDefault())"
         @keydown.arrow-right.window="lightbox && (next(), $event.preventDefault())"
@@ -114,9 +114,7 @@
                     :aria-label="`${i + 1}. kép`"
                     :aria-current="i === current ? 'true' : 'false'"
                     class="relative h-20 w-24 flex-none overflow-hidden rounded-xl border bg-white shadow-sm transition sm:h-24 sm:w-32"
-                    :class="i === current
-                        ? 'border-neutral-900 ring-1 ring-neutral-900'
-                        : 'border-neutral-200 opacity-75 hover:border-neutral-300 hover:opacity-100'"
+                    :class="{ 'border-neutral-900 ring-1 ring-neutral-900': i === current, 'border-neutral-200 opacity-75 hover:border-neutral-300 hover:opacity-100': i !== current }"
                 >
                     <img
                         :src="thumbUrl"
@@ -196,9 +194,7 @@
                                 @click="select(i)"
                                 :aria-label="`${i + 1}. kép`"
                                 class="h-16 w-20 flex-none overflow-hidden rounded-lg border transition sm:h-20 sm:w-28"
-                                :class="i === current
-                                    ? 'border-white ring-1 ring-white'
-                                    : 'border-white/20 opacity-60 hover:opacity-100'"
+                                :class="{ 'border-white ring-1 ring-white': i === current, 'border-white/20 opacity-60 hover:opacity-100': i !== current }"
                             >
                                 <img
                                     :src="thumbUrl"

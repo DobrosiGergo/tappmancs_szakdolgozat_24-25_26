@@ -58,9 +58,16 @@
             </x-ui.action-card>
           @endif
 
+          @php
+            if (auth()->user()->shelter) {
+                $staffingHref = route('shelter.staffing.index', auth()->user()->shelter);
+            } else {
+                $staffingHref = '#';
+            }
+          @endphp
           <x-ui.action-card
             class="w-full p-8 md:p-10"
-            :href="auth()->user()->shelter ? route('shelter.staffing.index', auth()->user()->shelter) : '#'"
+            :href="$staffingHref"
             title="Munkatárs felvétele"
             description="Hívj meg önkénteseket vagy adj hozzá kezelői jogosultságot."
           >

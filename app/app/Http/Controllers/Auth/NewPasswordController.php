@@ -26,6 +26,11 @@ class NewPasswordController extends Controller
             'token'    => ['required'],
             'email'    => ['required', 'email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'email.required'     => 'Az e-mail cím megadása kötelező.',
+            'email.email'        => 'Érvénytelen e-mail cím.',
+            'password.required'  => 'Az új jelszó megadása kötelező.',
+            'password.confirmed' => 'A két jelszó nem egyezik.',
         ]);
 
         $status = Password::reset(
@@ -40,9 +45,11 @@ class NewPasswordController extends Controller
             }
         );
 
-        return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                        ->withErrors(['email' => __($status)]);
+        if ($status == Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('status', __($status));
+        }
+
+        return back()->withInput($request->only('email'))
+            ->withErrors(['email' => __($status)]);
     }
 }

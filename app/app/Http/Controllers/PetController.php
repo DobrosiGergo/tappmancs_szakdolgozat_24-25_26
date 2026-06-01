@@ -16,9 +16,11 @@ class PetController extends Controller
         $user = auth()->user();
         abort_unless(in_array($user->type, ['Shelterowner', 'Shelterworker']), 403);
 
-        $shelter = $user->type === 'Shelterowner'
-            ? Shelter::where('owner_id', $user->id)->firstOrFail()
-            : $user->worksAt;
+        if ($user->type === 'Shelterowner') {
+            $shelter = Shelter::where('owner_id', $user->id)->firstOrFail();
+        } else {
+            $shelter = $user->worksAt;
+        }
 
         abort_if(! $shelter, 403);
 
@@ -126,9 +128,11 @@ class PetController extends Controller
         $data = $request->validated();
         $user = auth()->user();
 
-        $shelter = $user->type === 'Shelterowner'
-            ? Shelter::where('owner_id', $user->id)->firstOrFail()
-            : $user->worksAt;
+        if ($user->type === 'Shelterowner') {
+            $shelter = Shelter::where('owner_id', $user->id)->firstOrFail();
+        } else {
+            $shelter = $user->worksAt;
+        }
 
         abort_if(! $shelter, 403);
 

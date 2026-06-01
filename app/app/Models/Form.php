@@ -13,9 +13,12 @@ class Form extends Model
     protected $table = 'form_messages';
 
     protected $fillable = [
+        'uuid',
         'subject',
         'message',
-        'uuid',
+        'user_id',
+        'shelter_id',
+        'pet_id',
     ];
 
     protected $hidden = ['user_id'];
