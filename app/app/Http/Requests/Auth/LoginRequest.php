@@ -24,6 +24,15 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'email.required'    => 'Az e-mail cím megadása kötelező.',
+            'email.email'       => 'Érvénytelen e-mail cím.',
+            'password.required' => 'A jelszó megadása kötelező.',
+        ];
+    }
+
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();

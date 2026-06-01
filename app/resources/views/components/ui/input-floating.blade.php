@@ -15,7 +15,7 @@
       id="{{ $id }}"
       name="{{ $name }}"
       rows="{{ $rows }}"
-      {{ $required ? 'required' : '' }}
+      @required($required)
       autocomplete="{{ $autocomplete }}"
       placeholder="{{ $label }}"
       class="peer block w-full border-0 border-b border-neutral-400 bg-transparent
@@ -27,7 +27,7 @@
       id="{{ $id }}"
       name="{{ $name }}"
       value="{{ old($name, $value) }}"
-      {{ $required ? 'required' : '' }}
+      @required($required)
       autocomplete="{{ $autocomplete }}"
       placeholder="{{ $label }}"
       class="peer block w-full border-0 border-b border-neutral-400 bg-transparent

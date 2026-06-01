@@ -25,6 +25,9 @@ class StaffingController extends Controller
 
         $request->validate([
             'email' => ['required', 'email'],
+        ], [
+            'email.required' => 'Az e-mail cím megadása kötelező.',
+            'email.email'    => 'Érvénytelen e-mail cím.',
         ]);
 
         $user = User::where('email', $request->email)->first();

@@ -171,13 +171,17 @@ class ImageUploader extends Component
         $isAtMax   = $used               >= $this->max;
         $isNearMax = ! $isAtMax && $used >= (int) ceil($this->max * 0.8);
 
+        if ($this->maxSize >= 1024) {
+            $fileSizeLabel = round($this->maxSize / 1024) . ' MB';
+        } else {
+            $fileSizeLabel = $this->maxSize . ' KB';
+        }
+
         return view('livewire.image-uploader', [
             'used'          => $used,
             'isAtMax'       => $isAtMax,
             'isNearMax'     => $isNearMax,
-            'fileSizeLabel' => $this->maxSize >= 1024
-                ? round($this->maxSize / 1024) . ' MB'
-                : $this->maxSize . ' KB',
+            'fileSizeLabel' => $fileSizeLabel,
             'badgeClass' => match (true) {
                 $isAtMax   => 'bg-red-50 text-red-600 ring-red-200',
                 $isNearMax => 'bg-amber-50 text-amber-600 ring-amber-200',

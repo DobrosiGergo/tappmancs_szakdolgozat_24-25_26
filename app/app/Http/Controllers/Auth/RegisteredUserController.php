@@ -78,6 +78,15 @@ class RegisteredUserController extends Controller
             'phoneNumber'  => ['nullable', 'string', 'max:15'],
             'role'         => ['required', 'in:shelter,User'],
             'role_shelter' => ['nullable', 'in:shelterOwner,shelterWorker', 'required_if:role,shelter'],
+        ], [
+            'name.required'      => 'A név megadása kötelező.',
+            'name.max'           => 'A név legfeljebb 255 karakter lehet.',
+            'email.required'     => 'Az e-mail cím megadása kötelező.',
+            'email.email'        => 'Érvénytelen e-mail cím.',
+            'email.unique'       => 'Ez az e-mail cím már foglalt.',
+            'password.required'  => 'A jelszó megadása kötelező.',
+            'password.confirmed' => 'A két jelszó nem egyezik.',
+            'phoneNumber.max'    => 'A telefonszám legfeljebb 15 karakter lehet.',
         ]);
 
         $role        = $validated['role'];

@@ -7,8 +7,17 @@
 ])
 
 @php
-  $qRole = $role ?: request()->query('role');
-  $qShelterRole = $roleShelter ?: request()->query('role_shelter');
+  if ($role) {
+      $qRole = $role;
+  } else {
+      $qRole = request()->query('role');
+  }
+
+  if ($roleShelter) {
+      $qShelterRole = $roleShelter;
+  } else {
+      $qShelterRole = request()->query('role_shelter');
+  }
 
   if (!$qRole && auth()->check()) {
       $t = auth()->user()->type;
@@ -61,14 +70,16 @@
 
         <li class="flex items-center">
           <div class="flex items-center gap-3">
-            <span class="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full border text-[13px] md:text-[14px]
-              {{ $isActive ? 'bg-neutral-900 text-white border-neutral-900' : '' }}
-              {{ $isDone ? 'bg-neutral-200 text-neutral-700 border-neutral-200' : '' }}
-              {{ (!$isActive && !$isDone) ? 'border-neutral-300 text-neutral-400' : '' }}">
+            <span @class([
+                'flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full border text-[13px] md:text-[14px]',
+                'bg-neutral-900 text-white border-neutral-900' => $isActive,
+                'bg-neutral-200 text-neutral-700 border-neutral-200' => $isDone,
+                'border-neutral-300 text-neutral-400' => !$isActive && !$isDone,
+              ])>
               {{ $idx + 1 }}
             </span>
 
-            <span class="{{ $isActive ? 'font-semibold text-neutral-900' : 'text-neutral-600' }}">
+            <span @class(['font-semibold text-neutral-900' => $isActive, 'text-neutral-600' => !$isActive])>
               {{ $step['label'] }}
             </span>
           </div>

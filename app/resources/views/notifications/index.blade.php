@@ -35,7 +35,7 @@
                             'bg-neutral-100' => ! $wasUnread,
                             'bg-emerald-100' => $wasUnread,
                         ])>
-                            <x-icon name="user" class="h-4 w-4 {{ $wasUnread ? 'text-emerald-600' : 'text-neutral-400' }}" />
+                            <x-icon name="user" @class(['h-4 w-4', 'text-emerald-600' => $wasUnread, 'text-neutral-400' => !$wasUnread]) />
                         </div>
 
                         <div class="flex-1 min-w-0">

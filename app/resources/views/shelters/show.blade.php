@@ -58,12 +58,6 @@
                 </div>
 
                 <div class="flex shrink-0 flex-wrap gap-3">
-                    <a href="#contact"
-                       class="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-neutral-100">
-                        Kapcsolatfelvétel
-                        <x-icon name="arrow-right" class="h-4 w-4" />
-                    </a>
-
                     @can('update', $shelter)
                         <a href="{{ route('shelter.edit', $shelter) }}"
                            class="inline-flex items-center gap-2 rounded-full bg-white/10 px-6 py-3 text-sm font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/15">
@@ -147,6 +141,12 @@
                                 </a>
                             @endforeach
                         </div>
+
+                        @if($pets->hasPages())
+                            <div class="mt-4">
+                                {{ $pets->withQueryString()->onEachSide(1)->links() }}
+                            </div>
+                        @endif
                     @else
                         <div class="rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-8 py-12 text-center">
                             <x-icon name="heart" class="mx-auto mb-3 h-8 w-8 opacity-30" />
@@ -155,7 +155,6 @@
                     @endif
                 </x-ui.card>
 
-                <x-ui.contact-form />
 
             </div>
 
@@ -202,13 +201,6 @@
                     </dl>
                 </x-ui.card>
 
-                @unless(auth()->check() && in_array(auth()->user()->type, ['Shelterowner', 'Shelterworker']))
-                    <a href="#contact"
-                       class="flex items-center justify-center gap-2 rounded-2xl bg-[#333333] px-6 py-4 text-sm font-semibold text-white shadow-sm ring-1 ring-white/10 transition hover:bg-neutral-700">
-                        <x-icon name="mail" class="h-4 w-4 text-white" />
-                        Kapcsolatfelvétel
-                    </a>
-                @endunless
 
             </div>
 

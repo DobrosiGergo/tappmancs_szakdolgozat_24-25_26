@@ -37,10 +37,13 @@ class PetSpeciesBreedSelect extends Component
             ])
             ->toArray();
 
-        $this->species_id = (string) old(
-            'species_id',
-            $speciesId ?: ($this->species[0]['id'] ?? '')
-        );
+        if ($speciesId) {
+            $defaultSpeciesId = $speciesId;
+        } else {
+            $defaultSpeciesId = $this->species[0]['id'] ?? '';
+        }
+
+        $this->species_id = (string) old('species_id', $defaultSpeciesId);
 
         $availableBreeds = collect($this->breeds)
             ->where('species_id', $this->species_id)
@@ -48,9 +51,11 @@ class PetSpeciesBreedSelect extends Component
 
         $incomingBreedId = (string) old('breed_id', $breedId);
 
-        $this->breed_id = $availableBreeds->contains('id', $incomingBreedId)
-            ? $incomingBreedId
-            : (string) ($availableBreeds->first()['id'] ?? '');
+        if ($availableBreeds->contains('id', $incomingBreedId)) {
+            $this->breed_id = $incomingBreedId;
+        } else {
+            $this->breed_id = (string) ($availableBreeds->first()['id'] ?? '');
+        }
     }
 
     public function render()

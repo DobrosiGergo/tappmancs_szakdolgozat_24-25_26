@@ -15,18 +15,6 @@
 
       <div class="bg-white rounded-3xl shadow-sm border border-neutral-200 overflow-hidden">
 
-        @if ($errors->any())
-          <div class="p-6 border-b border-neutral-100">
-            <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-              <ul class="list-disc list-inside space-y-1">
-                @foreach ($errors->all() as $error)
-                  <li>{{ $error }}</li>
-                @endforeach
-              </ul>
-            </div>
-          </div>
-        @endif
-
         <form method="POST" action="{{ route('pets.update', $pet) }}" enctype="multipart/form-data">
           @csrf
           @method('PUT')

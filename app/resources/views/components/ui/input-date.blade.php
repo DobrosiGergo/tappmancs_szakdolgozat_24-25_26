@@ -19,7 +19,7 @@
       id="{{ $id }}"
       name="{{ $name }}"
       value="{{ old($name, $value) }}"
-      {{ $required ? 'required' : '' }}
+      @required($required)
       @if($min) min="{{ $min }}" @endif
       @if($max) max="{{ $max }}" @endif
       class="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm text-neutral-900

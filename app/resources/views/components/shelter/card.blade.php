@@ -7,7 +7,11 @@
 ])
 
 @php
-  $imgUrl = $image ? \Illuminate\Support\Facades\Storage::url($image) : '';
+  if ($image) {
+      $imgUrl = \Illuminate\Support\Facades\Storage::url($image);
+  } else {
+      $imgUrl = '';
+  }
 @endphp
 
 <a href="{{ $href }}" class="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 rounded-2xl">

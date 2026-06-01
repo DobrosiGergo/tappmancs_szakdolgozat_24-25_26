@@ -7,7 +7,7 @@
     <x-navbar.link :href="route('settings.index')">Beállítások</x-navbar.link>
     <form method="POST" action="{{ route('logout') }}">
       @csrf
-      <button type="submit" class="text-sm text-white/80 hover:text-white hover:font-semibold transition-colors duration-150 text-left w-full">
+      <button type="submit" class="text-sm text-white/80 hover:text-white transition-colors duration-150 text-left w-full">
         Kijelentkezés
       </button>
     </form>

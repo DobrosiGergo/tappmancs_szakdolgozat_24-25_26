@@ -1,35 +1,46 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+    <div class="flex min-h-screen items-center justify-center p-6">
+        <div class="w-full max-w-[440px]">
 
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-neutral-900">Jelszó visszaállítása</h2>
+                <p class="mt-1 text-sm text-neutral-500">Add meg az új jelszavadat az alábbi mezőkben.</p>
+            </div>
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <form method="POST" action="{{ route('password.store') }}" class="space-y-7">
+                @csrf
+                <input type="hidden" name="token" value="{{ $request->route('token') }}">
+
+                <x-ui.input-floating
+                    id="email"
+                    name="email"
+                    type="email"
+                    label="E-mail"
+                    required="true"
+                    value="{{ old('email', $request->email) }}"
+                />
+
+                <x-ui.input-floating
+                    id="password"
+                    name="password"
+                    type="password"
+                    label="Új jelszó"
+                    required="true"
+                />
+
+                <x-ui.input-floating
+                    id="password_confirmation"
+                    name="password_confirmation"
+                    type="password"
+                    label="Jelszó megerősítése"
+                    required="true"
+                />
+
+                <x-primary-button class="w-full py-3 text-base rounded-xl !bg-[#333333]">
+                    Jelszó visszaállítása
+                </x-primary-button>
+            </form>
+
         </div>
-
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
+    </div>
 </x-guest-layout>

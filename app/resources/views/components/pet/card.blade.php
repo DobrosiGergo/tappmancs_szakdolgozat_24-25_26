@@ -9,7 +9,11 @@
 ])
 
 @php
-  $imgUrl = $image ? \Illuminate\Support\Facades\Storage::url($image) : '';
+  if ($image) {
+      $imgUrl = \Illuminate\Support\Facades\Storage::url($image);
+  } else {
+      $imgUrl = '';
+  }
 
   $metaRows = [];
   foreach ($meta as $key => $value) {
