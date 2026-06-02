@@ -20,7 +20,7 @@
 
         @if(!empty($item['href']))
           <a href="{{ $item['href'] }}" 
-             class="hover:text-neutral-700 {{ $isLast ? 'text-neutral-700 font-medium' : '' }}">
+             @class(['hover:text-neutral-700', 'text-neutral-700 font-medium' => $isLast])>
             {{ $item['label'] }}
           </a>
         @else

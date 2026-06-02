@@ -22,4 +22,16 @@ class ProfileUpdateRequest extends FormRequest
             ],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required'  => 'A név megadása kötelező.',
+            'name.max'       => 'A név legfeljebb 255 karakter lehet.',
+            'email.required' => 'Az e-mail cím megadása kötelező.',
+            'email.email'    => 'Érvénytelen e-mail cím.',
+            'email.max'      => 'Az e-mail cím legfeljebb 255 karakter lehet.',
+            'email.unique'   => 'Ez az e-mail cím már foglalt.',
+        ];
+    }
 }

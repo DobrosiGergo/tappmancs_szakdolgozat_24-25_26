@@ -1,26 +1,28 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+    <div class="flex min-h-screen items-center justify-center p-6">
+        <div class="w-full max-w-[440px]">
+
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-neutral-900">Jelszó megerősítése</h2>
+                <p class="mt-1 text-sm text-neutral-500">Ez egy biztonságos terület. A folytatáshoz erősítsd meg a jelszavadat.</p>
+            </div>
+
+            <form method="POST" action="{{ route('password.confirm') }}" class="space-y-7">
+                @csrf
+
+                <x-ui.input-floating
+                    id="password"
+                    name="password"
+                    type="password"
+                    label="Jelszó"
+                    required="true"
+                />
+
+                <x-primary-button class="w-full py-3 text-base rounded-xl !bg-[#333333]">
+                    Megerősítés
+                </x-primary-button>
+            </form>
+
+        </div>
     </div>
-
-    <form method="POST" action="{{ route('password.confirm') }}">
-        @csrf
-
-        <div>
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <div class="flex justify-end mt-4">
-            <x-primary-button>
-                {{ __('Confirm') }}
-            </x-primary-button>
-        </div>
-    </form>
 </x-guest-layout>

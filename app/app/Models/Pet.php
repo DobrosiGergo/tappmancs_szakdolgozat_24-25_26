@@ -121,7 +121,11 @@ protected function casts()
     {
         $arr = $this->images_safe;
 
-        return count($arr) ? asset('storage/' . $arr[0]) : null;
+        if (count($arr)) {
+            return asset('storage/' . $arr[0]);
+        }
+
+        return null;
     }
 
     public function getFirstImagePathAttribute(): ?string
@@ -197,7 +201,11 @@ protected function casts()
 
     public function getAgeLabelAttribute(): ?string
     {
-        return $this->age ? $this->age . ' év' : null;
+        if ($this->age) {
+            return $this->age . ' év';
+        }
+
+        return null;
     }
 
     public function getExcerptAttribute(): string

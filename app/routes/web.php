@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FormController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\SettingsController;
@@ -127,6 +128,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/staffing/leave', [StaffingController::class, 'leave'])
         ->middleware('role:Shelterworker')
         ->name('staffing.leave');
+
+    Route::post('/messages', [FormController::class, 'store'])
+        ->middleware('role:User')
+        ->name('messages.store');
+
+    Route::prefix('messages')->name('messages.')->middleware('role:Shelterowner')->group(function () {
+        Route::get('/', [FormController::class, 'index'])->name('index');
+        Route::get('/{form:uuid}', [FormController::class, 'show'])->whereUuid('form')->name('show');
+        Route::delete('/{form:uuid}', [FormController::class, 'destroy'])->whereUuid('form')->name('destroy');
+    });
 });
 
 /*

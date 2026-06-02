@@ -26,7 +26,7 @@
       type="button"
       id="{{ $id }}"
       @click="open = !open"
-      :class="open ? 'border-neutral-900 ring-2 ring-neutral-900/10' : 'border-neutral-300 hover:border-neutral-400'"
+      :class="{ 'border-neutral-900 ring-2 ring-neutral-900/10': open, 'border-neutral-300 hover:border-neutral-400': !open }"
       class="w-full flex items-center justify-between rounded-xl border bg-white px-4 py-3 text-sm text-neutral-900 shadow-sm transition focus:outline-none"
     >
       <span x-text="lbl" class="truncate text-left"></span>
@@ -50,7 +50,7 @@
           <button
             type="button"
             @click="val = '{{ $opt['value'] }}'; lbl = '{{ $opt['label'] }}'; open = false"
-            :class="val === '{{ $opt['value'] }}' ? 'bg-neutral-900 text-white' : 'text-neutral-700 hover:bg-neutral-30'"
+            :class="{ 'bg-neutral-900 text-white': val === '{{ $opt['value'] }}', 'text-neutral-700 hover:bg-neutral-30': val !== '{{ $opt['value'] }}' }"
             class="flex w-full items-center justify-between px-4 py-2.5 text-sm transition"
           >
             <span>{{ $opt['label'] }}</span>

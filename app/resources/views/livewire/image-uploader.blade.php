@@ -1,4 +1,11 @@
 <div>
+    @php
+        if ($max > 0) {
+            $barWidth = min(100, (int) round($used / $max * 100));
+        } else {
+            $barWidth = 0;
+        }
+    @endphp
     <div class="flex items-center justify-between mb-3">
         <span class="text-xs font-semibold uppercase tracking-wider text-neutral-400">Feltöltött képek</span>
         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset {{ $badgeClass }}">
@@ -9,7 +16,7 @@
     <div class="h-1 w-full rounded-full bg-neutral-100 mb-4 overflow-hidden">
         <div
             class="h-full rounded-full transition-all duration-300 {{ $barClass }}"
-            style="width: {{ $max > 0 ? min(100, (int) round($used / $max * 100)) : 0 }}%"
+            style="width: {{ $barWidth }}%"
         ></div>
     </div>
 

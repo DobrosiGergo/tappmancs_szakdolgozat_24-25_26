@@ -1,11 +1,16 @@
 @php
   $isEdit = isset($mode) && $mode === 'edit' && isset($shelter);
-  $action = $isEdit ? route('shelter.update', $shelter) : route('shelter.store');
-  $btn    = $isEdit ? 'Változások mentése' : 'Menhely létrehozása';
-  $title  = $isEdit ? 'Menhely szerkesztése' : 'Hozza létre menhelyét';
-  $subtitle = $isEdit
-      ? 'Módosítsa az adatokat. Új képeket a jobb oldalon adhat hozzá, a régieket alább tudja törölni.'
-      : 'Adj meg egy nevet és rövid leírást. A képeket a jobb oldalon tudod feltölteni.';
+  if ($isEdit) {
+      $action   = route('shelter.update', $shelter);
+      $btn      = 'Változások mentése';
+      $title    = 'Menhely szerkesztése';
+      $subtitle = 'Módosítsa az adatokat. Új képeket a jobb oldalon adhat hozzá, a régieket alább tudja törölni.';
+  } else {
+      $action   = route('shelter.store');
+      $btn      = 'Menhely létrehozása';
+      $title    = 'Hozza létre menhelyét';
+      $subtitle = 'Adj meg egy nevet és rövid leírást. A képeket a jobb oldalon tudod feltölteni.';
+  }
 @endphp
 
 <x-guest-layout>

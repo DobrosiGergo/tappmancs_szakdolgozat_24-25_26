@@ -29,8 +29,8 @@ class ShelterController extends Controller
     public function show(Shelter $shelter)
     {
         $shelter->load('owner');
-        $pets     = $shelter->pets()->latest()->get();
-        $petCount = $pets->count();
+        $pets     = $shelter->pets()->latest()->paginate(4);
+        $petCount = $pets->total();
 
         return view('shelters.show', compact('shelter', 'pets', 'petCount'));
     }
@@ -45,6 +45,10 @@ class ShelterController extends Controller
         $validated = $request->validate([
             'name'        => 'required|string|max:255',
             'description' => 'required|string',
+        ], [
+            'name.required'        => 'A menhely neve kötelező.',
+            'name.max'             => 'A menhely neve legfeljebb 255 karakter lehet.',
+            'description.required' => 'A leírás megadása kötelező.',
         ]);
 
         $shelter = Shelter::create([
@@ -99,6 +103,10 @@ class ShelterController extends Controller
             'description'     => 'required|string',
             'remove_images'   => ['array'],
             'remove_images.*' => ['string'],
+        ], [
+            'name.required'        => 'A menhely neve kötelező.',
+            'name.max'             => 'A menhely neve legfeljebb 255 karakter lehet.',
+            'description.required' => 'A leírás megadása kötelező.',
         ]);
 
         $existing = $shelter->images_safe;

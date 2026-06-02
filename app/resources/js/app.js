@@ -1,42 +1,38 @@
 import './bootstrap';
 
-import Alpine from 'alpinejs';
+document.addEventListener('alpine:init', () => {
+    window.Alpine.data('speciesBreedSelect', (species, breeds, speciesId, breedId) => ({
+        speciesOpen: false,
+        breedOpen: false,
+        species,
+        breeds,
+        speciesId,
+        breedId,
 
-window.Alpine = Alpine;
+        get selectedSpeciesLabel() {
+            const match = this.species.find(s => s.id === this.speciesId);
+            return match?.name ?? 'Válassz fajt';
+        },
 
-Alpine.data('speciesBreedSelect', (species, breeds, speciesId, breedId) => ({
-    speciesOpen: false,
-    breedOpen: false,
-    species,
-    breeds,
-    speciesId,
-    breedId,
+        get filteredBreeds() {
+            return this.breeds.filter(b => b.species_id === this.speciesId);
+        },
 
-    get selectedSpeciesLabel() {
-        const match = this.species.find(s => s.id === this.speciesId);
-        return match?.name ?? 'Válassz fajt';
-    },
+        get selectedBreedLabel() {
+            const match = this.filteredBreeds.find(b => b.id === this.breedId);
+            return match?.name ?? 'Válassz fajtát';
+        },
 
-    get filteredBreeds() {
-        return this.breeds.filter(b => b.species_id === this.speciesId);
-    },
+        selectSpecies(id) {
+            this.speciesId = id;
+            this.breedId = this.filteredBreeds[0]?.id ?? '';
+            this.speciesOpen = false;
+            this.breedOpen = false;
+        },
 
-    get selectedBreedLabel() {
-        const match = this.filteredBreeds.find(b => b.id === this.breedId);
-        return match?.name ?? 'Válassz fajtát';
-    },
-
-    selectSpecies(id) {
-        this.speciesId = id;
-        this.breedId = this.filteredBreeds[0]?.id ?? '';
-        this.speciesOpen = false;
-        this.breedOpen = false;
-    },
-
-    selectBreed(id) {
-        this.breedId = id;
-        this.breedOpen = false;
-    },
-}));
-
-Alpine.start();
+        selectBreed(id) {
+            this.breedId = id;
+            this.breedOpen = false;
+        },
+    }));
+});
