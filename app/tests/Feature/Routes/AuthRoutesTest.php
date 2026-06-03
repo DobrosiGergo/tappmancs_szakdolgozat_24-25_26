@@ -1,10 +1,12 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
+use function Pest\Laravel\put;
 
 it('guest can view auth pages (login/register/role/forgot/reset)', function () {
 get(route('login'))->assertOk();
@@ -48,4 +50,27 @@ it('authenticated can open confirm-password and update password endpoints (smoke
         'password_confirmation' => 'new-password',
     ]);
     $response->assertStatus(302);
+});
+
+it('authenticates with valid credentials and redirects to dashboard', function () {
+    $user = User::factory()->create(['password' => Hash::make('ValidPass1!')]);
+
+    post(route('login'), [
+        'email'    => $user->email,
+        'password' => 'ValidPass1!',
+    ])->assertRedirect(route('dashboard'));
+});
+
+it('password.update succeeds with correct current password and updates the hash', function () {
+    $user = User::factory()->create(['password' => Hash::make('OldPass1!')]);
+    actingAs($user);
+
+    put(route('password.update'), [
+        'current_password'      => 'OldPass1!',
+        'password'              => 'NewPass1!',
+        'password_confirmation' => 'NewPass1!',
+    ])->assertRedirect()
+        ->assertSessionHas('flash', fn ($f) => $f['type'] === 'success');
+
+    expect(Hash::check('NewPass1!', $user->fresh()->password))->toBeTrue();
 });

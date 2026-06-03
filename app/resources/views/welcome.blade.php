@@ -14,12 +14,12 @@
             Ismerd meg, hogyan segíthetsz, és kezdj hozzá most!
           </x-ui.home.lead>
 
-          <div class="flex flex-col items-start md:items-center">
-            <div class="transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2">
+          <div class="flex flex-col items-start">
+            <div class="w-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2">
               <x-ui.home.cta-button :href="route('shelters.index')" label="Tudj meg többet!" />
             </div>
 
-            <div class="flex gap-6 mt-12">
+            <div class="flex gap-4 md:gap-6 mt-8 md:mt-12">
               <div class="transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2">
                 <x-ui.home.stat :target="$petCount" label="Kisállatok" :href="route('pets.index')" />
               </div>
@@ -30,10 +30,12 @@
           </div>
         </div>
 
-          <x-ui.home.image-frame
-            :src="asset('images/collar-dog.svg')"
-            alt="Örökbefogadás"
-          />
+          <div class="hidden md:block">
+            <x-ui.home.image-frame
+              :src="asset('images/collar-dog.svg')"
+              alt="Örökbefogadás"
+            />
+          </div>
       </div>
     </x-ui.home.container>
   </section>
@@ -55,7 +57,7 @@
         <div
           class="group relative py-10 md:py-0 md:px-10 first:md:pl-0 last:md:pr-0
                  border-t border-white/10 md:border-t-0 first:border-t-0
-                 md:border-l first:md:border-l-0 border-white/10"
+                 md:border-l first:md:border-l-0"
         >
           <span class="block font-light text-[80px] leading-none text-white/[0.07] select-none mb-5
                        group-hover:text-white/[0.13] transition-colors duration-700">

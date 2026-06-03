@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Adoption;
+use App\Models\Comment;
+use App\Models\Form;
+use App\Models\Like;
 use App\Models\Pet;
 use App\Models\Shelter;
 use App\Models\User;
@@ -41,4 +45,41 @@ it('shelterworker factory state sets type to Shelterworker', function () {
     $user = User::factory()->shelterWorker()->make();
 
     expect($user->type)->toBe('Shelterworker');
+});
+
+it('getRouteKeyName returns uuid', function () {
+    $user = User::factory()->make();
+    expect($user->getRouteKeyName())->toBe('uuid');
+});
+
+it('has many comments', function () {
+    $user    = User::factory()->create();
+    $comment = Comment::factory()->create(['user_id' => $user->id]);
+
+    expect($user->comments)->toHaveCount(1)
+        ->and($user->comments->first()->is($comment))->toBeTrue();
+});
+
+it('has many likes', function () {
+    $user = User::factory()->create();
+    $like = Like::factory()->create(['user_id' => $user->id]);
+
+    expect($user->likes)->toHaveCount(1)
+        ->and($user->likes->first()->is($like))->toBeTrue();
+});
+
+it('has many adoptions', function () {
+    $user     = User::factory()->create();
+    $adoption = Adoption::factory()->create(['user_id' => $user->id]);
+
+    expect($user->adoptions)->toHaveCount(1)
+        ->and($user->adoptions->first()->is($adoption))->toBeTrue();
+});
+
+it('has many form messages', function () {
+    $user = User::factory()->create();
+    $form = Form::factory()->create(['user_id' => $user->id]);
+
+    expect($user->formMessages)->toHaveCount(1)
+        ->and($user->formMessages->first()->is($form))->toBeTrue();
 });

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Form;
 use App\Models\Pet;
 use App\Models\Shelter;
 use App\Models\User;
@@ -55,4 +56,17 @@ it('workers can contain multiple users', function () {
     expect($shelter->workers)->toHaveCount(2)
         ->and($shelter->workers->contains($workerA))->toBeTrue()
         ->and($shelter->workers->contains($workerB))->toBeTrue();
+});
+
+it('getRouteKeyName returns uuid', function () {
+    $shelter = new Shelter;
+    expect($shelter->getRouteKeyName())->toBe('uuid');
+});
+
+it('has many form messages', function () {
+    $shelter = Shelter::factory()->create();
+    $form    = Form::factory()->create(['shelter_id' => $shelter->id]);
+
+    expect($shelter->formMessages)->toHaveCount(1)
+        ->and($shelter->formMessages->first()->is($form))->toBeTrue();
 });

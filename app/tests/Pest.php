@@ -4,5 +4,4 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class)->in('Feature');
-uses(RefreshDatabase::class)->in('Unit/Requests');
-uses(TestCase::class)->in('Unit');
+uses(TestCase::class, RefreshDatabase::class)->in('Unit');

@@ -113,3 +113,18 @@ it('deletes shelterowner account, removes shelter images & folder, logs out and 
 
     get(route('settings.index'))->assertRedirect(route('login'));
 });
+
+it('deletes shelterowner account with no shelter, logs out and redirects home', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create([
+        'type'     => 'Shelterowner',
+        'password' => Hash::make('secret123'),
+    ]);
+    actingAs($user);
+
+    delete(route('settings.delete.confirm'), ['password' => 'secret123'])
+        ->assertRedirect('/');
+
+    $this->assertDatabaseMissing('users', ['id' => $user->id]);
+});

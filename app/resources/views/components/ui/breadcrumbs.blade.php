@@ -5,7 +5,7 @@
 ])
 
 <nav aria-label="Breadcrumb">
-  <ol class="flex items-center gap-2 text-sm text-neutral-500">
+  <ol class="flex flex-wrap items-center gap-2 text-sm text-neutral-500">
     <li>
       <a href="{{ $homeHref }}" class="inline-flex items-center gap-2 hover:text-neutral-700">
         <x-icon name="home" class="h-4 w-4" />

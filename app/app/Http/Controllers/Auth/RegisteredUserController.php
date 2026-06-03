@@ -90,7 +90,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $role        = $validated['role'];
-        $roleShelter = $validated['role_shelter'];
+        $roleShelter = $validated['role_shelter'] ?? null;
 
         $map = [
             'shelterOwner'  => 'Shelterowner',
@@ -107,7 +107,7 @@ class RegisteredUserController extends Controller
             'name'        => $validated['name'],
             'email'       => $validated['email'],
             'password'    => Hash::make($validated['password']),
-            'phoneNumber' => $validated['phoneNumber'],
+            'phoneNumber' => $validated['phoneNumber'] ?? null,
         ]);
 
         Auth::login($user);

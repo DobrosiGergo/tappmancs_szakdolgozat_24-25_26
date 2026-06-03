@@ -29,7 +29,7 @@
   </div>
 
   @if($image)
-    <div class="relative">
+    <div class="hidden lg:block relative">
       <div class="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-neutral-200/30 to-neutral-100/30 blur-2xl"></div>
       <x-ui.lazy-image
             src="{{ $image }}"
