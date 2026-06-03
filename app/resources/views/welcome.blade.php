@@ -4,7 +4,7 @@
   <section class="relative overflow-hidden bg-neutral-900 text-white">
     <x-ui.home.container class="relative z-10">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center py-16 md:py-24">
-        <div>
+        <div class="text-left">
           <x-ui.home.h1 class="text-white">Tappmancs</x-ui.home.h1>
 
           <x-ui.home.h2 class="text-white/90">Fogadj örökbe kisállatot vagy indíts el a saját menhelyed!</x-ui.home.h2>
