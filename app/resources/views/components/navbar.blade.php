@@ -5,6 +5,9 @@
     $isWorker      = $user && $user->type === 'Shelterworker';
     $ownShelter    = $user?->shelter;
     $workerShelter = $user?->worksAt;
+    $shelterShowUrl  = $ownShelter ? route('shelters.show', $ownShelter) : route('shelter.setup');
+    $shelterEditUrl  = $ownShelter ? route('shelter.edit', $ownShelter) : route('shelter.setup');
+    $shelterStaffUrl = $ownShelter ? route('shelter.staffing.index', $ownShelter) : route('shelter.setup');
     $unreadCount = 0;
     if ($user) {
         $unreadCount = $user->unreadNotifications()->count();
@@ -33,7 +36,7 @@
 
     <div class="col-start-5 col-span-2 hidden lg:flex items-center"
          @mouseenter="open = 'shelter'" @focusin="open = 'shelter'">
-      <x-navbar.menu-item :dark="$dark" label="Menhelyem" :href="route('shelters.show', $ownShelter)" />
+      <x-navbar.menu-item :dark="$dark" label="Menhelyem" :href="$shelterShowUrl" />
     </div>
 
     <div class="col-start-7 col-span-2 hidden lg:flex items-center"
@@ -43,7 +46,7 @@
 
     <div class="col-start-9 col-span-2 hidden lg:flex items-center"
          @mouseenter="open = 'staff'" @focusin="open = 'staff'">
-      <x-navbar.menu-item :dark="$dark" label="Munkatársak" :href="route('shelter.staffing.index', $ownShelter)" />
+      <x-navbar.menu-item :dark="$dark" label="Munkatársak" :href="$shelterStaffUrl" />
     </div>
 
     <div class="col-start-11 col-span-1 hidden lg:flex items-center"
@@ -139,8 +142,8 @@
 
           <div class="col-start-5 col-span-2" x-show="open === 'shelter'">
             <x-navbar.section title="Menhelyem">
-              <x-navbar.link :href="route('shelters.show', $ownShelter)">Publikus oldal</x-navbar.link>
-              <x-navbar.link :href="route('shelter.edit', $ownShelter)">Szerkesztés</x-navbar.link>
+              <x-navbar.link :href="$shelterShowUrl">Publikus oldal</x-navbar.link>
+              <x-navbar.link :href="$shelterEditUrl">Szerkesztés</x-navbar.link>
               <x-navbar.link :href="route('messages.index')">Üzenetek</x-navbar.link>
             </x-navbar.section>
           </div>
@@ -155,7 +158,7 @@
 
           <div class="col-start-9 col-span-2" x-show="open === 'staff'">
             <x-navbar.section title="Munkatársak">
-              <x-navbar.link :href="route('shelter.staffing.index', $ownShelter)">Kezelés</x-navbar.link>
+              <x-navbar.link :href="$shelterStaffUrl">Kezelés</x-navbar.link>
             </x-navbar.section>
           </div>
 
@@ -237,8 +240,8 @@
               <x-icon name="chevron-right" class="h-4 w-4 text-white/40 transition-transform duration-200" x-bind:class="{ 'rotate-90': section === 'shelter' }" />
             </button>
             <div x-show="section === 'shelter'" x-cloak class="pb-3 pl-3 flex flex-col gap-1">
-              <a href="{{ route('shelters.show', $ownShelter) }}" class="block py-2 text-sm text-white/60 hover:text-white transition-colors">Publikus oldal</a>
-              <a href="{{ route('shelter.edit', $ownShelter) }}" class="block py-2 text-sm text-white/60 hover:text-white transition-colors">Szerkesztés</a>
+              <a href="{{ $shelterShowUrl }}" class="block py-2 text-sm text-white/60 hover:text-white transition-colors">Publikus oldal</a>
+              <a href="{{ $shelterEditUrl }}" class="block py-2 text-sm text-white/60 hover:text-white transition-colors">Szerkesztés</a>
               <a href="{{ route('messages.index') }}" class="block py-2 text-sm text-white/60 hover:text-white transition-colors">Üzenetek</a>
             </div>
           </div>
@@ -263,7 +266,7 @@
               <x-icon name="chevron-right" class="h-4 w-4 text-white/40 transition-transform duration-200" x-bind:class="{ 'rotate-90': section === 'staff' }" />
             </button>
             <div x-show="section === 'staff'" x-cloak class="pb-3 pl-3 flex flex-col gap-1">
-              <a href="{{ route('shelter.staffing.index', $ownShelter) }}" class="block py-2 text-sm text-white/60 hover:text-white transition-colors">Kezelés</a>
+              <a href="{{ $shelterStaffUrl }}" class="block py-2 text-sm text-white/60 hover:text-white transition-colors">Kezelés</a>
             </div>
           </div>
 
