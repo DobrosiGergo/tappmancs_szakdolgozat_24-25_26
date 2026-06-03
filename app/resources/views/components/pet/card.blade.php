@@ -10,7 +10,7 @@
 
 @php
   if ($image) {
-      $imgUrl = \Illuminate\Support\Facades\Storage::url($image);
+      $imgUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($image);
   } else {
       $imgUrl = '';
   }

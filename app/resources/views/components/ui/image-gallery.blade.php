@@ -5,7 +5,7 @@
 
     $urls = collect($images)
         ->filter()
-        ->map(fn ($img) => Storage::url($img))
+        ->map(fn ($img) => Storage::disk('public')->url($img))
         ->values()
         ->toArray();
 @endphp
