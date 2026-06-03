@@ -25,18 +25,22 @@ class ImageUploader extends Component
 
     public ?int $petId = null;
 
+    public int $existingCount = 0;
+
     public string $uid;
 
     public function mount(
         string $context = 'shelter',
         int $max = 10,
         int $maxSize = 2048,
-        ?int $petId = null
+        ?int $petId = null,
+        int $existingCount = 0
     ): void {
-        $this->context = $context;
-        $this->max     = $max;
-        $this->maxSize = $maxSize;
-        $this->petId   = $petId;
+        $this->context       = $context;
+        $this->max           = $max;
+        $this->maxSize       = $maxSize;
+        $this->petId         = $petId;
+        $this->existingCount = $existingCount;
         $this->uid     = uniqid($context . '_');
 
         $existing       = session()->get($this->sessionKey(), []);
@@ -67,7 +71,7 @@ class ImageUploader extends Component
 
     public function updatedImages(): void
     {
-        $totalAfter = count($this->previews) + count($this->existingImages) + count($this->images);
+        $totalAfter = $this->existingCount + count($this->previews) + count($this->existingImages) + count($this->images);
 
         if ($totalAfter > $this->max) {
             $this->addError('images', "Legfeljebb {$this->max} kép tölthető fel összesen.");
@@ -167,7 +171,7 @@ class ImageUploader extends Component
 
     public function render()
     {
-        $used      = count($this->existingImages) + count($this->previews);
+        $used      = $this->existingCount + count($this->existingImages) + count($this->previews);
         $isAtMax   = $used               >= $this->max;
         $isNearMax = ! $isAtMax && $used >= (int) ceil($this->max * 0.8);
 

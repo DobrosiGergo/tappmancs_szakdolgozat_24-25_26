@@ -59,7 +59,7 @@
             <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 @foreach ($existingImages as $index => $image)
                     <div class="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100">
-                        <x-ui.lazy-image src="{{ Storage::url($image['path']) }}" alt="" class="h-28 w-full object-cover" />
+                        <x-ui.lazy-image src="{{ Storage::disk('public')->url($image['path']) }}" alt="" class="h-28 w-full object-cover" />
                         <button
                             type="button"
                             wire:click="removeExistingImage({{ $index }})"
@@ -79,7 +79,7 @@
             <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 @foreach ($previews as $index => $image)
                     <div class="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100">
-                        <x-ui.lazy-image src="{{ Storage::url($image['path']) }}" alt="" class="h-28 w-full object-cover" />
+                        <x-ui.lazy-image src="{{ Storage::disk('public')->url($image['path']) }}" alt="" class="h-28 w-full object-cover" />
                         <button
                             type="button"
                             wire:click="removeImage({{ $index }})"

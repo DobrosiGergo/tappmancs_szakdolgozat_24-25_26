@@ -84,7 +84,7 @@
           <p class="mt-1 text-neutral-600 text-sm">Válaszd ki vagy húzd ide a képeket (JPEG, JPG, PNG). Több kép is feltölthető.</p>
         </div>
 
-        @livewire('image-uploader', ['context' => 'shelter', 'max' => 10, 'maxSize' => 2048])
+        @livewire('image-uploader', ['context' => 'shelter', 'max' => 10, 'maxSize' => 2048, 'existingCount' => $isEdit ? count($shelter->images_safe) : 0])
         </div>
 
     </div>
