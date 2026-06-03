@@ -1,4 +1,5 @@
 <x-app-layout>
+<div class="max-w-7xl mx-auto px-6 lg:px-8 py-6">
   <x-ui.breadcrumbs :items="[['label' => 'Kisállatok']]" />
 
   <h1 class="text-2xl font-bold mb-6">Elérhető kisállatok</h1>
@@ -47,4 +48,5 @@
     </div>
 
   </div>
+</div>
 </x-app-layout>

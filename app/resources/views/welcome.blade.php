@@ -14,7 +14,7 @@
             Ismerd meg, hogyan segíthetsz, és kezdj hozzá most!
           </x-ui.home.lead>
 
-          <div class="flex flex-col items-center">
+          <div class="flex flex-col items-start md:items-center">
             <div class="transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2">
               <x-ui.home.cta-button :href="route('shelters.index')" label="Tudj meg többet!" />
             </div>

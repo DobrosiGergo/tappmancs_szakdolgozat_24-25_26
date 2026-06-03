@@ -73,7 +73,7 @@
                                   class="w-full resize-none rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition focus:border-neutral-400 focus:bg-white focus:ring-2 focus:ring-neutral-200">{{ old('message') }}</textarea>
                     </div>
 
-                    <div class="flex items-center justify-between gap-4 pt-1">
+                    <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
                         <p class="text-xs text-neutral-400">
                             Adataidat kizárólag a kapcsolatfelvételhez használjuk.
                         </p>

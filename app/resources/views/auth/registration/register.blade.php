@@ -65,13 +65,13 @@
       </form>
     </div>
 
-    <div class="w-full md:w-1/2 flex items-center justify-center">
-    <x-ui.lazy-image
-    src="{{ asset('images/collar-dog.svg') }}"
-    alt="Kutya nyakörv"
-    w="640" h="420"
-    class="md:w-[520px] lg:w-[600px] border-2 border-neutral-800 rounded-full"
-    />
+    <div class="hidden md:flex w-full md:w-1/2 items-center justify-center">
+      <x-ui.lazy-image
+        src="{{ asset('images/collar-dog.svg') }}"
+        alt="Kutya nyakörv"
+        w="640" h="420"
+        class="w-full max-w-[440px] lg:max-w-[560px] border-2 border-neutral-800 rounded-full"
+      />
     </div>
   </div>
 </x-guest-layout>

@@ -7,7 +7,7 @@
             <div class="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-white opacity-[0.04] blur-2xl"></div>
         </div>
 
-        <div class="relative mx-auto max-w-7xl px-6 py-16 sm:py-20 lg:px-8">
+        <div class="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
 
             <nav class="mb-10 flex items-center gap-2 text-xs font-medium"
                  aria-label="Breadcrumb">
@@ -26,7 +26,7 @@
                         Állatmenhely
                     </p>
 
-                    <h1 class="text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
+                    <h1 class="text-2xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-7xl">
                         {{ $shelter->name }}
                     </h1>
 

@@ -30,7 +30,7 @@
       </header>
     @endisset
 
-    <main class="px-6 lg:px-8 py-6">
+    <main>
       {{ $slot }}
     </main>
 

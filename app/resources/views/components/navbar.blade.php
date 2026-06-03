@@ -310,6 +310,19 @@
         @endif
 
         @auth
+          <a href="{{ route('notifications.index') }}"
+             class="flex items-center justify-between py-3.5 text-sm font-medium text-white border-b border-white/10">
+            <span>Értesítések</span>
+            @if($unreadCount > 0)
+              <span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                {{ $unreadCount }}
+              </span>
+            @endif
+          </a>
+          <a href="{{ route('settings.index') }}"
+             class="flex items-center py-3.5 text-sm font-medium text-white border-b border-white/10">
+            Beállítások
+          </a>
           <div class="py-4">
             <form method="POST" action="{{ route('logout') }}">
               @csrf

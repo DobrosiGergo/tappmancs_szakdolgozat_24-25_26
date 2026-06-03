@@ -59,9 +59,9 @@
   $activeIndex = collect($steps)->search(fn ($s) => $s['key'] === $active);
 @endphp
 
-<div class="w-full pt-8 md:pt-10 {{ $class }}">
-  <div class="max-w-5xl mx-auto flex justify-left">
-    <ol class="inline-flex items-center gap-6 md:gap-8 text-sm">
+<div class="w-full pt-6 md:pt-10 {{ $class }}">
+  <div class="max-w-5xl mx-auto overflow-x-auto">
+    <ol class="inline-flex items-center gap-4 md:gap-8 text-sm min-w-max">
       @foreach ($steps as $idx => $step)
         @php
           $isDone   = $idx < $activeIndex;
@@ -85,7 +85,7 @@
           </div>
 
           @if (!$loop->last)
-            <span class="mx-4 md:mx-6 h-px w-16 md:w-24 bg-neutral-200 block"></span>
+            <span class="mx-3 md:mx-6 h-px w-10 md:w-24 bg-neutral-200 block"></span>
           @endif
         </li>
       @endforeach

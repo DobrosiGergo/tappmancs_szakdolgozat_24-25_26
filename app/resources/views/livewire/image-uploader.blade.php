@@ -63,7 +63,7 @@
                         <button
                             type="button"
                             wire:click="removeExistingImage({{ $index }})"
-                            class="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition group-hover:opacity-100"
+                            class="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition"
                         >
                             <x-icon name="delete" class="h-3.5 w-3.5" />
                         </button>
@@ -83,7 +83,7 @@
                         <button
                             type="button"
                             wire:click="removeImage({{ $index }})"
-                            class="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition group-hover:opacity-100"
+                            class="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition"
                         >
                             <x-icon name="delete" class="h-3.5 w-3.5" />
                         </button>
