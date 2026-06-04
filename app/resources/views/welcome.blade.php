@@ -2,9 +2,8 @@
   @section('title', 'Tappmancs Kezdőlap')
 
   <section class="relative overflow-hidden bg-neutral-900 text-white">
-    <x-ui.home.container class="relative z-10">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center py-16 md:py-24">
-        <div class="text-left">
+    <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 items-center">
+      <div class="text-left px-6 sm:px-10 lg:px-16 xl:px-24 py-16 md:py-24">
           <x-ui.home.h1 class="text-white">Tappmancs</x-ui.home.h1>
 
           <x-ui.home.h2 class="text-white/90">Fogadj örökbe kisállatot vagy indíts el a saját menhelyed!</x-ui.home.h2>
@@ -28,16 +27,15 @@
               </div>
             </div>
           </div>
-        </div>
-
-          <div class="hidden md:block">
-            <x-ui.home.image-frame
-              :src="asset('images/collar-dog.svg')"
-              alt="Örökbefogadás"
-            />
-          </div>
       </div>
-    </x-ui.home.container>
+
+      <div class="hidden md:flex items-center justify-center px-8 lg:px-16 py-16 md:py-24">
+        <x-ui.home.image-frame
+          :src="asset('images/collar-dog.svg')"
+          alt="Örökbefogadás"
+        />
+      </div>
+    </div>
   </section>
 
   <section class="bg-neutral-900 border-t border-white/[0.07] py-20 md:py-28 text-white">

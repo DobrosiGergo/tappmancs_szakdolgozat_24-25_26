@@ -12,6 +12,8 @@
         "test:feature": "npm --workspace app run test:feature",
         "test:unit": "npm --workspace app run test:unit",
         "test:e2e": "npm --workspace app-e2e run test",
+        "test:coverage": "npm --workspace app run test:coverage",
+        "coverage:view": "npm --workspace app run coverage:view",
         "lint": "npm --workspace app run lint:pint"
     }
 }
