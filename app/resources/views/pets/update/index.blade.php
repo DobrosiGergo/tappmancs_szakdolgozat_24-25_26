@@ -1,5 +1,4 @@
 <x-app-layout>
-<div class="max-w-7xl mx-auto px-6 lg:px-8 py-6">
   <x-ui.breadcrumbs
     :items="[
       ['label' => 'Kisállatok'],
@@ -94,5 +93,4 @@
   <div class="mt-6">
     {{ $pets->withQueryString()->onEachSide(1)->links() }}
   </div>
-</div>
 </x-app-layout>
