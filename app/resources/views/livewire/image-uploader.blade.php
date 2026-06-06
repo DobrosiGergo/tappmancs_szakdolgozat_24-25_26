@@ -46,10 +46,10 @@
         <input
             type="file"
             multiple
-            wire:model="images"
             id="imageUpload-{{ $uid }}"
             class="hidden"
             @disabled($isAtMax)
+            @change="$wire.uploadMultiple('images', $event.target.files); $event.target.value = ''"
         >
     </label>
 

@@ -18,7 +18,11 @@ class ShelterController extends Controller
         $query = Shelter::with('owner')->withCount('pets');
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $term = $request->search;
+            $query->where(function ($q) use ($term) {
+                $q->where('name', 'like', '%' . $term . '%')
+                  ->orWhere('location', 'like', '%' . $term . '%');
+            });
         }
 
         $shelters = $query->paginate(20);
@@ -45,15 +49,23 @@ class ShelterController extends Controller
         $validated = $request->validate([
             'name'        => 'required|string|max:255',
             'description' => 'required|string',
+            'location'    => 'nullable|string|max:255',
         ], [
             'name.required'        => 'A menhely neve kötelező.',
             'name.max'             => 'A menhely neve legfeljebb 255 karakter lehet.',
             'description.required' => 'A leírás megadása kötelező.',
         ]);
 
+        if (array_key_exists('location', $validated)) {
+            $location = $validated['location'];
+        } else {
+            $location = null;
+        }
+
         $shelter = Shelter::create([
             'name'        => $validated['name'],
             'description' => $validated['description'],
+            'location'    => $location,
             'owner_id'    => auth()->id(),
         ]);
 
@@ -101,6 +113,7 @@ class ShelterController extends Controller
         $validated = $request->validate([
             'name'            => 'required|string|max:255',
             'description'     => 'required|string',
+            'location'        => 'nullable|string|max:255',
             'remove_images'   => ['array'],
             'remove_images.*' => ['string'],
         ], [
@@ -134,9 +147,16 @@ class ShelterController extends Controller
 
         $images = array_values(array_unique([...$kept, ...$newUploaded]));
 
+        if (array_key_exists('location', $validated)) {
+            $location = $validated['location'];
+        } else {
+            $location = null;
+        }
+
         $shelter->update([
             'name'        => $validated['name'],
             'description' => $validated['description'],
+            'location'    => $location,
             'images'      => $images,
         ]);
 

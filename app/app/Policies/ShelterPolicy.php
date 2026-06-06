@@ -16,4 +16,19 @@ class ShelterPolicy
     {
         return (int) $shelter->owner_id === (int) $user->id;
     }
+
+    public function managePets(User $user, Shelter $shelter): bool
+    {
+        if ((int) $shelter->owner_id === (int) $user->id) {
+            return true;
+        }
+
+        $worksAt = $user->worksAt;
+
+        if (! $worksAt) {
+            return false;
+        }
+
+        return (int) $worksAt->id === (int) $shelter->id;
+    }
 }

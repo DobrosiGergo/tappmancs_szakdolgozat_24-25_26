@@ -1,10 +1,12 @@
 @php
   $isEdit = isset($mode) && $mode === 'edit' && isset($shelter);
+  $locationValue = '';
   if ($isEdit) {
-      $action   = route('shelter.update', $shelter);
-      $btn      = 'Változások mentése';
-      $title    = 'Menhely szerkesztése';
-      $subtitle = 'Módosítsa az adatokat. Új képeket a jobb oldalon adhat hozzá, a régieket alább tudja törölni.';
+      $action        = route('shelter.update', $shelter);
+      $btn           = 'Változások mentése';
+      $title         = 'Menhely szerkesztése';
+      $subtitle      = 'Módosítsa az adatokat. Új képeket a jobb oldalon adhat hozzá, a régieket alább tudja törölni.';
+      $locationValue = (string) $shelter->location;
   } else {
       $action   = route('shelter.store');
       $btn      = 'Menhely létrehozása';
@@ -41,6 +43,13 @@
             label="Menhely név*"
             required="true"
             :value="old('name', $shelter->name ?? '')"
+          />
+
+          <x-ui.input-floating
+            id="location"
+            name="location"
+            label="Helyszín (pl. Budapest)"
+            :value="old('location', $locationValue)"
           />
 
           <x-ui.input-floating

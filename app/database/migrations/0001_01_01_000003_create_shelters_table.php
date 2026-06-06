@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('owner_id')->references('id')->on('users')->onDelete('cascade');
             $table->text('description');
+            $table->string('location')->nullable();
             $table->json('images')->nullable();
             $table->timestamps();
         });

@@ -6,7 +6,7 @@
     <div class="w-full sm:w-72">
       <x-ui.search-filter
         :action="route('shelters.index')"
-        placeholder="Menhely neve..."
+        placeholder="Keress név vagy helyszín szerint..."
       />
     </div>
   </div>
@@ -19,6 +19,7 @@
         :description="$shelter->excerpt"
         :badge="$shelter->pets_count . ' kisállat'"
         :image="$shelter->cover_image"
+        :location="$shelter->location"
       />
     @empty
       <div class="col-span-full text-neutral-500">Nincs megjeleníthető menhely.</div>

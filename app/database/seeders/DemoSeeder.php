@@ -31,6 +31,7 @@ class DemoSeeder extends Seeder
             'name'        => 'Tappmancs Demo Menhely',
             'owner_id'    => $owner->id,
             'description' => 'Ez egy demo menhely, amely a szakdolgozat bemutatásához lett létrehozva. Három kisállatunkat szerető gazdiknak adjuk örökbe.',
+            'location'    => 'Budapest',
             'images'      => [],
         ]);
 

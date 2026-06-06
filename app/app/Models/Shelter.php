@@ -25,6 +25,7 @@ class Shelter extends Model
         'uuid',
         'name',
         'description',
+        'location',
         'images',
         'owner_id',
     ];

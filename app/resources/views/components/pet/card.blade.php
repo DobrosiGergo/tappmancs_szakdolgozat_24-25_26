@@ -9,8 +9,10 @@
 ])
 
 @php
+  use Illuminate\Support\Facades\Storage;
+
   if ($image) {
-      $imgUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($image);
+      $imgUrl = Storage::disk('public')->url($image);
   } else {
       $imgUrl = '';
   }

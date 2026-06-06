@@ -36,6 +36,13 @@
                             {{ $shelter->owner_name }}
                         </x-ui.badge>
 
+                        @if($shelter->location)
+                            <x-ui.badge>
+                                <x-icon name="map-pin" class="h-3.5 w-3.5 opacity-70" />
+                                {{ $shelter->location }}
+                            </x-ui.badge>
+                        @endif
+
                         <x-ui.badge>
                             <x-icon name="calendar" class="h-3.5 w-3.5 opacity-70" />
                             {{ $shelter->created_at->format('Y') }} óta aktív
@@ -58,6 +65,13 @@
                 </div>
 
                 <div class="flex shrink-0 flex-wrap gap-3">
+                    @can('managePets', $shelter)
+                        <a href="{{ route('pets.update.index') }}"
+                           class="inline-flex items-center gap-2 rounded-full bg-white/10 px-6 py-3 text-sm font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/15">
+                            <x-icon name="paw" class="h-4 w-4 text-white" />
+                            Kisállatok
+                        </a>
+                    @endcan
                     @can('update', $shelter)
                         <a href="{{ route('shelter.edit', $shelter) }}"
                            class="inline-flex items-center gap-2 rounded-full bg-white/10 px-6 py-3 text-sm font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/15">
@@ -182,11 +196,15 @@
                         Részletek
                     </p>
                     <dl class="divide-y divide-neutral-100">
+                        @if($shelter->location)
+                            <div class="flex items-center justify-between py-2.5 text-sm">
+                                <dt class="text-neutral-400">Helyszín</dt>
+                                <dd class="font-medium text-neutral-800">{{ $shelter->location }}</dd>
+                            </div>
+                        @endif
                         <div class="flex items-center justify-between py-2.5 text-sm">
-                            <dt class="text-neutral-400">Frissítve</dt>
-                            <dd class="font-medium text-neutral-800">
-                                {{ $shelter->updated_at->diffForHumans() }}
-                            </dd>
+                            <dt class="text-neutral-400">Kisállatok</dt>
+                            <dd class="font-medium text-neutral-800">{{ $petCount }} db</dd>
                         </div>
                         <div class="flex items-center justify-between py-2.5 text-sm">
                             <dt class="text-neutral-400">Létrehozva</dt>
@@ -195,8 +213,10 @@
                             </dd>
                         </div>
                         <div class="flex items-center justify-between py-2.5 text-sm">
-                            <dt class="text-neutral-400">Kisállatok</dt>
-                            <dd class="font-medium text-neutral-800">{{ $petCount }} db</dd>
+                            <dt class="text-neutral-400">Frissítve</dt>
+                            <dd class="font-medium text-neutral-800">
+                                {{ $shelter->updated_at->diffForHumans() }}
+                            </dd>
                         </div>
                     </dl>
                 </x-ui.card>

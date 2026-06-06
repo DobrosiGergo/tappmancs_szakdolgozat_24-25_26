@@ -61,13 +61,28 @@
                   :options="\App\Models\Pet::statusOptions()"
                 />
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 gap-5"
+                x-data="{
+                  birthDate: '{{ old('birth_date', $birthDateValue) }}',
+                  arrivalDate: '{{ old('arrival_date', $arrivalDateValue) }}',
+                  get invalid() { return this.birthDate && this.arrivalDate && this.birthDate > this.arrivalDate; },
+                  onDateChange(e) {
+                    if (e.target.name === 'birth_date') {
+                      this.birthDate = e.target.value;
+                    } else if (e.target.name === 'arrival_date') {
+                      this.arrivalDate = e.target.value;
+                    }
+                  }
+                }"
+                @change="onDateChange($event)"
+              >
                 <x-ui.input-date
                   id="birth_date"
                   name="birth_date"
                   label="Születési dátum*"
                   required="true"
-                  :value="old('birth_date', $pet->birth_date?->format('Y-m-d') ?? now()->format('Y-m-d'))"
+                  :value="old('birth_date', $birthDateValue)"
                   :max="now()->format('Y-m-d')"
                 />
                 <x-ui.input-date
@@ -75,9 +90,16 @@
                   name="arrival_date"
                   label="Érkezés dátuma*"
                   required="true"
-                  :value="old('arrival_date', $pet->arrival_date?->format('Y-m-d') ?? now()->format('Y-m-d'))"
+                  :value="old('arrival_date', $arrivalDateValue)"
                   :max="now()->format('Y-m-d')"
                 />
+                <p
+                  x-cloak
+                  x-show="invalid"
+                  class="col-span-full text-xs text-amber-600"
+                >
+                  A születési dátum nem lehet az érkezési dátumnál később.
+                </p>
               </div>
             </div>
 

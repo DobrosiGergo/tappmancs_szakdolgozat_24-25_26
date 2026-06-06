@@ -32,7 +32,13 @@ class PetController extends Controller
         $query = Pet::query()->with(['shelter:id,name', 'species:id,name', 'breed:id,name']);
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $term = $request->search;
+            $query->where(function ($q) use ($term) {
+                $q->where('name', 'like', '%' . $term . '%')
+                  ->orWhereHas('shelter', function ($sq) use ($term) {
+                      $sq->where('location', 'like', '%' . $term . '%');
+                  });
+            });
         }
         if ($request->filled('species')) {
             $query->where('species_id', $request->species);
@@ -53,24 +59,46 @@ class PetController extends Controller
 
     public function updateIndex()
     {
-        $userId = auth()->id();
+        $user  = auth()->user();
+        $query = Pet::query()->with([
+            'shelter:id,name,owner_id',
+            'species:id,name',
+            'breed:id,name',
+        ]);
 
-        $pets = Pet::query()
-            ->with([
-                'shelter:id,name,owner_id',
-                'species:id,name',
-                'breed:id,name',
-            ])
-            ->where(function ($query) use ($userId) {
-                $query->where('employee_id', $userId)
-                    ->orWhereHas('shelter', function ($shelterQuery) use ($userId) {
-                        $shelterQuery->where('owner_id', $userId);
-                    });
-            })
-            ->latest()
-            ->paginate(12);
+        if ($user->type === 'Shelterowner') {
+            $query->whereHas('shelter', function ($q) use ($user) {
+                $q->where('owner_id', $user->id);
+            });
+        } else {
+            $worksAt   = $user->worksAt;
+            $shelterId = null;
+            if ($worksAt) {
+                $shelterId = $worksAt->id;
+            }
+            abort_if(! $shelterId, 403);
+            $query->where('shelter_id', $shelterId);
+        }
+
+        $pets = $query->latest()->paginate(12);
 
         return view('pets.update.index', compact('pets'));
+    }
+
+    public function updateStatus(Request $request, Pet $pet)
+    {
+        $pet->load('shelter');
+        abort_if(! $pet->shelter, 403);
+        $this->authorize('managePets', $pet->shelter);
+
+        $request->validate(['status' => ['required', 'in:' . implode(',', array_keys(Pet::STATUSES))]]);
+
+        $pet->update(['status' => $request->status]);
+
+        return back()->with('flash', [
+            'message' => 'Státusz frissítve.',
+            'type'    => 'success',
+        ]);
     }
 
     public function show(Pet $pet)
@@ -120,7 +148,18 @@ class PetController extends Controller
             $shelter = $pet->shelter;
         }
 
-        return view('pets.update.edit', compact('pet', 'shelter'));
+        $birthDateValue   = now()->format('Y-m-d');
+        $arrivalDateValue = now()->format('Y-m-d');
+
+        if ($pet->birth_date) {
+            $birthDateValue = $pet->birth_date->format('Y-m-d');
+        }
+
+        if ($pet->arrival_date) {
+            $arrivalDateValue = $pet->arrival_date->format('Y-m-d');
+        }
+
+        return view('pets.update.edit', compact('pet', 'shelter', 'birthDateValue', 'arrivalDateValue'));
     }
 
     public function store(PetStoreRequest $request)

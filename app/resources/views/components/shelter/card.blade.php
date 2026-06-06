@@ -4,11 +4,14 @@
   'description' => '',
   'badge' => null,
   'image' => null,
+  'location' => null,
 ])
 
 @php
+  use Illuminate\Support\Facades\Storage;
+
   if ($image) {
-      $imgUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($image);
+      $imgUrl = Storage::disk('public')->url($image);
   } else {
       $imgUrl = '';
   }
@@ -40,6 +43,13 @@
       @if($description)
         <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-500">
           {{ $description }}
+        </p>
+      @endif
+
+      @if($location)
+        <p class="mt-2 flex items-center gap-1 text-xs text-neutral-400">
+          <x-icon name="map-pin" class="h-3 w-3 shrink-0" />
+          {{ $location }}
         </p>
       @endif
 

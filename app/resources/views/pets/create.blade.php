@@ -35,15 +35,30 @@
 
             <div class="p-8 space-y-5">
               <p class="text-xs font-semibold uppercase tracking-wider text-neutral-400">Részletek</p>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              <x-ui.input-select
-                id="gender"
-                name="gender"
-                label="Nem*"
-                required="true"
-                :value="old('gender', 'unknown')"
-                :options="\App\Models\Pet::genderOptions()"
-              />
+              <div
+                class="grid grid-cols-1 sm:grid-cols-3 gap-5"
+                x-data="{
+                  birthDate: '{{ old('birth_date', now()->format('Y-m-d')) }}',
+                  arrivalDate: '{{ old('arrival_date', now()->format('Y-m-d')) }}',
+                  get invalid() { return this.birthDate && this.arrivalDate && this.birthDate > this.arrivalDate; },
+                  onDateChange(e) {
+                    if (e.target.name === 'birth_date') {
+                      this.birthDate = e.target.value;
+                    } else if (e.target.name === 'arrival_date') {
+                      this.arrivalDate = e.target.value;
+                    }
+                  }
+                }"
+                @change="onDateChange($event)"
+              >
+                <x-ui.input-select
+                  id="gender"
+                  name="gender"
+                  label="Nem*"
+                  required="true"
+                  :value="old('gender', 'unknown')"
+                  :options="\App\Models\Pet::genderOptions()"
+                />
                 <x-ui.input-date
                   id="birth_date"
                   name="birth_date"
@@ -60,6 +75,13 @@
                   :value="old('arrival_date', now()->format('Y-m-d'))"
                   :max="now()->format('Y-m-d')"
                 />
+                <p
+                  x-cloak
+                  x-show="invalid"
+                  class="col-span-full text-xs text-amber-600"
+                >
+                  A születési dátum nem lehet az érkezési dátumnál később.
+                </p>
               </div>
             </div>
 

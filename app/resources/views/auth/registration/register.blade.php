@@ -7,62 +7,10 @@
         Hozz létre saját fiókot
       </h2>
 
-      <form method="POST" action="{{ route('register') }}" class="space-y-8">
-        @csrf
-        <input type="hidden" name="role" value="{{ request('role') }}">
-        <input type="hidden" name="role_shelter" value="{{ request('role_shelter') }}">
-
-        <x-ui.input-floating
-          id="email"
-          name="email"
-          type="email"
-          label="Email"
-          required="true"
-          autocomplete="username"
-        />
-
-        <x-ui.input-floating
-          id="name"
-          name="name"
-          type="text"
-          label="Teljes név"
-          required="true"
-          autocomplete="name"
-        />
-
-        <x-ui.input-floating
-          id="password"
-          name="password"
-          type="password"
-          label="Jelszó"
-          required="true"
-          autocomplete="new-password"
-        />
-
-        <x-ui.input-floating
-          id="password_confirmation"
-          name="password_confirmation"
-          type="password"
-          label="Jelszó megerősítés"
-          required="true"
-          autocomplete="new-password"
-        />
-
-        <x-ui.input-floating
-          id="phoneNumber"
-          name="phoneNumber"
-          type="text"
-          label="Telefonszám +36-"
-          autocomplete="tel"
-        />
-
-        <button
-          type="submit"
-          class="w-full mt-2 bg-neutral-900 text-white py-3 rounded-full font-medium hover:bg-neutral-800 transition"
-        >
-          Fiók létrehozása
-        </button>
-      </form>
+      @livewire('register-form', [
+        'role'         => request('role', ''),
+        'role_shelter' => request('role_shelter', ''),
+      ])
     </div>
 
     <div class="hidden md:flex w-full md:w-1/2 items-center justify-center">

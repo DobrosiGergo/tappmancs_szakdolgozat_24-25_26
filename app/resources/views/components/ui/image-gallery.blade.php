@@ -3,11 +3,12 @@
 @php
     use Illuminate\Support\Facades\Storage;
 
-    $urls = collect($images)
-        ->filter()
-        ->map(fn ($img) => Storage::disk('public')->url($img))
-        ->values()
-        ->toArray();
+    $urls = [];
+    foreach ($images as $img) {
+        if ($img) {
+            $urls[] = Storage::disk('public')->url($img);
+        }
+    }
 @endphp
 
 @if (empty($urls))
@@ -27,10 +28,27 @@
             get url() { return this.urls[this.current] ?? ''; },
             get total() { return this.urls.length; },
             get hasMany() { return this.total > 1; },
-            prev() { this.current = (this.current - 1 + this.total) % this.total; },
-            next() { this.current = (this.current + 1) % this.total; },
-            select(i) { this.current = i; },
-            open(i) { this.current = i; this.lightbox = true; },
+            prev() { const wrap = this.current === 0; this.current = (this.current - 1 + this.total) % this.total; this.scrollThumb(wrap); },
+            next() { const wrap = this.current === this.total - 1; this.current = (this.current + 1) % this.total; this.scrollThumb(wrap); },
+            select(i) { this.current = i; this.scrollThumb(false); },
+            open(i) { this.current = i; this.lightbox = true; this.scrollThumb(true); },
+            scrollThumb(instant = false) {
+                this.$nextTick(() => {
+                    let behavior;
+                    if (instant) {
+                        behavior = 'instant';
+                    } else {
+                        behavior = 'smooth';
+                    }
+                    for (const ref of ['thumbs', 'lightboxThumbs']) {
+                        const container = this.$refs[ref];
+                        if (!container) continue;
+                        const el = container.children[this.current];
+                        if (!el) continue;
+                        container.scrollTo({ left: el.offsetLeft - container.offsetWidth / 2 + el.offsetWidth / 2, behavior });
+                    }
+                });
+            },
             close() { this.lightbox = false; }
         }"
         x-effect="if (lightbox) { document.body.style.overflow = 'hidden' } else { document.body.style.overflow = '' }"
@@ -104,6 +122,7 @@
 
         <div
             x-show="hasMany"
+            x-ref="thumbs"
             class="flex gap-2 overflow-x-auto pb-1"
             style="scrollbar-width: none; -ms-overflow-style: none;"
         >
@@ -133,7 +152,7 @@
                 x-cloak
                 x-transition.opacity
                 @click.self="close()"
-                class="fixed inset-0 z-[9999] backdrop-blur px-4 py-4 sm:px-6 sm:py-6"
+                class="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm px-4 py-4 sm:px-6 sm:py-6"
             >
                 <div class="mx-auto flex h-full max-w-6xl flex-col">
                     <div class="mb-4 flex items-center justify-between gap-4 text-white">
@@ -185,6 +204,7 @@
 
                     <div
                         x-show="hasMany"
+                        x-ref="lightboxThumbs"
                         class="mt-4 flex gap-2 overflow-x-auto pb-1"
                         style="scrollbar-width: none; -ms-overflow-style: none;"
                     >

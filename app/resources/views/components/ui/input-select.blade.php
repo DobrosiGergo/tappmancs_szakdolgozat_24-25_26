@@ -9,7 +9,14 @@
 
 @php
   $currentValue = old($name, $value);
-  $currentLabel = collect($options)->firstWhere('value', $currentValue)['label'] ?? ($options[0]['label'] ?? '');
+  $matched = collect($options)->firstWhere('value', $currentValue);
+  if ($matched !== null) {
+      $currentLabel = $matched['label'];
+  } elseif (!empty($options)) {
+      $currentLabel = $options[0]['label'] ?? '';
+  } else {
+      $currentLabel = '';
+  }
 @endphp
 
 <div class="flex flex-col gap-1.5">

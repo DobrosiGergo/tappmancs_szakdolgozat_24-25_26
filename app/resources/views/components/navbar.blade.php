@@ -1,13 +1,19 @@
 @php
-    $dark          = request()->routeIs('home');
+    $dark          = request()->routeIs('home', 'about');
     $user          = auth()->user();
     $isOwner       = $user && $user->type === 'Shelterowner';
     $isWorker      = $user && $user->type === 'Shelterworker';
     $ownShelter    = $user?->shelter;
     $workerShelter = $user?->worksAt;
-    $shelterShowUrl  = $ownShelter ? route('shelters.show', $ownShelter) : route('shelter.setup');
-    $shelterEditUrl  = $ownShelter ? route('shelter.edit', $ownShelter) : route('shelter.setup');
-    $shelterStaffUrl = $ownShelter ? route('shelter.staffing.index', $ownShelter) : route('shelter.setup');
+    if ($ownShelter) {
+        $shelterShowUrl  = route('shelters.show', $ownShelter);
+        $shelterEditUrl  = route('shelter.edit', $ownShelter);
+        $shelterStaffUrl = route('shelter.staffing.index', $ownShelter);
+    } else {
+        $shelterShowUrl  = route('shelter.setup');
+        $shelterEditUrl  = route('shelter.setup');
+        $shelterStaffUrl = route('shelter.setup');
+    }
     $unreadCount = 0;
     if ($user) {
         $unreadCount = $user->unreadNotifications()->count();

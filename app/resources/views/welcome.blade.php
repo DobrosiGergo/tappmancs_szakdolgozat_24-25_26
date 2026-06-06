@@ -15,7 +15,7 @@
 
           <div class="flex flex-col items-start">
             <div class="w-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-2">
-              <x-ui.home.cta-button :href="route('shelters.index')" label="Tudj meg többet!" />
+              <x-ui.home.cta-button :href="route('about')" label="Tudj meg többet!" />
             </div>
 
             <div class="flex gap-4 md:gap-6 mt-8 md:mt-12">

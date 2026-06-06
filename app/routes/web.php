@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
 
+Route::view('/about', 'about')->name('about');
+
 Route::get('/shelters', [ShelterController::class, 'index'])->name('shelters.index');
 
 Route::get('/shelters/{shelter:uuid}', [ShelterController::class, 'show'])
@@ -120,6 +122,10 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{pet:uuid}', [PetController::class, 'destroy'])
                 ->whereUuid('pet')
                 ->name('destroy');
+
+            Route::patch('/{pet:uuid}/status', [PetController::class, 'updateStatus'])
+                ->whereUuid('pet')
+                ->name('update.status');
         });
 
     /*

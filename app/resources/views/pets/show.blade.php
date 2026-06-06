@@ -41,6 +41,39 @@
                 </div>
 
                 <div class="space-y-6">
+                    @if($pet->shelter)
+                        @can('managePets', $pet->shelter)
+                            <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
+                                <h2 class="mb-4 text-sm font-semibold uppercase tracking-widest text-neutral-400">Státusz</h2>
+                                <div class="flex flex-col gap-2">
+                                    @foreach(\App\Models\Pet::STATUSES as $value => $label)
+                                        @php
+                                            $isActive = $pet->status === $value;
+                                            if ($isActive) {
+                                                $btnType  = 'button';
+                                                $btnClass = 'bg-neutral-900 text-white cursor-default';
+                                            } else {
+                                                $btnType  = 'submit';
+                                                $btnClass = 'bg-neutral-50 text-neutral-700 hover:bg-neutral-100';
+                                            }
+                                        @endphp
+                                        <form method="POST" action="{{ route('pets.update.status', $pet) }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="status" value="{{ $value }}">
+                                            <button
+                                                type="{{ $btnType }}"
+                                                class="w-full rounded-xl px-4 py-2.5 text-sm font-medium text-left transition {{ $btnClass }}"
+                                            >
+                                                {{ $label }}
+                                            </button>
+                                        </form>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endcan
+                    @endif
+
                     <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
                         <h2 class="text-lg font-semibold text-neutral-900">Alapadatok</h2>
 
@@ -85,6 +118,15 @@
                                     @endif
                                 </dd>
                             </div>
+
+                            @if($pet->shelter && $pet->shelter->location)
+                            <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
+                                <dt class="text-sm text-neutral-500">Helyszín</dt>
+                                <dd class="text-right text-sm font-medium text-neutral-900">
+                                    {{ $pet->shelter->location }}
+                                </dd>
+                            </div>
+                            @endif
 
                             <div class="flex items-start justify-between gap-4">
                                 <dt class="text-sm text-neutral-500">Feltöltötte</dt>

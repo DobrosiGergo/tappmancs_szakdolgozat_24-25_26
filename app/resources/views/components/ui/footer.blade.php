@@ -16,6 +16,7 @@
                     <ul class="space-y-2">
                         <li><a href="{{ route('pets.index') }}" class="text-sm text-neutral-700 hover:text-neutral-900 transition-colors">Kisállatok</a></li>
                         <li><a href="{{ route('shelters.index') }}" class="text-sm text-neutral-700 hover:text-neutral-900 transition-colors">Menhelyek</a></li>
+                        <li><a href="{{ route('about') }}" class="text-sm text-neutral-700 hover:text-neutral-900 transition-colors">Tudj meg többet</a></li>
                     </ul>
                 </div>
 

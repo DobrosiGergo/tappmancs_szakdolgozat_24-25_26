@@ -56,7 +56,13 @@
       }
   }
 
-  $activeIndex = collect($steps)->search(fn ($s) => $s['key'] === $active);
+  $activeIndex = null;
+  foreach ($steps as $i => $s) {
+      if ($s['key'] === $active) {
+          $activeIndex = $i;
+          break;
+      }
+  }
 @endphp
 
 <div class="w-full pt-6 md:pt-10 {{ $class }}">

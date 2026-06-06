@@ -5,7 +5,7 @@
 
   <x-ui.search-filter
     :action="route('pets.index')"
-    placeholder="Keress név, fajta vagy város szerint..."
+    placeholder="Keress név vagy helyszín szerint..."
     class="mb-3"
   />
 
