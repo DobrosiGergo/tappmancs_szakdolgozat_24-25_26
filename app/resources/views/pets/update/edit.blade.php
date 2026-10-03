@@ -115,7 +115,7 @@
             </div>
 
             <div class="px-8 py-6 bg-neutral-50/60">
-              <x-primary-button class="w-full py-3 text-base rounded-xl !bg-[#333333]">
+              <x-primary-button data-test-id="pet-submit" class="w-full py-3 text-base rounded-xl !bg-[#333333]">
                 Kisállat adatainak mentése
               </x-primary-button>
             </div>

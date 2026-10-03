@@ -4,6 +4,7 @@
     <input
       type="email"
       id="reg-email"
+      data-test-id="register-email"
       wire:model.live.debounce.600ms="email"
       placeholder="Email"
       autocomplete="username"
@@ -27,6 +28,7 @@
     <input
       type="text"
       id="reg-name"
+      data-test-id="register-name"
       wire:model="name"
       placeholder="Teljes név"
       autocomplete="name"
@@ -65,6 +67,7 @@
       <input
         type="password"
         id="reg-password"
+        data-test-id="register-password"
         wire:model.lazy="password"
         x-on:input="pw = $event.target.value"
         placeholder="Jelszó"
@@ -99,6 +102,7 @@
       <input
         type="password"
         id="reg-password-confirm"
+        data-test-id="register-password-confirm"
         wire:model.lazy="password_confirmation"
         x-on:input="confirmPw = $event.target.value"
         placeholder="Jelszó megerősítése"
@@ -127,6 +131,7 @@
     <input
       type="text"
       id="reg-phone"
+      data-test-id="register-phone"
       wire:model="phoneNumber"
       placeholder="Telefonszám +36-"
       autocomplete="tel"
@@ -144,6 +149,7 @@
 
   <button
     type="submit"
+    data-test-id="register-submit"
     class="w-full mt-2 bg-neutral-900 text-white py-3 rounded-full font-medium hover:bg-neutral-800 transition"
   >
     <span wire:loading.remove wire:target="register">Fiók létrehozása</span>

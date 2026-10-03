@@ -30,8 +30,8 @@
   />
 
   <div class="mt-10 flex flex-wrap items-center gap-3 mb-6">
-    <h2 class="text-lg font-semibold text-neutral-900">{{ $authUser->name }}</h2>
-    <span class="inline-flex items-center rounded-full px-3 py-0.5 text-xs font-semibold {{ $roleColor }}">
+    <h2 data-test-id="user-name" class="text-lg font-semibold text-neutral-900">{{ $authUser->name }}</h2>
+    <span data-test-id="user-role-badge" class="inline-flex items-center rounded-full px-3 py-0.5 text-xs font-semibold {{ $roleColor }}">
       {{ $roleLabel }}
     </span>
   </div>
@@ -165,6 +165,7 @@
           @csrf
           @method('DELETE')
           <button type="submit"
+            data-test-id="leave-shelter-button"
             class="group w-full block rounded-2xl border border-red-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition text-left">
             <div class="flex gap-4">
               <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-red-50 text-red-500">

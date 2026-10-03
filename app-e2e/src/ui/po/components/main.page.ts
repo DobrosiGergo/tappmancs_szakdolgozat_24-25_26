@@ -1,13 +1,15 @@
-import { Locator, Page } from "@playwright/test";
+import { Page } from '@playwright/test';
+import { BasePage } from './base.page';
 
-export class MainPage {
+export class MainPage extends BasePage {
     readonly url: string;
 
-    readonly page: Page;
-
-
     constructor(page: Page, url: string) {
+        super(page);
         this.url = url;
-        this.page = page;
+    }
+
+    async goto(): Promise<void> {
+        await this.page.goto(this.url);
     }
 }

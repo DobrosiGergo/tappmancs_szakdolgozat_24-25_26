@@ -17,6 +17,7 @@
 
       <div class="mt-8">
         <x-danger-button
+          data-test-id="delete-account-start"
           x-data=""
           x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
           class="px-6 py-3 text-lg"
@@ -43,6 +44,7 @@
         <div class="mt-6">
           <x-input-label for="password" value="Jelszó" class="sr-only" />
           <x-text-input
+            data-test-id="delete-account-password"
             id="password"
             name="password"
             type="password"
@@ -57,7 +59,7 @@
             Mégse
           </x-secondary-button>
 
-          <x-danger-button>
+          <x-danger-button data-test-id="delete-account-confirm">
             Fiók törlése
           </x-danger-button>
         </div>

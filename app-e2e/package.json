@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test:e2e": "npx playwright test",
+    "test:e2e:prod": "E2E_TARGET=production npx playwright test --grep-invert @mutating",
+    "test:e2e:smoke": "npx playwright test --grep @smoke",
     "test:e2e:headed": "npx playwright test --headed",
     "test:e2e:ui": "npx playwright test --ui",
     "test:e2e:list": "npx playwright list",
@@ -12,7 +14,8 @@
     "lint": "eslint \"src/**/*.{ts,tsx}\"  --max-warnings=0",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "format": "prettier --check \"{src,tests}/**/*.{ts,tsx,js,json,md}\"",
-    "format:fix": "prettier --write \"{src,tests}/**/*.{ts,tsx,js,json,md}\""
+    "format:fix": "prettier --write \"{src,tests}/**/*.{ts,tsx,js,json,md}\"",
+    "test:e2e:export": "npx playwright test --workers=1 --reporter=json > /tmp/e2e-report.json && node scripts/export-results.mjs /tmp/e2e-report.json ../app/resources/data/e2e-results.json"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
@@ -32,6 +35,7 @@
     "@types/node": "^24.3.1",
     "@typescript-eslint/eslint-plugin": "^8.42.0",
     "@typescript-eslint/parser": "^8.42.0",
+    "dotenv": "^18.0.1",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-playwright": "^2.2.2",

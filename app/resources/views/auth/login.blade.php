@@ -59,7 +59,7 @@
             <a class="text-sm text-neutral-600 hover:text-neutral-900" href="{{ route('role') }}">Regisztráció</a>
           </div>
 
-          <x-primary-button class="w-full py-3 text-base rounded-xl !bg-[#333333]">
+          <x-primary-button data-test-id="login-submit" class="w-full py-3 text-base rounded-xl !bg-[#333333]">
             Bejelentkezés
           </x-primary-button>
         </form>

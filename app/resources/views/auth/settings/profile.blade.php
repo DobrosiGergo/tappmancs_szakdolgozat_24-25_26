@@ -25,6 +25,7 @@
         <div>
           <x-input-label for="name" value="Név" />
           <x-text-input
+            data-test-id="profile-name"
             id="name"
             name="name"
             type="text"
@@ -40,6 +41,7 @@
         <div>
           <x-input-label for="email" value="E-mail cím" />
           <x-text-input
+            data-test-id="profile-email"
             id="email"
             name="email"
             type="email"
@@ -77,7 +79,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-          <x-primary-button class="px-6 py-2 text-lg">Mentés</x-primary-button>
+          <x-primary-button data-test-id="settings-save" class="px-6 py-2 text-lg">Mentés</x-primary-button>
 
         </div>
       </form>

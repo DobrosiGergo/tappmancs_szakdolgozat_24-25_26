@@ -21,6 +21,7 @@
         <div>
           <x-input-label for="update_password_current_password" value="Jelenlegi jelszó" />
           <x-text-input
+            data-test-id="password-current"
             id="update_password_current_password"
             name="current_password"
             type="password"
@@ -33,6 +34,7 @@
         <div>
           <x-input-label for="update_password_password" value="Új jelszó" />
           <x-text-input
+            data-test-id="password-new"
             id="update_password_password"
             name="password"
             type="password"
@@ -45,6 +47,7 @@
         <div>
           <x-input-label for="update_password_password_confirmation" value="Új jelszó megerősítése" />
           <x-text-input
+            data-test-id="password-new-confirm"
             id="update_password_password_confirmation"
             name="password_confirmation"
             type="password"
@@ -55,7 +58,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-          <x-primary-button class="px-6 py-2 text-lg">Mentés</x-primary-button>
+          <x-primary-button data-test-id="settings-save" class="px-6 py-2 text-lg">Mentés</x-primary-button>
 
         </div>
       </form>

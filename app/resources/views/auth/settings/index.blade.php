@@ -11,6 +11,7 @@
       <x-ui.action-card
         class="w-full p-6 md:p-8"
         :href="route('settings.profile')"
+        data-test-id="settings-profile-card"
         title="Profilinformációk módosítása"
         description="Név, e-mail, avatar frissítése."
       >
@@ -22,6 +23,7 @@
       <x-ui.action-card
         class="w-full p-6 md:p-8"
         :href="route('settings.password')"
+        data-test-id="settings-password-card"
         title="Jelszó módosítása"
         description="Erős, egyedi jelszót állíts be a fiókodhoz."
       >
@@ -33,6 +35,7 @@
       <x-ui.action-card
         class="w-full p-6 md:p-8 border-red-200"
         :href="route('settings.delete')"
+        data-test-id="settings-delete-card"
         title="Fiók törlése"
         description="A fiók és az összes kapcsolódó adat végleges eltávolítása."
       >

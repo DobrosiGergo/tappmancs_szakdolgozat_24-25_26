@@ -1,0 +1,82 @@
+{
+    "startedAt": "2026-09-30T09:33:22.463Z",
+    "durationSeconds": 55,
+    "browsers": [
+        "chromium",
+        "firefox"
+    ],
+    "scenarios": 23,
+    "runs": 46,
+    "passed": 46,
+    "failed": 0,
+    "areas": [
+        {
+            "area": "Tudj meg többet oldal",
+            "cases": [
+                "should render every section of the about page",
+                "should reach the pet list from the about page CTA",
+                "should reach the shelter list from the about page CTA"
+            ]
+        },
+        {
+            "area": "Bejelentkezés",
+            "cases": [
+                "should land on the dashboard after a successful login",
+                "should show an error message for an invalid password",
+                "should return to the home page after logout"
+            ]
+        },
+        {
+            "area": "Regisztráció",
+            "cases": [
+                "should create an adopter account",
+                "should create a shelter worker account",
+                "should open the shelter setup page after a shelter owner registration"
+            ]
+        },
+        {
+            "area": "Nyitóoldal",
+            "cases": [
+                "should render every element of the hero section",
+                "should navigate to the about page from the CTA button",
+                "should let a guest reach the pet list from the navbar",
+                "should let a guest reach the shelter list from the navbar"
+            ]
+        },
+        {
+            "area": "Fiókbeállítások",
+            "cases": [
+                "should show every settings card",
+                "should prefill the profile form with the user data",
+                "should render every field of the password change form",
+                "should load the account delete page"
+            ]
+        },
+        {
+            "area": "Menhelykezelés",
+            "cases": [
+                "should let an owner create a shelter and then update its details"
+            ]
+        },
+        {
+            "area": "Munkatársak",
+            "cases": [
+                "should let an owner add a worker and then remove them"
+            ]
+        },
+        {
+            "area": "Böngészés felhasználóként",
+            "cases": [
+                "should let a logged-in user browse the shelters",
+                "should let a logged-in user browse the pets",
+                "should send a message to a pet's shelter"
+            ]
+        },
+        {
+            "area": "Munkatársi műveletek",
+            "cases": [
+                "should let an employed worker manage pets and then leave the shelter"
+            ]
+        }
+    ]
+}

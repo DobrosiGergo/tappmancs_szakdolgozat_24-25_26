@@ -44,6 +44,7 @@ module.exports = [
     files: ['**/*.spec.ts', '**/*.test.ts'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+      'playwright/expect-expect': 'off',
     },
   },
 ];

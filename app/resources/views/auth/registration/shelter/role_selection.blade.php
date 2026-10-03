@@ -17,6 +17,7 @@
             type="submit"
             name="role_shelter"
             value="shelterWorker"
+            data-test-id="role-shelterWorker"
             class="group w-72 rounded-3xl border border-neutral-200 bg-white p-8
                    flex flex-col items-center justify-center gap-4 text-center shadow-sm
                    transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-neutral-300
@@ -36,6 +37,7 @@
             type="submit"
             name="role_shelter"
             value="shelterOwner"
+            data-test-id="role-shelterOwner"
             class="group w-72 rounded-3xl border border-neutral-200 bg-white p-8
                    flex flex-col items-center justify-center gap-4 text-center shadow-sm
                    transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-neutral-300

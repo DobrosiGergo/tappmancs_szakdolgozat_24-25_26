@@ -17,7 +17,7 @@
 
   <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
     @forelse($pets as $pet)
-      <div class="relative">
+      <div class="relative" data-test-id="pet-manage-item">
         <x-pet.card
           :href="route('pets.show', $pet)"
           :name="$pet->name"
@@ -33,6 +33,7 @@
             href="{{ route('pets.edit', $pet) }}"
             class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white/90 text-neutral-700 shadow-sm backdrop-blur transition hover:bg-neutral-300 hover:text-white"
             title="Módosítás"
+            data-test-id="pet-edit-link"
           >
             <x-icon name="pencil" class="h-5 w-5" />
           </a>
@@ -43,6 +44,7 @@
             @click.prevent="$dispatch('open-modal', 'delete-pet-{{ $pet->id }}')"
             class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-red-200 bg-white/90 text-red-600 shadow-sm backdrop-blur transition hover:bg-red-500 hover:text-white"
             title="Törlés"
+            data-test-id="pet-delete-button"
           >
             <x-icon name="delete" class="h-5 w-5" />
           </button>
@@ -74,6 +76,7 @@
 
                 <button
                   type="submit"
+                  data-test-id="pet-delete-confirm"
                   class="inline-flex items-center rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
                 >
                   Törlés

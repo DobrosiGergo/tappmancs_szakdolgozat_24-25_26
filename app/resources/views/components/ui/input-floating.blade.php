@@ -13,6 +13,7 @@
   @if($rows)
     <textarea
       id="{{ $id }}"
+      data-test-id="{{ $id }}"
       name="{{ $name }}"
       rows="{{ $rows }}"
       @required($required)
@@ -25,6 +26,7 @@
     <input
       type="{{ $type }}"
       id="{{ $id }}"
+      data-test-id="{{ $id }}"
       name="{{ $name }}"
       value="{{ old($name, $value) }}"
       @required($required)

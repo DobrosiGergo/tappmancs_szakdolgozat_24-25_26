@@ -22,6 +22,7 @@
     x-transition:leave="transition ease-in duration-200"
     x-transition:leave-start="opacity-100 translate-y-0"
     x-transition:leave-end="opacity-0 translate-y-3"
+    data-test-id="flash-message"
     class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 z-50 overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-black/8"
 >
     <div class="h-1 {{ $barClass }}"></div>

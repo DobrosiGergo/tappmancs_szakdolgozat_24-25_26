@@ -16,7 +16,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
 
-Route::view('/about', 'about')->name('about');
+Route::get('/about', function () {
+    $resultsPath = resource_path('data/e2e-results.json');
+
+    return view('about', [
+        'e2e' => file_exists($resultsPath) ? json_decode(file_get_contents($resultsPath), true) : null,
+    ]);
+})->name('about');
 
 Route::get('/shelters', [ShelterController::class, 'index'])->name('shelters.index');
 

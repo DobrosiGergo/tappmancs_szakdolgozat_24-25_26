@@ -39,5 +39,47 @@ Az alkalmazás a [http://localhost:8000](http://localhost:8000) címen érhető 
 | `npm run dev` | Laravel + Vite fejlesztői szerver indítása |
 | `npm run build` | Frontend eszközök éles fordítása |
 | `npm run test` | Unit és feature tesztek futtatása |
-| `npm run test:e2e` | Playwright e2e tesztek futtatása |
+| `npm run test:e2e` | Playwright e2e tesztek futtatása lokálisan (kell hozzá a futó `npm run dev`) |
+| `npm run test:e2e:prod` | E2e tesztek a production ellen (`E2E_BASE_URL` kötelező, adatmódosító tesztek kimaradnak) |
 | `npm run lint` | Kódstílus ellenőrzése (Laravel Pint) |
+
+## E2E tesztek
+
+A Playwright tesztek az `app-e2e/` mappában találhatók (page object minta, `src/ui/po/` + `src/ui/features/`).
+
+```bash
+# Egyszeri beállítás: a példafájl értékei a seedelt felhasználókhoz passzolnak
+cp app-e2e/.env.example app-e2e/.env
+
+# Lokálisan (előtte: npm run dev egy másik terminálban)
+npm run test:e2e
+
+# Production ellen (csak nem-adatmódosító tesztek futnak)
+E2E_BASE_URL=https://<prod-domain> \
+E2E_USER_EMAIL=<teszt-user-email> \
+E2E_USER_PASSWORD=<teszt-user-jelszo> \
+E2E_USER_NAME="<teszt-user-nev>" \
+npm run test:e2e:prod
+```
+
+### Tesztriport a „Tudj meg többet" oldalon
+
+A `/about` oldal „Automatizált tesztelés" szekciója az `app/resources/data/e2e-results.json` fájlból olvas, amit a teszt-futás generál:
+
+```bash
+cd app-e2e && npm run test:e2e:export
+```
+
+A fájl **verziókövetett** — enélkül a szekció a deployolt oldalon nem jelenik meg. A szekciócímek (`Bejelentkezés`, `Regisztráció`, …) az `app-e2e/scripts/export-results.mjs` `AREAS` táblájából jönnek, spec-fájlnév szerint; új spec esetén a script hibával áll le, amíg be nem kerül a megfelelő sor.
+
+Környezeti változók: `E2E_TARGET` (`local`/`production`), `E2E_BASE_URL`, valamint a teszt fiókok (`E2E_USER_*`, `E2E_OWNER_*`, `E2E_WORKER_*`). Az értékek az `app-e2e/.env` fájlból jönnek (lásd `.env.example`), a shell változók felülírják őket. A beolvasást és a validációt az `app-e2e/src/config/env.ts` végzi — hiányzó változónál azonnal, beszédes hibával áll le.
+
+A tesztek tagekkel futtathatók (`npx playwright test --grep @tag`):
+
+| Tag | Tartalom |
+|---|---|
+| `@smoke` | Főoldal, „Tudj meg többet" oldal + bejelentkezés/kijelentkezés gyorsteszt |
+| `@home`, `@about`, `@auth`, `@registration` | Főoldal, „Tudj meg többet" oldal, auth és regisztrációs flow-k |
+| `@shelter`, `@staffing`, `@worker` | Menhely kezelés, munkatárs kezelés, dolgozói interakciók |
+| `@user`, `@settings` | Felhasználói böngészés, profil beállítások |
+| `@mutating` | Adatot módosító tesztek — a `test:e2e:prod` script kizárja őket |

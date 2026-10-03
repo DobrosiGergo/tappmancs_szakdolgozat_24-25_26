@@ -2,7 +2,7 @@
     x-data="speciesBreedSelect(@js($species), @js($breeds), @js($species_id), @js($breed_id))"
     class="grid grid-cols-1 sm:grid-cols-2 gap-5"
 >
-    <div class="flex flex-col gap-1.5">
+    <div class="flex flex-col gap-1.5" data-test-id="species-select">
         <label class="text-sm font-medium text-neutral-700">Válassz fajt*</label>
 
         <div class="relative" @click.outside="speciesOpen = false">
@@ -40,7 +40,7 @@
         @enderror
     </div>
 
-    <div class="flex flex-col gap-1.5">
+    <div class="flex flex-col gap-1.5" data-test-id="breed-select">
         <label class="text-sm font-medium text-neutral-700">Válassz fajtát*</label>
 
         <div class="relative" @click.outside="breedOpen = false">

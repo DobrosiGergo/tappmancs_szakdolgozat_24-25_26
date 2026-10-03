@@ -42,22 +42,22 @@
 
     <div class="col-start-5 col-span-2 hidden lg:flex items-center"
          @mouseenter="open = 'shelter'" @focusin="open = 'shelter'">
-      <x-navbar.menu-item :dark="$dark" label="Menhelyem" :href="$shelterShowUrl" />
+      <x-navbar.menu-item :dark="$dark" label="Menhelyem" :href="$shelterShowUrl" data-test-id="nav-my-shelter" />
     </div>
 
     <div class="col-start-7 col-span-2 hidden lg:flex items-center"
          @mouseenter="open = 'pets'" @focusin="open = 'pets'">
-      <x-navbar.menu-item :dark="$dark" label="Kisállatok" :href="route('pets.index')" />
+      <x-navbar.menu-item :dark="$dark" label="Kisállatok" :href="route('pets.index')" data-test-id="nav-pets" />
     </div>
 
     <div class="col-start-9 col-span-2 hidden lg:flex items-center"
          @mouseenter="open = 'staff'" @focusin="open = 'staff'">
-      <x-navbar.menu-item :dark="$dark" label="Munkatársak" :href="$shelterStaffUrl" />
+      <x-navbar.menu-item :dark="$dark" label="Munkatársak" :href="$shelterStaffUrl" data-test-id="nav-staff" />
     </div>
 
     <div class="col-start-11 col-span-1 hidden lg:flex items-center"
          @mouseenter="open = 'account'" @focusin="open = 'account'">
-      <x-navbar.menu-item :dark="$dark" label="Fiók" :href="route('settings.index')" />
+      <x-navbar.menu-item :dark="$dark" label="Fiók" :href="route('settings.index')" data-test-id="nav-account" />
     </div>
 
   @elseif($isWorker)
@@ -65,12 +65,12 @@
     @if($workerShelter)
       <div class="col-start-7 col-span-2 hidden lg:flex items-center"
            @mouseenter="open = 'worker-shelter'" @focusin="open = 'worker-shelter'">
-        <x-navbar.menu-item :dark="$dark" label="Menhely" :href="route('shelters.show', $workerShelter)" />
+        <x-navbar.menu-item :dark="$dark" label="Menhely" :href="route('shelters.show', $workerShelter)" data-test-id="nav-worker-shelter" />
       </div>
 
       <div class="col-start-9 col-span-2 hidden lg:flex items-center"
            @mouseenter="open = 'pets'" @focusin="open = 'pets'">
-        <x-navbar.menu-item :dark="$dark" label="Kisállatok" :href="route('pets.index')" />
+        <x-navbar.menu-item :dark="$dark" label="Kisállatok" :href="route('pets.index')" data-test-id="nav-pets" />
       </div>
     @else
       <div class="col-start-7 col-span-4 hidden lg:flex items-center">
@@ -83,24 +83,24 @@
 
     <div class="col-start-11 col-span-1 hidden lg:flex items-center"
          @mouseenter="open = 'account'" @focusin="open = 'account'">
-      <x-navbar.menu-item :dark="$dark" label="Fiók" :href="route('settings.index')" />
+      <x-navbar.menu-item :dark="$dark" label="Fiók" :href="route('settings.index')" data-test-id="nav-account" />
     </div>
 
   @else
 
     <div class="col-start-7 col-span-2 hidden lg:flex items-center"
          @mouseenter="open = 'shelters-public'" @focusin="open = 'shelters-public'">
-      <x-navbar.menu-item :dark="$dark" label="Menhelyek" :href="route('shelters.index')" />
+      <x-navbar.menu-item :dark="$dark" label="Menhelyek" :href="route('shelters.index')" data-test-id="nav-shelters" />
     </div>
 
     <div class="col-start-9 col-span-2 hidden lg:flex items-center"
          @mouseenter="open = 'pets-public'" @focusin="open = 'pets-public'">
-      <x-navbar.menu-item :dark="$dark" label="Kisállatok" :href="route('pets.index')" />
+      <x-navbar.menu-item :dark="$dark" label="Kisállatok" :href="route('pets.index')" data-test-id="nav-pets" />
     </div>
 
     <div class="col-start-11 col-span-1 hidden lg:flex items-center"
          @mouseenter="open = 'account'" @focusin="open = 'account'">
-      <x-navbar.menu-item :dark="$dark" label="Fiók" :href="route('login')" />
+      <x-navbar.menu-item :dark="$dark" label="Fiók" :href="route('login')" data-test-id="nav-account" />
     </div>
 
   @endif
@@ -149,22 +149,22 @@
           <div class="col-start-5 col-span-2" x-show="open === 'shelter'">
             <x-navbar.section title="Menhelyem">
               <x-navbar.link :href="$shelterShowUrl">Publikus oldal</x-navbar.link>
-              <x-navbar.link :href="$shelterEditUrl">Szerkesztés</x-navbar.link>
+              <x-navbar.link :href="$shelterEditUrl" data-test-id="nav-edit-shelter">Szerkesztés</x-navbar.link>
               <x-navbar.link :href="route('messages.index')">Üzenetek</x-navbar.link>
             </x-navbar.section>
           </div>
 
           <div class="col-start-7 col-span-2" x-show="open === 'pets'">
             <x-navbar.section title="Kisállatok">
-              <x-navbar.link :href="route('pets.create')">Új kisállat</x-navbar.link>
+              <x-navbar.link :href="route('pets.create')" data-test-id="nav-new-pet">Új kisállat</x-navbar.link>
               <x-navbar.link :href="route('pets.index')">Összes kisállat</x-navbar.link>
-              <x-navbar.link :href="route('pets.update.index')">Saját kisállatok</x-navbar.link>
+              <x-navbar.link :href="route('pets.update.index')" data-test-id="nav-my-pets">Saját kisállatok</x-navbar.link>
             </x-navbar.section>
           </div>
 
           <div class="col-start-9 col-span-2" x-show="open === 'staff'">
             <x-navbar.section title="Munkatársak">
-              <x-navbar.link :href="$shelterStaffUrl">Kezelés</x-navbar.link>
+              <x-navbar.link :href="$shelterStaffUrl" data-test-id="nav-manage-staff">Kezelés</x-navbar.link>
             </x-navbar.section>
           </div>
 
@@ -185,9 +185,9 @@
 
             <div class="col-start-9 col-span-2" x-show="open === 'pets'">
               <x-navbar.section title="Kisállatok">
-                <x-navbar.link :href="route('pets.create')">Új kisállat</x-navbar.link>
+                <x-navbar.link :href="route('pets.create')" data-test-id="nav-new-pet">Új kisállat</x-navbar.link>
                 <x-navbar.link :href="route('pets.index')">Összes kisállat</x-navbar.link>
-                <x-navbar.link :href="route('pets.update.index')">Saját kisállatok</x-navbar.link>
+                <x-navbar.link :href="route('pets.update.index')" data-test-id="nav-my-pets">Saját kisállatok</x-navbar.link>
               </x-navbar.section>
             </div>
           @endif

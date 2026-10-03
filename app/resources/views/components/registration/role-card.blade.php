@@ -11,6 +11,7 @@
     type="submit"
     name="role"
     value="{{ $role }}"
+    data-test-id="role-{{ $role }}"
     aria-label="{{ $label }}"
     class="group w-full h-[220px] md:h-[240px] rounded-2xl border border-neutral-200 bg-white
            p-6 transition-colors duration-200

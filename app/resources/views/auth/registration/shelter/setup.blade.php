@@ -79,6 +79,7 @@
           @endif
 
           <button
+            data-test-id="shelter-submit"
             type="submit"
             class="w-full inline-flex items-center justify-center rounded-full bg-neutral-900 text-white px-5 py-3 font-medium hover:bg-neutral-800 transition"
           >

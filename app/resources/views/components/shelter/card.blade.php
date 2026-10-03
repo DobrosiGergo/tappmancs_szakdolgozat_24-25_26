@@ -17,7 +17,7 @@
   }
 @endphp
 
-<a href="{{ $href }}" class="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 rounded-2xl">
+<a href="{{ $href }}" data-test-id="shelter-card" class="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 rounded-2xl">
   <article class="relative flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200/70 bg-white shadow-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl hover:shadow-neutral-200/60">
 
     <div class="relative flex h-44 shrink-0 items-center justify-center overflow-hidden bg-neutral-700">
@@ -36,7 +36,7 @@
     <div class="h-px w-0 bg-neutral-900 transition-all duration-500 ease-out group-hover:w-full"></div>
 
     <div class="flex flex-1 flex-col p-5">
-      <h3 class="text-xl font-semibold leading-snug text-neutral-900 transition-colors duration-200 group-hover:text-neutral-600">
+      <h3 data-test-id="shelter-card-name" class="text-xl font-semibold leading-snug text-neutral-900 transition-colors duration-200 group-hover:text-neutral-600">
         {{ $name }}
       </h3>
 

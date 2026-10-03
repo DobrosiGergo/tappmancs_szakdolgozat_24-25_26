@@ -32,7 +32,7 @@
 
             @if($alreadySent)
 
-                <div class="rounded-xl bg-amber-50 px-5 py-4 ring-1 ring-amber-200">
+                <div data-test-id="contact-already-sent" class="rounded-xl bg-amber-50 px-5 py-4 ring-1 ring-amber-200">
                     <p class="text-sm font-medium text-amber-800">Már küldtél üzenetet ezzel a kisállattal kapcsolatban.</p>
                     <p class="mt-1 text-xs text-amber-600">A menhely koordinátora hamarosan felveszi veled a kapcsolatot.</p>
                 </div>
@@ -68,7 +68,7 @@
                         <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-neutral-500">
                             Üzeneted
                         </label>
-                        <textarea name="message" rows="5" required minlength="10" maxlength="2000"
+                        <textarea name="message" data-test-id="contact-message-input" rows="5" required minlength="10" maxlength="2000"
                                   placeholder="Írj egy rövid bemutatkozást, és mondd el, miért szeretnéd örökbe fogadni ezt a kisállatot."
                                   class="w-full resize-none rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition focus:border-neutral-400 focus:bg-white focus:ring-2 focus:ring-neutral-200">{{ old('message') }}</textarea>
                     </div>
@@ -78,6 +78,7 @@
                             Adataidat kizárólag a kapcsolatfelvételhez használjuk.
                         </p>
                         <button type="submit"
+                                data-test-id="contact-send-button"
                                 class="inline-flex shrink-0 items-center gap-2 rounded-full bg-dark-mid px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-dark-soft disabled:opacity-60"
                                 :disabled="loading">
                             <span x-show="!loading">Üzenet küldése</span>

@@ -50,7 +50,7 @@
                     @if($workers->isNotEmpty())
                         <div class="flex flex-col divide-y divide-neutral-100">
                             @foreach($workers as $worker)
-                                <div class="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0">
+                                <div data-test-id="worker-row" class="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0">
                                     <div class="flex items-center gap-3">
                                         <div class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-neutral-100">
                                             <x-icon name="user" class="h-5 w-5 opacity-50" />
@@ -67,6 +67,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
+                                                data-test-id="worker-remove-button"
                                                 class="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium text-red-600 ring-1 ring-red-200 transition hover:bg-red-50">
                                             Eltávolítás
                                         </button>
@@ -97,6 +98,7 @@
                             </label>
                             <input type="email"
                                    id="email"
+                                   data-test-id="staffing-email"
                                    name="email"
                                    value="{{ old('email') }}"
                                    placeholder="pelda@email.com"
@@ -109,6 +111,7 @@
                         </div>
 
                         <button type="submit"
+                                data-test-id="staffing-add-button"
                                 class="w-full rounded-xl bg-[#333333] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-700">
                             Hozzáadás
                         </button>
