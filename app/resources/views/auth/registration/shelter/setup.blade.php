@@ -67,7 +67,7 @@
               <div class="grid sm:grid-cols-2 gap-4">
                 @foreach($shelter->images_safe as $img)
                   <label class="relative block rounded-xl border border-neutral-200 overflow-hidden bg-white">
-                    <img src="{{ asset('storage/'.$img) }}" alt="" class="h-40 w-full object-cover">
+                    <img src="{{ \App\Support\UploadDisk::url($img) }}" alt="" class="h-40 w-full object-cover">
                     <div class="flex items-center gap-2 p-2 text-sm">
                       <input type="checkbox" name="remove_images[]" value="{{ $img }}" id="rm_{{ md5($img) }}" class="rounded border-neutral-300 text-neutral-700 focus:ring-neutral-500">
                       <span class="text-neutral-600">Törlés</span>

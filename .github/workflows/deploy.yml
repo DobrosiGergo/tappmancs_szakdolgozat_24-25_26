@@ -1,60 +1,68 @@
-name: Deploy to AWS EC2
+name: Deploy
+
+# Az alkalmazást a Vercel Git-integrációja deployolja automatikusan minden
+# main-re érkező pushnál. Ez a workflow csak azt végzi el, amit a serverless
+# runtime nem tud: az adatbázis-migrációt a Neon Postgres ellen.
+#
+# A seedelés szándékos, kézi művelet (workflow_dispatch), hogy egy push ne
+# írhassa újra az éles adatokat.
 
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: 'Run db:seed and demo:reset as well (fresh database only)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: migrate-production
+  cancel-in-progress: false
 
 jobs:
-  deploy:
-    if: github.event_name == 'push'
+  migrate:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+    defaults:
+      run:
+        working-directory: app
 
-      - name: Deploy to EC2
-        run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} '
-            cd /var/www/tappmancs
-            git pull origin main
-            cd app
-            composer install --no-dev --optimize-autoloader
-            npm install
-            npm run build
-            php artisan optimize:clear
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
-            sudo chown -R www-data:www-data storage bootstrap/cache
-          '
-
-  data:
-    needs: [deploy]
-    if: |
-      always() &&
-      (needs.deploy.result == 'success' || needs.deploy.result == 'skipped')
-    runs-on: ubuntu-latest
+    env:
+      APP_ENV: production
+      APP_KEY: ${{ secrets.APP_KEY }}
+      APP_DEBUG: 'false'
+      LOG_CHANNEL: stderr
+      DB_CONNECTION: pgsql
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_DATABASE: ${{ secrets.DB_DATABASE }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_SSLMODE: require
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+      QUEUE_CONNECTION: sync
 
     steps:
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+      - uses: actions/checkout@v4
 
-      - name: Migrate, seed and reset demo
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_pgsql, mbstring, bcmath
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Run migrations
+        run: php artisan migrate --force
+
+      - name: Seed and reset demo data
+        if: github.event_name == 'workflow_dispatch' && inputs.seed
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} '
-            cd /var/www/tappmancs/app
-            php artisan migrate --force
-            php artisan db:seed --force
-            php artisan demo:reset
-          '
+          php artisan db:seed --force
+          php artisan demo:reset

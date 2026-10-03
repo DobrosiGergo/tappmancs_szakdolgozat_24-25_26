@@ -43,6 +43,18 @@ Az alkalmazás a [http://localhost:8000](http://localhost:8000) címen érhető 
 | `npm run test:e2e:prod` | E2e tesztek a production ellen (`E2E_BASE_URL` kötelező, adatmódosító tesztek kimaradnak) |
 | `npm run lint` | Kódstílus ellenőrzése (Laravel Pint) |
 
+## Deploy
+
+Az alkalmazás a **Vercelen** fut serverless functionként; a deployt a Vercel
+Git-integrációja végzi minden `main`-re érkező pushnál. Az adatbázis **Neon
+Postgres**, a feltöltött képek **Cloudflare R2** bucketben vannak.
+
+A teljes beállítás (env változók, Neon, R2, cron, első seedelés) a
+[docs/VERCEL.md](docs/VERCEL.md)-ben van leírva.
+
+> Lokálisan semmi nem változik: SQLite és a `public` disk az alapértelmezés,
+> a `UPLOADS_DISK` env változó csak a deployolt környezetben vált `s3`-ra.
+
 ## E2E tesztek
 
 A Playwright tesztek az `app-e2e/` mappában találhatók (page object minta, `src/ui/po/` + `src/ui/features/`).

@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Support\UploadDisk;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Helpers\Tools;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class SettingsController extends Controller
@@ -68,13 +68,13 @@ class SettingsController extends Controller
                 $shelter->workers()->update(['shelter_id' => null]);
 
                 $petShelterFolder = 'pets/' . $shelter->uuid;
-                if (Storage::disk('public')->exists($petShelterFolder)) {
-                    Storage::disk('public')->deleteDirectory($petShelterFolder);
+                if (UploadDisk::get()->exists($petShelterFolder)) {
+                    UploadDisk::get()->deleteDirectory($petShelterFolder);
                 }
 
                 $shelterFolder = 'shelters/' . $shelter->uuid;
-                if (Storage::disk('public')->exists($shelterFolder)) {
-                    Storage::disk('public')->deleteDirectory($shelterFolder);
+                if (UploadDisk::get()->exists($shelterFolder)) {
+                    UploadDisk::get()->deleteDirectory($shelterFolder);
                 }
             }
         }

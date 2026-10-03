@@ -6,6 +6,7 @@ use App\Http\Controllers\PetController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShelterController;
 use App\Http\Controllers\StaffingController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -163,5 +164,39 @@ Route::get('/shelters/{id}', function ($id) {
 
     return redirect()->route('shelters.show', $shelter, 301);
 })->whereNumber('id');
+
+/*
+|--------------------------------------------------------------------------
+| Cron végpontok (Vercel Cron hívja, nincs rendszerszintű scheduler)
+|--------------------------------------------------------------------------
+|
+| Serverless környezetben nincs crontab, ami a `schedule:run`-t futtatná,
+| ezért a Vercel Cron HTTP-n keresztül hívja ezeket. A Vercel a
+| CRON_SECRET env változó értékét küldi Bearer tokenként; enélkül a
+| végpontok 404-et adnak, hogy kívülről ne is legyenek észlelhetők.
+|
+*/
+
+Route::get('/cron/{task}', function (string $task) {
+    $secret = config('services.cron.secret');
+
+    abort_unless(
+        $secret && hash_equals('Bearer ' . $secret, request()->header('Authorization', '')),
+        404
+    );
+
+    $command = match ($task) {
+        'prune-uploads' => 'uploads:prune',
+        'demo-reset'    => 'demo:reset',
+        default         => abort(404),
+    };
+
+    Artisan::call($command);
+
+    return response()->json([
+        'task'   => $task,
+        'output' => trim(Artisan::output()),
+    ]);
+})->whereIn('task', ['prune-uploads', 'demo-reset'])->name('cron');
 
 require __DIR__ . '/auth.php';

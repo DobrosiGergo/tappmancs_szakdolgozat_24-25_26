@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\HasUuid;
+use App\Support\UploadDisk;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -122,7 +123,7 @@ protected function casts()
         $arr = $this->images_safe;
 
         if (count($arr)) {
-            return asset('storage/' . $arr[0]);
+            return UploadDisk::url($arr[0]);
         }
 
         return null;

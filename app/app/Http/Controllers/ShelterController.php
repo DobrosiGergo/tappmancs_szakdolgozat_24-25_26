@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Shelter;
+use App\Support\UploadDisk;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ShelterController extends Controller
 {
@@ -76,8 +76,8 @@ class ShelterController extends Controller
                 $filename = basename($tmpImagePath);
                 $newPath  = 'shelters/' . $shelter->uuid . '/' . $filename;
 
-                if (Storage::disk('public')->exists($tmpImagePath)) {
-                    Storage::disk('public')->move($tmpImagePath, $newPath);
+                if (UploadDisk::get()->exists($tmpImagePath)) {
+                    UploadDisk::get()->move($tmpImagePath, $newPath);
                     $uploadedImages[] = $newPath;
                 }
             }
@@ -138,8 +138,8 @@ class ShelterController extends Controller
                 $filename = basename($tmpImagePath);
                 $newPath  = 'shelters/' . $shelter->uuid . '/' . $filename;
 
-                if (Storage::disk('public')->exists($tmpImagePath)) {
-                    Storage::disk('public')->move($tmpImagePath, $newPath);
+                if (UploadDisk::get()->exists($tmpImagePath)) {
+                    UploadDisk::get()->move($tmpImagePath, $newPath);
                     $newUploaded[] = $newPath;
                 }
             }

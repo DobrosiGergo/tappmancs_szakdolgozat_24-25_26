@@ -17,6 +17,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Upload Disk
+    |--------------------------------------------------------------------------
+    |
+    | Disk holding user-uploaded images. Kept separate from the default disk
+    | because it must be writable at runtime: on serverless hosting the
+    | application filesystem is read-only, so this points at a bucket.
+    |
+    */
+
+    'uploads' => env('UPLOADS_DISK', 'public'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Filesystem Disks
     |--------------------------------------------------------------------------
     |

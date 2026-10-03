@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Pet;
-use Illuminate\Support\Facades\Storage;
+use App\Support\UploadDisk;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -86,7 +86,7 @@ class ImageUploader extends Component
         ]);
 
         foreach ($this->images as $image) {
-            $path = $image->store($this->tempDir(), 'public');
+            $path = $image->store($this->tempDir(), UploadDisk::name());
 
             $this->previews[] = [
                 'name' => $image->getClientOriginalName(),
@@ -110,8 +110,8 @@ class ImageUploader extends Component
 
         $path = $this->previews[$index]['path'];
 
-        if (Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
+        if (UploadDisk::get()->exists($path)) {
+            UploadDisk::get()->delete($path);
         }
 
         unset($this->previews[$index]);
@@ -153,8 +153,8 @@ class ImageUploader extends Component
 
         $path = $images[$index];
 
-        if (Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
+        if (UploadDisk::get()->exists($path)) {
+            UploadDisk::get()->delete($path);
         }
 
         $images->forget($index);

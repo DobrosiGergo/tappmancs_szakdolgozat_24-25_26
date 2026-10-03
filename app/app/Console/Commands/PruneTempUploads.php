@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Support\UploadDisk;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 
 class PruneTempUploads extends Command
 {
@@ -15,7 +15,7 @@ class PruneTempUploads extends Command
     {
         $hours  = (int) $this->option('hours');
         $cutoff = now()->subHours($hours)->timestamp;
-        $disk   = Storage::disk('public');
+        $disk   = UploadDisk::get();
         $count  = 0;
 
         foreach ($disk->allFiles('temp') as $file) {

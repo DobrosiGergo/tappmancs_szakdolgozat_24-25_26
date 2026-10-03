@@ -6,8 +6,8 @@ use App\Http\Requests\PetStoreRequest;
 use App\Models\Pet;
 use App\Models\Shelter;
 use App\Models\Specie;
+use App\Support\UploadDisk;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class PetController extends Controller
 {
@@ -196,8 +196,8 @@ class PetController extends Controller
                 $filename = basename($tmpPath);
                 $newPath  = 'pets/' . $shelter->uuid . '/' . $pet->uuid . '/' . $filename;
 
-                if (Storage::disk('public')->exists($tmpPath)) {
-                    Storage::disk('public')->move($tmpPath, $newPath);
+                if (UploadDisk::get()->exists($tmpPath)) {
+                    UploadDisk::get()->move($tmpPath, $newPath);
                     $paths[] = $newPath;
                 }
             }
@@ -244,8 +244,8 @@ class PetController extends Controller
                 $filename = basename($tmpPath);
                 $newPath  = 'pets/' . $pet->shelter->uuid . '/' . $pet->uuid . '/' . $filename;
 
-                if (Storage::disk('public')->exists($tmpPath)) {
-                    Storage::disk('public')->move($tmpPath, $newPath);
+                if (UploadDisk::get()->exists($tmpPath)) {
+                    UploadDisk::get()->move($tmpPath, $newPath);
                     $newImages[] = $newPath;
                 }
             }
@@ -292,14 +292,14 @@ class PetController extends Controller
         $petFolder     = 'pets/' . $pet->shelter->uuid . '/' . $pet->uuid;
         $shelterFolder = 'pets/' . $pet->shelter->uuid;
 
-        if (Storage::disk('public')->exists($petFolder)) {
-            Storage::disk('public')->deleteDirectory($petFolder);
+        if (UploadDisk::get()->exists($petFolder)) {
+            UploadDisk::get()->deleteDirectory($petFolder);
         }
 
         if (
-            Storage::disk('public')->exists($shelterFolder) && empty(Storage::disk('public')->directories($shelterFolder)) && empty(Storage::disk('public')->files($shelterFolder))
+            UploadDisk::get()->exists($shelterFolder) && empty(UploadDisk::get()->directories($shelterFolder)) && empty(UploadDisk::get()->files($shelterFolder))
         ) {
-            Storage::disk('public')->deleteDirectory($shelterFolder);
+            UploadDisk::get()->deleteDirectory($shelterFolder);
         }
 
         $pet->delete();
