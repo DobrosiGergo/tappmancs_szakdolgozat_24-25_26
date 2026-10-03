@@ -2,6 +2,26 @@
 
 use Illuminate\Support\Str;
 
+/*
+|--------------------------------------------------------------------------
+| MySQL TLS CA tanúsítvány
+|--------------------------------------------------------------------------
+|
+| A menedzselt MySQL szolgáltatók (pl. Aiven) kötelezően TLS-t használnak, és
+| a szerver tanúsítványának ellenőrzéséhez CA cert kell. Ha a fájl a szokásos
+| helyen van, magától megtaláljuk -- így nem kell absztrakt elérési utat env
+| változóba írni, ami serverless futtatókörnyezetben könnyen eltér.
+|
+| Szándékosan database_path() és nem storage_path(): serverless alatt az
+| api/index.php a storage path-ot /tmp-re tereli, a database path viszont a
+| telepítés gyökeréhez kötött, tehát stabil.
+|
+*/
+
+$mysqlSslCa = env('MYSQL_ATTR_SSL_CA') ?: (
+    file_exists($defaultCa = database_path('certs/ca.pem')) ? $defaultCa : null
+);
+
 return [
 
     /*
@@ -58,7 +78,7 @@ return [
             'strict'         => true,
             'engine'         => null,
             'options'        => extension_loaded('pdo_mysql') ? array_filter([
-                (class_exists(\Pdo\Mysql::class) ? \Pdo\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
+                (class_exists(\Pdo\Mysql::class) ? \Pdo\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => $mysqlSslCa,
             ]) : [],
         ],
 
@@ -78,7 +98,7 @@ return [
             'strict'         => true,
             'engine'         => null,
             'options'        => extension_loaded('pdo_mysql') ? array_filter([
-                (class_exists(\Pdo\Mysql::class) ? \Pdo\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
+                (class_exists(\Pdo\Mysql::class) ? \Pdo\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => $mysqlSslCa,
             ]) : [],
         ],
 

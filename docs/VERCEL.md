@@ -167,7 +167,7 @@ Vegyél fel **két kapcsolatot** ugyanabban a kliensben:
 | `tappmancs-prod` | Aiven host | Aiven port | `defaultdb` | `avnadmin` |
 
 A prod kapcsolatnál kapcsold be az **SSL**-t (az Aiven megköveteli), és add meg a
-2. lépésben letöltött CA certet.
+2. lépésben letöltött `ca.pem`-et.
 
 ---
 
@@ -198,37 +198,35 @@ A service *Overview* fülén:
 
 ### SSL CA cert
 
-Az Aiven **kötelezően SSL-t használ**. Az *Overview* fülön: *Download CA
+Az Aiven **kötelezően TLS-t használ**. Az *Overview* fülön: *Download CA
 certificate* → `ca.pem`.
 
-A serverless function filesystemje read-only, ezért a certet a repóba kell tenni:
+**Egyetlen `ca.pem` kell** — kliens-tanúsítvány és privát kulcs **nem**. Az Aiven
+szerveroldali TLS-t használ, ez a fájl csak a *szerver* tanúsítványának
+ellenőrzésére szolgál, nem mutual TLS-hez. A fájl nem titkos (publikus CA cert),
+ezért verziókövethető.
+
+Tedd a helyére, pontosan ezen a néven:
 
 ```bash
-mkdir -p app/storage/certs
-cp ~/Downloads/ca.pem app/storage/certs/aiven-ca.pem
+cp ~/Downloads/ca.pem app/database/certs/ca.pem
 ```
 
-Ez a fájl **nem titkos** (publikus CA cert, nem kulcs), bátran verziókövethető.
-Ellenőrizd, hogy a `.vercelignore` nem zárja-e ki:
+Ennyi. **Nem kell `MYSQL_ATTR_SSL_CA` env változót beállítani** sem a Vercelen,
+sem GitHub secretként — a `config/database.php` magától megtalálja, ha ezen a
+néven itt van. Az env változó csak felülbírálásra szolgál, ha máshol tartod.
+
+> **Miért `database/certs/` és nem `storage/certs/`:** serverless futtatáskor az
+> `api/index.php` a `storage_path()`-ot `/tmp`-re tereli, mert a filesystem
+> read-only. Egy `storage/` alatti cert ezért futásidőben nem lenne megtalálható.
+> A `database_path()` a telepítés gyökeréhez kötött, tehát stabil.
+> Lefedve: `app/tests/Feature/MysqlSslCaTest.php`.
+
+Ellenőrizd, hogy a deploy-bundle nem zárja ki:
 
 ```bash
-grep -n "storage" app/.vercelignore
+grep -n "database" app/.vercelignore    # csak /database/*.sqlite legyen benne
 ```
-
-Ha a `storage/app/public` szerepel benne, az rendben van — a `storage/certs` nem.
-
-Env változó a Vercelen:
-
-```
-MYSQL_ATTR_SSL_CA=/var/task/user/storage/certs/aiven-ca.pem
-```
-
-> **Ezt az utat ellenőrizd az első deploy után.** A function munkakönyvtára
-> runtime-függő, és ha az út téves, a kapcsolat SSL-hibával esik el. A Vercel
-> function logjában látszik a tényleges path. Alternatíva, ha nem találja:
-> `MYSQL_ATTR_SSL_CA` kihagyása — a MySQL ekkor is SSL-t használ, csak nem
-> validálja a CA-t. Szakdolgozatnál ez elfogadható kompromisszum, de a validált
-> változat a helyes.
 
 ### Ellenőrzés
 
@@ -236,7 +234,7 @@ A GUI kliensedből csatlakozz a prod adatbázishoz. Vagy CLI-ből:
 
 ```bash
 mysql -h <aiven-host> -P <aiven-port> -u avnadmin -p \
-      --ssl-ca=app/storage/certs/aiven-ca.pem defaultdb -e "select version();"
+      --ssl-ca=app/database/certs/ca.pem defaultdb -e "select version();"
 ```
 
 ### Limitek, amiket tudni kell
@@ -312,7 +310,6 @@ Pontosan ezek a nevek kellenek (a `.github/workflows/deploy.yml` ezekre hivatkoz
 | `DB_DATABASE` | `defaultdb` |
 | `DB_USERNAME` | `avnadmin` |
 | `DB_PASSWORD` | Aiven jelszó |
-| `MYSQL_ATTR_SSL_CA` | `app/storage/certs/aiven-ca.pem` (a runner checkoutjában ez a relatív út érvényes) |
 
 **Töröld a régieket:** `EC2_SSH_KEY`, `EC2_HOST` — ezekre már semmi nem hivatkozik.
 
@@ -365,7 +362,8 @@ DB_PORT=<aiven-port>
 DB_DATABASE=defaultdb
 DB_USERNAME=avnadmin
 DB_PASSWORD=<aiven-pass>
-MYSQL_ATTR_SSL_CA=/var/task/user/storage/certs/aiven-ca.pem
+# MYSQL_ATTR_SSL_CA nem kell: a config/database.php feloldja a
+# database/certs/ca.pem fájlból (lásd 2. lépés)
 
 # Nem lehet "file" — nincs írható, kérések között megosztott filesystem
 SESSION_DRIVER=database
@@ -467,7 +465,8 @@ Két dolog indul el egyszerre:
 
 **Ellenőrzés:** mindkettő zöld. A migráció a 11 migrációt futtatja — ezek MySQL-en
 lokálisan már tisztán lefutottak, úgyhogy itt nem számítok gondra. Ha az Actions
-SSL-hibával esik el, a `MYSQL_ATTR_SSL_CA` secret útja a gyanús.
+SSL-hibával esik el, ellenőrizd, hogy a `app/database/certs/ca.pem`
+be van-e commitolva.
 
 ---
 
@@ -690,7 +689,7 @@ Nézd a function logot. Tipikus okok:
 | Log | Ok |
 |---|---|
 | `SQLSTATE[HY000] [2002]` | `DB_HOST`/`DB_PORT` téves, vagy az Aiven még `REBUILDING` |
-| SSL/certificate hiba | `MYSQL_ATTR_SSL_CA` útja téves — lásd 2. lépés |
+| SSL/certificate hiba | a `database/certs/ca.pem` nincs a repóban, vagy a `.vercelignore` kizárja |
 | `No application encryption key` | `APP_KEY` nincs beállítva a Vercel envben |
 | `Permission denied` / `mkdir` | a storage path nem `/tmp`-re megy; ezt az `api/index.php` kezeli |
 | `Table ... doesn't exist` | a migráció nem futott le — nézd a GitHub Actions-t |
