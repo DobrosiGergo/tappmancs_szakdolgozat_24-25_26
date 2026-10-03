@@ -46,15 +46,18 @@ Az alkalmazás a [http://localhost:8000](http://localhost:8000) címen érhető 
 ## Deploy
 
 Az alkalmazás a **Vercelen** fut serverless functionként; a deployt a Vercel
-Git-integrációja végzi minden `main`-re érkező pushnál. Az adatbázis **Neon
-Postgres**, a feltöltött képek **Cloudflare R2** bucketben vannak.
+Git-integrációja végzi minden `main`-re érkező pushnál. Az adatbázis **Aiven
+MySQL**, a feltöltött képek **Cloudflare R2** bucketben vannak.
 Az éles cím: **https://tappmancs-szakdolgozat.hu**
 
-A teljes beállítás (env változók, Neon, R2, cron, első seedelés) a
+A teljes beállítás (Aiven, R2, env változók, domain, cron, seedelés, és az
+AWS leállítása) a
 [docs/VERCEL.md](docs/VERCEL.md)-ben van leírva.
 
-> Lokálisan semmi nem változik: SQLite és a `public` disk az alapértelmezés,
-> a `UPLOADS_DISK` env változó csak a deployolt környezetben vált `s3`-ra.
+> A dev és a prod ugyanazt a motort használja: lokálisan is **MySQL** megy
+> (`app/.env.example`), hogy ne térjenek el. A feltöltés diskje viszont
+> környezetfüggő: lokálisan a `public` disk, prodban `s3` — ezt az
+> `UPLOADS_DISK` env változó vezérli.
 
 ## E2E tesztek
 
