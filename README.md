@@ -48,6 +48,7 @@ Az alkalmazás a [http://localhost:8000](http://localhost:8000) címen érhető 
 Az alkalmazás a **Vercelen** fut serverless functionként; a deployt a Vercel
 Git-integrációja végzi minden `main`-re érkező pushnál. Az adatbázis **Neon
 Postgres**, a feltöltött képek **Cloudflare R2** bucketben vannak.
+Az éles cím: **https://tappmancs-szakdolgozat.hu**
 
 A teljes beállítás (env változók, Neon, R2, cron, első seedelés) a
 [docs/VERCEL.md](docs/VERCEL.md)-ben van leírva.
@@ -67,7 +68,7 @@ cp app-e2e/.env.example app-e2e/.env
 npm run test:e2e
 
 # Production ellen (csak nem-adatmódosító tesztek futnak)
-E2E_BASE_URL=https://<prod-domain> \
+E2E_BASE_URL=https://tappmancs-szakdolgozat.hu \
 E2E_USER_EMAIL=<teszt-user-email> \
 E2E_USER_PASSWORD=<teszt-user-jelszo> \
 E2E_USER_NAME="<teszt-user-nev>" \

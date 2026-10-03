@@ -52,7 +52,7 @@ APP_NAME=Tappmancs
 APP_ENV=production
 APP_KEY=                      # php artisan key:generate --show
 APP_DEBUG=false
-APP_URL=https://<project>.vercel.app
+APP_URL=https://tappmancs-szakdolgozat.hu
 APP_LOCALE=hu
 APP_FALLBACK_LOCALE=hu
 
@@ -74,6 +74,9 @@ SESSION_DRIVER=database
 CACHE_STORE=database
 QUEUE_CONNECTION=sync
 
+# A domain csak HTTPS-en szolgál ki, így a cookie-t ne bízzuk auto-detectre
+SESSION_SECURE_COOKIE=true
+
 # Feltöltések: Cloudflare R2 (S3-kompatibilis)
 UPLOADS_DISK=s3
 AWS_ACCESS_KEY_ID=<r2-access-key>
@@ -91,7 +94,56 @@ CRON_SECRET=<generálj egy hosszú random stringet>
 `QUEUE_CONNECTION=sync`, mert az alkalmazás nem dispatch-el queue jobot
 (ellenőrizve: nincs `ShouldQueue` és nincs `dispatch()`), így nem kell worker.
 
-## 4. Adatbázis inicializálása
+## 4. Saját domain: tappmancs-szakdolgozat.hu
+
+A Vercel Hobby tieren a custom domain ingyenes, a TLS tanúsítványt (Let's
+Encrypt) a Vercel automatikusan kezeli és újítja.
+
+1. Vercel → Project → Settings → Domains → add `tappmancs-szakdolgozat.hu`.
+2. Add hozzá a `www.tappmancs-szakdolgozat.hu`-t is, és állítsd be
+   **redirectnek az apexre** — így egy kanonikus hoston fut minden, és a
+   session cookie sem hasad szét két host között.
+3. Állítsd be a DNS rekordokat a `.hu` regisztrátorod felületén.
+
+### DNS rekordok
+
+| Típus | Név | Érték |
+|---|---|---|
+| A | `@` (apex) | `76.76.21.21` |
+| CNAME | `www` | a Vercel által kiírt `cname.vercel-dns…` érték |
+
+> **Az értékeket a Vercel felületéről olvasd ki, ne innen.** A Vercel saját
+> dokumentációja is jelzi, hogy a rekordok projektspecifikusak lehetnek, és a
+> CNAME célpontja több változatban él (`cname.vercel-dns.com`,
+> `cname.vercel-dns-0.com`). A Domains fül pontosan kiírja, mi kell; CLI-ből
+> `vercel domains inspect tappmancs-szakdolgozat.hu`.
+
+Apex domainre **nem lehet CNAME-et** tenni (DNS-standard), ezért ott A rekord kell.
+
+### CAA rekord
+
+Ha a domainen van CAA rekord, engedned kell a Let's Encryptet, különben a
+Vercel nem tud tanúsítványt kiállítani:
+
+```
+0 issue "letsencrypt.org"
+```
+
+Ha nincs CAA rekordod egyáltalán, nincs mit tenni — az bármely CA-t engedi.
+
+### HTTPS a proxy mögött
+
+A Vercel terminálja a TLS-t, és a sémát csak az `X-Forwarded-Proto` headerben
+adja tovább. Ezért a `bootstrap/app.php`-ban be van állítva a
+`trustProxies(at: '*')` — enélkül a Laravel HTTP-nek látná a kérést, és
+`http://` URL-eket generálna egy HTTPS-es oldalon (blokkolt asseteket és
+lefokozott login-redirecteket okozva).
+
+A wildcard itt azért helyes, mert a Vercel proxy IP-i nem fix range-ben vannak,
+és az origin **csak** a proxyn keresztül érhető el. Saját VM-en ezt nem így
+kellene beállítani. Lefedve: `tests/Feature/ProxiedHttpsTest.php`.
+
+## 5. Adatbázis inicializálása
 
 A migrációkat **nem** a serverless function futtatja, hanem a GitHub Actions
 (`.github/workflows/deploy.yml`), mert a runnerben van PHP és eléri a Neont.
@@ -108,7 +160,7 @@ Utána minden push csak a `migrate --force`-ot futtatja.
 GitHub repository secretek (Settings → Secrets → Actions):
 `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, `APP_KEY`
 
-## 5. Cron
+## 6. Cron
 
 A `vercel.json` két napi cront definiál (Hobby tieren ez a maximum, és csak
 napi felbontás van):
@@ -120,11 +172,11 @@ napi felbontás van):
 
 A végpontok `CRON_SECRET` nélkül 404-et adnak (lásd `tests/Feature/Routes/CronRoutesTest.php`).
 
-## 6. E2E a production ellen
+## 7. E2E a production ellen
 
 ```bash
 cd app-e2e
-E2E_BASE_URL=https://<project>.vercel.app npm run test:e2e:prod
+E2E_BASE_URL=https://tappmancs-szakdolgozat.hu npm run test:e2e:prod
 ```
 
 Cold start miatt az első kérés lassabb — ha flaky lesz, emeld a Playwright
