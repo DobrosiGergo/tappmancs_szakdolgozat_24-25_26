@@ -2,8 +2,39 @@
 
 Teljes, lépésenkénti útmutató a nulláról az élő oldalig, majd az AWS leállításáig.
 
+## Hol tartasz
+
+A kódoldal készen van és verifikálva; ami hátravan, az jórészt fiókbeállítás.
+
+```
+KÉSZ (commitolva, de NINCS pusholva)
+  [x] Serverless entrypoint (api/index.php, vercel.json, .vercelignore)
+  [x] MySQL-re állítva, dev és prod egyaránt
+  [x] Feltöltés object storage-ra (UploadDisk seam)
+  [x] Session és cache database driverre
+  [x] Cron végpontok CRON_SECRET védelemmel
+  [x] trustProxies a Vercel proxy mögé
+  [x] Aiven CA cert a repóban (database/certs/ca.pem)
+  [x] deploy.yml: EC2 helyett migráció a MySQL ellen
+
+RÁD VÁR
+  [ ] 1.  Lokális MySQL + .env            -> 1. lépés
+  [ ] 2.  Aiven service adatai            -> 2. lépés
+  [ ] 3.  Cloudflare R2 bucket + token    -> 3. lépés
+  [ ] 4.  APP_KEY generálás               -> 4. lépés
+  [ ] 5.  GitHub secretek (6 db)          -> 5. lépés
+  [ ] 6.  Vercel projekt + env változók   -> 6. lépés
+  [ ] 7.  Domain + DNS                    -> 7. lépés
+  [ ] 8.  git push                        -> 8. lépés
+  [ ] 9.  Első seed (kézi workflow)       -> 9. lépés
+  [ ] 10. Ellenőrzés                      -> 10. lépés
+  [ ] 11. AWS leállítása                  -> 11. lépés
+```
+
+### Tartalom
+
 - [Mi változik és miért](#mi-változik-és-miért)
-- [Előkészítés](#0-előkészítés)
+- [0. Előkészítés](#0-előkészítés)
 - [1. Lokális fejlesztés](#1-lokális-fejlesztés-dev-adatbázis)
 - [2. Aiven MySQL](#2-aiven-mysql)
 - [3. Cloudflare R2](#3-cloudflare-r2)
@@ -11,12 +42,13 @@ Teljes, lépésenkénti útmutató a nulláról az élő oldalig, majd az AWS le
 - [5. GitHub secrets](#5-github-secrets)
 - [6. Vercel projekt](#6-vercel-projekt)
 - [7. Domain](#7-domain-tappmancs-szakdolgozathu)
-- [8. Push](#8-push--ez-indítja-a-deployt)
+- [8. Push](#8-push)
 - [9. Első seed](#9-első-seed)
 - [10. Ellenőrzés](#10-ellenőrzés)
 - [11. AWS leállítása](#11-az-aws-leállítása)
 - [Hibakeresés](#hibakeresés)
 - [Visszaállás](#visszaállás-rollback)
+- [Szolgáltató-váltás később](#szolgáltató-váltás-később)
 
 ---
 
@@ -39,7 +71,7 @@ GitHub push ─┬─> Vercel build -> serverless function (PHP 8.4)
              │                    └─ /tmp (ephemeral, cold startnál törlődik)
              └─> Actions -> migrate --force ──┐
                                               v
-                           Aiven MySQL  <── DB, session, cache
+                           Aiven MySQL   <── DB, session, cache
                            Cloudflare R2 <── feltöltött képek
 ```
 
@@ -79,9 +111,10 @@ Amit lokálisan már levalidáltam, hogy ne a deploynál derüljön ki:
 |---|---|
 | 11 migráció MySQL-en | tisztán lefut |
 | Seederek + `demo:reset` MySQL-en | lefut |
-| Teljes PHP tesztszuite MySQL-en | **286/286** (MySQL 9.6, ellenőrzött driver) |
+| Teljes PHP tesztszuite MySQL-en | **290/290** (MySQL 9.6, ellenőrzött driver) |
 | E2E szuite | **46/46** (chromium + firefox) |
 | Proxy mögötti HTTPS | lefedve, és ellenőrizve, hogy a fix nélkül elbukik |
+| CA cert feloldása | lefedve (`MysqlSslCaTest`) |
 
 **Amit nem tudtam verifikálni:** magát a Vercel deployt. A legvalószínűbb
 buktató a statikus asset routing — lásd [Hibakeresés](#hibakeresés).
@@ -93,12 +126,22 @@ buktató a statikus asset routing — lásd [Hibakeresés](#hibakeresés).
 Mielőtt bármihez hozzányúlnál:
 
 ```bash
-cd /Users/gergodobrosi/Projects/tappmancs/tappmancs_szakdolgozat_24-25_26
-git log --oneline -4          # a migrációs commitok lokálisan vannak, nincsenek pusholva
+cd ~/Projects/tappmancs/tappmancs_szakdolgozat_24-25_26
+git log --oneline -5       # a migrációs commitok lokálisan vannak, nincsenek pusholva
 ```
 
-**Ne pusholj**, amíg a 7. lépésig el nem jutottál — a push elindítja a migrációs
+**Ne pusholj**, amíg a 8. lépésig el nem jutottál — a push elindítja a migrációs
 workflow-t, ami hozzáférések nélkül elhasal.
+
+### Jelöld meg a visszaállási pontot
+
+A migráció előtti utolsó állapot a `5d36b46` commit, ami **már fel van pusholva**.
+Tag-eld, hogy a rollback ne hash-ekre támaszkodjon:
+
+```bash
+git tag pre-vercel 5d36b46
+git push origin pre-vercel
+```
 
 ### Van-e éles adat az EC2-n?
 
@@ -109,10 +152,8 @@ mentsd le **most**, mert a 11. lépés után már nem lesz honnan:
 ```bash
 ssh ubuntu@<EC2_HOST>
 cd /var/www/tappmancs/app
-# adatbázis
-cp database/database.sqlite ~/tappmancs-backup.sqlite
-# feltöltött képek
-tar czf ~/tappmancs-uploads.tar.gz storage/app/public
+cp database/database.sqlite ~/tappmancs-backup.sqlite       # adatbázis
+tar czf ~/tappmancs-uploads.tar.gz storage/app/public       # feltöltött képek
 exit
 
 scp ubuntu@<EC2_HOST>:~/tappmancs-backup.sqlite ./
@@ -145,9 +186,9 @@ user: `root`, üres jelszó). Ha a lokális MySQL-ednek van root jelszava, írd 
 **Ellenőrzés:**
 
 ```bash
-php artisan test            # 286 passed
-npm run dev                 # másik terminálban
-cd ../app-e2e && npm run test:e2e   # 46 passed
+php artisan test                      # 290 passed
+npm run dev                           # másik terminálban
+cd ../app-e2e && npm run test:e2e     # 46 passed
 ```
 
 ### Kezelőfelület (dev és prod egy kliensből)
@@ -167,7 +208,7 @@ Vegyél fel **két kapcsolatot** ugyanabban a kliensben:
 | `tappmancs-prod` | Aiven host | Aiven port | `defaultdb` | `avnadmin` |
 
 A prod kapcsolatnál kapcsold be az **SSL**-t (az Aiven megköveteli), és add meg a
-2. lépésben letöltött `ca.pem`-et.
+`app/database/certs/ca.pem` fájlt CA certként.
 
 ---
 
@@ -196,25 +237,20 @@ A service *Overview* fülén:
 | User | `DB_USERNAME` → `avnadmin` |
 | Password | `DB_PASSWORD` |
 
-### SSL CA cert
+### SSL CA cert — ez már megvan
 
-Az Aiven **kötelezően TLS-t használ**. Az *Overview* fülön: *Download CA
-certificate* → `ca.pem`.
+Az Aiven **kötelezően TLS-t használ**, ezért kell a CA cert. Ez a lépés **már el
+van végezve**: a tanúsítvány a repóban van `app/database/certs/ca.pem` néven, és
+commitolva is van.
 
 **Egyetlen `ca.pem` kell** — kliens-tanúsítvány és privát kulcs **nem**. Az Aiven
 szerveroldali TLS-t használ, ez a fájl csak a *szerver* tanúsítványának
-ellenőrzésére szolgál, nem mutual TLS-hez. A fájl nem titkos (publikus CA cert),
-ezért verziókövethető.
+ellenőrzésére szolgál, nem mutual TLS-hez. A fájl nem titkos (publikus CA cert,
+nem kulcs), ezért verziókövethető.
 
-Tedd a helyére, pontosan ezen a néven:
-
-```bash
-cp ~/Downloads/ca.pem app/database/certs/ca.pem
-```
-
-Ennyi. **Nem kell `MYSQL_ATTR_SSL_CA` env változót beállítani** sem a Vercelen,
-sem GitHub secretként — a `config/database.php` magától megtalálja, ha ezen a
-néven itt van. Az env változó csak felülbírálásra szolgál, ha máshol tartod.
+**Nem kell `MYSQL_ATTR_SSL_CA` env változót beállítani** sem a Vercelen, sem
+GitHub secretként — a `config/database.php` magától feloldja. Az env változó csak
+felülbírálásra szolgál, ha máshol tartod a fájlt.
 
 > **Miért `database/certs/` és nem `storage/certs/`:** serverless futtatáskor az
 > `api/index.php` a `storage_path()`-ot `/tmp`-re tereli, mert a filesystem
@@ -222,10 +258,11 @@ néven itt van. Az env változó csak felülbírálásra szolgál, ha máshol ta
 > A `database_path()` a telepítés gyökeréhez kötött, tehát stabil.
 > Lefedve: `app/tests/Feature/MysqlSslCaTest.php`.
 
-Ellenőrizd, hogy a deploy-bundle nem zárja ki:
+Ha egyszer új certet kapsz az Aiventől (10 évente, vagy service újraépítésnél),
+csak írd felül ugyanezen a néven:
 
 ```bash
-grep -n "database" app/.vercelignore    # csak /database/*.sqlite legyen benne
+cp ~/Downloads/ca.pem app/database/certs/ca.pem
 ```
 
 ### Ellenőrzés
@@ -300,7 +337,8 @@ mint az alkalmazás.
 
 Repo → *Settings* → *Secrets and variables* → *Actions* → *New repository secret*.
 
-Pontosan ezek a nevek kellenek (a `.github/workflows/deploy.yml` ezekre hivatkozik):
+Pontosan ez a **hat** secret kell (a `.github/workflows/deploy.yml` ezekre
+hivatkozik):
 
 | Secret | Érték |
 |---|---|
@@ -311,6 +349,8 @@ Pontosan ezek a nevek kellenek (a `.github/workflows/deploy.yml` ezekre hivatkoz
 | `DB_USERNAME` | `avnadmin` |
 | `DB_PASSWORD` | Aiven jelszó |
 
+`MYSQL_ATTR_SSL_CA` **nem kell** — a cert a repóból oldódik fel (2. lépés).
+
 **Töröld a régieket:** `EC2_SSH_KEY`, `EC2_HOST` — ezekre már semmi nem hivatkozik.
 
 ---
@@ -320,7 +360,7 @@ Pontosan ezek a nevek kellenek (a `.github/workflows/deploy.yml` ezekre hivatkoz
 1. [vercel.com](https://vercel.com) → *Add New* → *Project* → importáld a
    GitHub repót.
 2. **Root Directory: `app`** ← ezt ne hagyd ki. A repó monorepo (npm workspaces),
-   a Laravel az `app/` alatt van. Ha ezt elfelejtsd, a build nem találja a
+   a Laravel az `app/` alatt van. Ha ezt elfelejted, a build nem találja a
    `composer.json`-t.
 3. Framework Preset: **Other**.
 4. Build commandot **ne írj be** — a `app/vercel.json` adja
@@ -355,15 +395,14 @@ APP_FALLBACK_LOCALE=hu
 LOG_CHANNEL=stderr
 LOG_LEVEL=warning
 
-# Aiven MySQL
+# Aiven MySQL. MYSQL_ATTR_SSL_CA nem kell: a config/database.php
+# feloldja a database/certs/ca.pem fájlból (2. lépés).
 DB_CONNECTION=mysql
 DB_HOST=<aiven-host>
 DB_PORT=<aiven-port>
 DB_DATABASE=defaultdb
 DB_USERNAME=avnadmin
 DB_PASSWORD=<aiven-pass>
-# MYSQL_ATTR_SSL_CA nem kell: a config/database.php feloldja a
-# database/certs/ca.pem fájlból (lásd 2. lépés)
 
 # Nem lehet "file" — nincs írható, kérések között megosztott filesystem
 SESSION_DRIVER=database
@@ -448,7 +487,7 @@ pipa jelzi, ha átállt és a cert kiállt.
 
 ---
 
-## 8. Push — ez indítja a deployt
+## 8. Push
 
 Most, és csak most:
 
@@ -464,9 +503,7 @@ Két dolog indul el egyszerre:
 | `migrate --force` az Aiven ellen | GitHub → *Actions* → *Deploy* |
 
 **Ellenőrzés:** mindkettő zöld. A migráció a 11 migrációt futtatja — ezek MySQL-en
-lokálisan már tisztán lefutottak, úgyhogy itt nem számítok gondra. Ha az Actions
-SSL-hibával esik el, ellenőrizd, hogy a `app/database/certs/ca.pem`
-be van-e commitolva.
+lokálisan már tisztán lefutottak, úgyhogy itt nem számítok gondra.
 
 ---
 
@@ -724,7 +761,17 @@ A 11. lépés előtt az EC2 még fut és működik, tehát:
 |---|---|
 | Vercel deploy visszavonása | Vercel → *Deployments* → korábbi deploy → *Promote to Production* |
 | Domain visszaállítása | DNS-ben vissza az EC2 IP-jére |
-| Kód visszaállítása | `git revert 3ddbb79 e8dc11e` (a két migrációs commit) |
+| Kód visszaállítása | lásd lent |
+
+A kód visszaállítása a migráció előtti állapotra — a `pre-vercel` tagtől
+(0. lépés), hogy ne kelljen commit-hasheket felsorolni:
+
+```bash
+git revert --no-commit pre-vercel..HEAD
+git commit -m "Revert Vercel migration"
+```
+
+Ez minden migrációs commitot visszafordít, függetlenül attól, hány darab lett.
 
 Ezért is van a 11. lépés a *végén*, és nem a push előtt.
 
@@ -733,8 +780,8 @@ Ezért is van a 11. lépés a *végén*, és nem a push előtt.
 ## Szolgáltató-váltás később
 
 Ha az Aiven 1 GB-ja vagy a 76 kapcsolat szűk lesz, a váltás **5 env változó**
-(`DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`) plusz az SSL
-cert. **Kódváltozás nincs.**
+(`DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`) plusz az új
+szolgáltató CA certje a `database/certs/ca.pem` helyére. **Kódváltozás nincs.**
 
 | Szolgáltató | Ár | Mit ad |
 |---|---|---|
