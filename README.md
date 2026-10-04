@@ -47,10 +47,10 @@ Az alkalmazás a [http://localhost:8000](http://localhost:8000) címen érhető 
 
 Az alkalmazás a **Vercelen** fut serverless functionként; a deployt a Vercel
 Git-integrációja végzi minden `main`-re érkező pushnál. Az adatbázis **Aiven
-MySQL**, a feltöltött képek **Backblaze B2** bucketben vannak.
+MySQL**, a feltöltött képek **Cloudflare R2** bucketben vannak.
 Az éles cím: **https://tappmancs-szakdolgozat.hu**
 
-A teljes beállítás (Aiven, B2, env változók, domain, cron, seedelés, és az
+A teljes beállítás (Aiven, R2, env változók, domain, cron, seedelés, és az
 AWS leállítása) a
 [docs/VERCEL.md](docs/VERCEL.md)-ben van leírva.
 
