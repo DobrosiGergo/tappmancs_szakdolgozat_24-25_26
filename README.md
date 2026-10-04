@@ -45,19 +45,19 @@ Az alkalmazás a [http://localhost:8000](http://localhost:8000) címen érhető 
 
 ## Deploy
 
-Az alkalmazás a **Vercelen** fut serverless functionként; a deployt a Vercel
-Git-integrációja végzi minden `main`-re érkező pushnál. Az adatbázis **Aiven
-MySQL**, a feltöltött képek **Cloudflare R2** bucketben vannak.
+Az alkalmazás egy **DigitalOcean Dropleten** fut (nginx + PHP-FPM), a
+**MySQL ugyanazon a gépen** van, a feltöltött képek pedig a gép lemezén —
+egyetlen szolgáltató, fix havi díj. A deployt a GitHub Actions végzi SSH-n
+minden `main`-re érkező pushnál.
 Az éles cím: **https://tappmancs-szakdolgozat.hu**
 
-A teljes beállítás (Aiven, R2, env változók, domain, cron, seedelés, és az
-AWS leállítása) a
-[docs/VERCEL.md](docs/VERCEL.md)-ben van leírva.
+A teljes beállítás (droplet, nginx, PHP, MySQL, TLS, cron, mentés, és az
+AWS leállítása) a [docs/DEPLOY.md](docs/DEPLOY.md)-ben van leírva.
 
-> A dev és a prod ugyanazt a motort használja: lokálisan is **MySQL** megy
-> (`app/.env.example`), hogy ne térjenek el. A feltöltés diskje viszont
-> környezetfüggő: lokálisan a `public` disk, prodban `s3` — ezt az
-> `UPLOADS_DISK` env változó vezérli.
+> A dev és a prod ugyanazt a motort használja: mindkettő **MySQL**
+> (`app/.env.example`), és a feltöltés is ugyanúgy a `public` diskre megy.
+> Az `UPLOADS_DISK` env változó akkor hasznos, ha egyszer object storage-ra
+> kellene váltani — a kódban egy helyen (`App\Support\UploadDisk`) dől el.
 
 ## E2E tesztek
 

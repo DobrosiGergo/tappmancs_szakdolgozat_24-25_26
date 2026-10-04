@@ -11,14 +11,6 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Serverless hosting puts the app behind a platform proxy that
-        // terminates TLS, so the scheme only survives in X-Forwarded-Proto.
-        // Without this, url()/route()/asset() emit http:// on an https site
-        // and post-login redirects downgrade. The proxy IPs are not a fixed
-        // range and the origin is not reachable except through it, so the
-        // trusted set is the wildcard.
-        $middleware->trustProxies(at: '*');
-
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
         ]);

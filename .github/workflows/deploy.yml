@@ -1,11 +1,9 @@
 name: Deploy
 
-# Az alkalmazást a Vercel Git-integrációja deployolja automatikusan minden
-# main-re érkező pushnál. Ez a workflow csak azt végzi el, amit a serverless
-# runtime nem tud: az adatbázis-migrációt a MySQL adatbázis ellen.
-#
-# A seedelés szándékos, kézi művelet (workflow_dispatch), hogy egy push ne
-# írhassa újra az éles adatokat.
+# A droplet húzza be a kódot SSH-n keresztül. Az asseteket a runner buildeli,
+# és rsync-kel másoljuk fel: a $6-os droplet 1 GB RAM-ján a Vite build
+# elfogyaszthatja a memóriát, és egy OOM a deploy közepén állítja meg a
+# folyamatot.
 
 on:
   push:
@@ -18,50 +16,85 @@ on:
         default: false
 
 concurrency:
-  group: migrate-production
+  group: deploy-production
   cancel-in-progress: false
 
 jobs:
-  migrate:
+  build:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: app
-
-    env:
-      APP_ENV: production
-      APP_KEY: ${{ secrets.APP_KEY }}
-      APP_DEBUG: 'false'
-      LOG_CHANNEL: stderr
-      DB_CONNECTION: mysql
-      DB_HOST: ${{ secrets.DB_HOST }}
-      DB_PORT: ${{ secrets.DB_PORT }}
-      DB_DATABASE: ${{ secrets.DB_DATABASE }}
-      DB_USERNAME: ${{ secrets.DB_USERNAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      SESSION_DRIVER: database
-      CACHE_STORE: database
-      QUEUE_CONNECTION: sync
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - uses: actions/setup-node@v4
         with:
-          php-version: '8.4'
-          extensions: pdo_mysql, mbstring, bcmath
-          coverage: none
+          node-version: '20'
+          cache: npm
 
-      - name: Install dependencies
-        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+      - name: Build frontend assets
+        working-directory: app
+        run: |
+          npm ci
+          npm run build
 
-      - name: Run migrations
-        run: php artisan migrate --force
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: app/public/build
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Pull code and install dependencies
+        run: |
+          ssh -i ~/.ssh/id_ed25519 "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" '
+            set -e
+            cd /var/www/tappmancs
+            git fetch --all
+            git reset --hard origin/main
+            cd app
+            composer install --no-dev --optimize-autoloader --no-interaction
+          '
+
+      - name: Upload built assets
+        run: |
+          rsync -az --delete -e "ssh -i ~/.ssh/id_ed25519" \
+            build/ "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/tappmancs/app/public/build/"
+
+      - name: Migrate and warm caches
+        run: |
+          ssh -i ~/.ssh/id_ed25519 "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" '
+            set -e
+            cd /var/www/tappmancs/app
+            php artisan migrate --force
+            php artisan storage:link || true
+            php artisan optimize:clear
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            sudo systemctl reload php8.4-fpm
+          '
 
       - name: Seed and reset demo data
         if: github.event_name == 'workflow_dispatch' && inputs.seed
         run: |
-          php artisan db:seed --force
-          php artisan demo:reset
+          ssh -i ~/.ssh/id_ed25519 "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" '
+            set -e
+            cd /var/www/tappmancs/app
+            php artisan db:seed --force
+            php artisan demo:reset
+          '
