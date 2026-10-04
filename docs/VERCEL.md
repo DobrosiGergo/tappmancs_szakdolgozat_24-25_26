@@ -296,6 +296,31 @@ megelőzi.
 
 ## 3. Cloudflare R2
 
+### 3.0 R2 aktiválása (egyszeri)
+
+Mielőtt bucketet tudnál létrehozni, az R2-t aktiválni kell a fiókon:
+Cloudflare dashboard → **R2** → *Get started with R2* →
+**Add R2 subscription to my account**. `Total Due Now: $0.00`.
+
+> **Bankkártya kell hozzá.** Az apróbetű szerint a számlázás a „payment method
+> on file"-ra megy, tehát a Cloudflare kártyát kér a fiókhoz akkor is, ha a
+> ingyenes kereten belül maradsz. Ez eltér az Aiventől, ahol nem kell kártya.
+> A díj $0 marad, amíg a limitek alatt vagy.
+
+Az ingyenes keret:
+
+| | Keret | Mire kell |
+|---|---|---|
+| Storage | 10 GB / hó | pár kisállat-fotó, töredéke a keretnek |
+| Class A (írás: PUT, LIST) | 1M művelet / hó | feltöltésenként 1–2 |
+| Class B (olvasás: GET) | 10M művelet / hó | képmegjelenítés |
+
+A **zero egress fee** itt lényeges: a képek kiszolgálása nem számláz forgalmi
+díjat. A fenti árak a *Standard* storage class-ra vonatkoznak — alapból ez
+használatos, nincs teendő.
+
+### 3.1 Bucket és token
+
 1. Cloudflare dashboard → **R2** → *Create bucket*: `tappmancs-uploads`.
 2. Bucket → *Settings* → **Public access** → engedélyezés. Ettől kapsz egy
    `https://pub-<hash>.r2.dev` URL-t. **Ez lesz az `AWS_URL`.**
