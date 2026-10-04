@@ -20,7 +20,7 @@ KÉSZ (commitolva, de NINCS pusholva)
 RÁD VÁR
   [ ] 1.  Lokális MySQL + .env            -> 1. lépés
   [ ] 2.  Aiven service adatai            -> 2. lépés
-  [ ] 3.  Cloudflare R2 bucket + token    -> 3. lépés
+  [ ] 3.  R2 bucket + public URL + token  -> 3. lépés
   [ ] 4.  APP_KEY generálás               -> 4. lépés
   [ ] 5.  GitHub secretek (6 db)          -> 5. lépés
   [ ] 6.  Vercel projekt + env változók   -> 6. lépés
@@ -319,18 +319,66 @@ A **zero egress fee** itt lényeges: a képek kiszolgálása nem számláz forga
 díjat. A fenti árak a *Standard* storage class-ra vonatkoznak — alapból ez
 használatos, nincs teendő.
 
-### 3.1 Bucket és token
+### 3.1 Bucket
 
-1. Cloudflare dashboard → **R2** → *Create bucket*: `tappmancs-uploads`.
-2. Bucket → *Settings* → **Public access** → engedélyezés. Ettől kapsz egy
-   `https://pub-<hash>.r2.dev` URL-t. **Ez lesz az `AWS_URL`.**
-   Enélkül a képek nem jelennek meg az oldalon.
-3. R2 → *Manage API Tokens* → *Create API token*:
-   - Permission: **Object Read & Write**
-   - Bucket: `tappmancs-uploads`
-   - Megkapod: Access Key ID + Secret Access Key
-4. Az S3 végpont: `https://<account-id>.r2.cloudflarestorage.com`
-   (az account ID az R2 áttekintő oldalán van)
+Cloudflare dashboard → **R2** → *Create bucket*: `tappmancs-uploads`.
+
+### 3.2 Publikus hozzáférés — ez kell az `AWS_URL`-hez
+
+A bucket alapból privát. A képek kiszolgálásához publikussá kell tenni, és erre
+**két külön út** van a bucket *Settings* fülén:
+
+| | Public Development URL | Custom Domain |
+|---|---|---|
+| Beállítás | egy kattintás | a domain Cloudflare zónába kell |
+| Cím | `https://pub-<hash>.r2.dev` | `https://kepek.tappmancs-szakdolgozat.hu` |
+| Rate limit | **van** | nincs |
+| CDN cache | nincs | van |
+| Mire szánták | fejlesztés | éles kiszolgálás |
+
+**Most ezt válaszd:** *Settings* → **Public Development URL** → *Enable*.
+Az így kapott `https://pub-<hash>.r2.dev` lesz az `AWS_URL`.
+
+> **Tudnod kell:** a Cloudflare dokumentációja szerint az `r2.dev` végpont
+> rate-limitelt, és „should only be used for development purposes". Nincs rajta
+> cache, és terhelés alatt dobhat. Szakdolgozat-forgalomnál (néhány látogató,
+> egy védés) ez a gyakorlatban elég, de ha éles kiszolgálást akarsz, lásd lent
+> a custom domaint.
+
+Enélkül a lépés nélkül a feltöltés **működni fog**, de a képek nem jelennek meg
+— ez a leggyakoribb néma hiba ebben a szakaszban.
+
+#### Opcionális: custom domain (éles kiszolgálás)
+
+Ha a rate limit zavar, köss a buckethez saját aldomaint, pl.
+`kepek.tappmancs-szakdolgozat.hu`. Ehhez a domainnek **Cloudflare zónának kell
+lennie** (névszerver-váltás, vagy partial CNAME setup).
+
+Ez a 7. lépést is érinti: ha a DNS a Cloudflare-hez kerül, az apex rekord
+(Vercel, `76.76.21.21`) **DNS-only** legyen — szürke felhő, ne proxyzott —,
+különben ütközhet a Vercel tanúsítvány-kezelésével. Az R2 aldomain viszont
+proxyzott (narancs felhő).
+
+Az `AWS_URL` ekkor az aldomain lesz, minden más változatlan.
+
+### 3.3 API token
+
+R2 → *Manage API Tokens* → *Create API token*:
+
+- Permission: **Object Read & Write**
+- Bucket: `tappmancs-uploads` (ne „All buckets")
+- Megkapod: Access Key ID + Secret Access Key
+
+A secretet **egyszer** látod — másold ki rögtön.
+
+### 3.4 S3 végpont
+
+```
+https://<account-id>.r2.cloudflarestorage.com
+```
+
+Az account ID az R2 áttekintő oldalán van. A bucket nevét **ne** tedd bele — az
+SDK fűzi hozzá.
 
 ### Miért `AWS_*` nevűek az env változók, ha nincs AWS?
 
@@ -342,7 +390,8 @@ is érdemes így megfogalmazni.
 ### Ellenőrzés
 
 Tölts fel egy tesztfájlt a bucketbe a Cloudflare felületén, és nyisd meg a
-publikus URL-jén böngészőből. Ha 404 vagy 403, a public access nincs bekapcsolva.
+publikus URL-jén böngészőből. Ha 404 vagy 403, a Public Development URL nincs
+engedélyezve (3.2).
 
 ---
 
@@ -444,7 +493,7 @@ AWS_SECRET_ACCESS_KEY=<r2-secret>
 AWS_DEFAULT_REGION=auto
 AWS_BUCKET=tappmancs-uploads
 AWS_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
-AWS_URL=<a 3. lépésben kapott pub-….r2.dev URL>
+AWS_URL=<a 3.2 lépésben kapott pub-….r2.dev URL>
 AWS_USE_PATH_STYLE_ENDPOINT=false
 
 # A Vercel Cron ezt küldi Bearer tokenként
@@ -758,8 +807,8 @@ Nézd a function logot. Tipikus okok:
 
 ### A képek nem jelennek meg (de a feltöltés sikeres)
 
-Az `AWS_URL` téves, vagy az R2 bucketen nincs **public access**. Nyisd meg egy
-feltöltött fájl URL-jét közvetlenül — ha 403, a public access a hiba.
+Az `AWS_URL` téves, vagy a bucketen nincs engedélyezve a **Public Development
+URL** (3.2). Nyisd meg egy feltöltött fájl URL-jét közvetlenül — ha 403, ez a hiba.
 
 ### `Too many connections`
 
