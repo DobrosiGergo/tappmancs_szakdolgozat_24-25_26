@@ -1,4 +1,4 @@
-# Migráció: AWS EC2 → Vercel + Aiven MySQL + Cloudflare R2
+# Migráció: AWS EC2 → Vercel + Aiven MySQL + Backblaze B2
 
 Teljes, lépésenkénti útmutató a nulláról az élő oldalig, majd az AWS leállításáig.
 
@@ -20,7 +20,7 @@ KÉSZ (commitolva, de NINCS pusholva)
 RÁD VÁR
   [ ] 1.  Lokális MySQL + .env            -> 1. lépés
   [ ] 2.  Aiven service adatai            -> 2. lépés
-  [ ] 3.  Cloudflare R2 bucket + token    -> 3. lépés
+  [ ] 3.  Backblaze B2 bucket + token     -> 3. lépés
   [ ] 4.  APP_KEY generálás               -> 4. lépés
   [ ] 5.  GitHub secretek (6 db)          -> 5. lépés
   [ ] 6.  Vercel projekt + env változók   -> 6. lépés
@@ -37,7 +37,7 @@ RÁD VÁR
 - [0. Előkészítés](#0-előkészítés)
 - [1. Lokális fejlesztés](#1-lokális-fejlesztés-dev-adatbázis)
 - [2. Aiven MySQL](#2-aiven-mysql)
-- [3. Cloudflare R2](#3-cloudflare-r2)
+- [3. Backblaze B2](#3-backblaze-b2)
 - [4. App key](#4-app-key)
 - [5. GitHub secrets](#5-github-secrets)
 - [6. Vercel projekt](#6-vercel-projekt)
@@ -72,14 +72,14 @@ GitHub push ─┬─> Vercel build -> serverless function (PHP 8.4)
              └─> Actions -> migrate --force ──┐
                                               v
                            Aiven MySQL   <── DB, session, cache
-                           Cloudflare R2 <── feltöltött képek
+                           Backblaze B2  <── feltöltött képek
 ```
 
 | Szerep | Szolgáltatás | Költség |
 |---|---|---|
 | Hosting | Vercel Hobby | ingyenes, **csak nem-kereskedelmi** célra (szakdolgozat belefér) |
 | Adatbázis | Aiven for MySQL | ingyenes, örökre, bankkártya nélkül |
-| Képtárolás | Cloudflare R2 | 10 GB ingyen |
+| Képtárolás | Backblaze B2 | 10 GB ingyen, utána $0.006/GB/hó |
 
 ### Miért nem lehetett „először a hosting, utána az adatbázis"
 
@@ -90,7 +90,7 @@ megtörténnie:
 | Változás | Miért kényszer |
 |---|---|
 | SQLite → MySQL | fájl alapú DB-t nem lehet írni, és cold startnál elvesznék |
-| Lokális feltöltés → R2 | a `storage/app/public` írása nem lehetséges, a `public/storage` symlink értelmezhetetlen |
+| Lokális feltöltés → B2 | a `storage/app/public` írása nem lehetséges, a `public/storage` symlink értelmezhetetlen |
 | Session/cache `file` → `database` | nincs írható, kérések között megosztott filesystem |
 | Scheduler → Vercel Cron | nincs crontab, ami a `schedule:run`-t hívná |
 
@@ -294,55 +294,89 @@ megelőzi.
 
 ---
 
-## 3. Cloudflare R2
+## 3. Backblaze B2
 
-### 3.0 R2 aktiválása (egyszeri)
+S3-kompatibilis object storage. A Laravel beépített `s3` diskje kezeli, ezért a
+szolgáltató cseréje **nem igényel kódváltozást** — csak env értékeket.
 
-Mielőtt bucketet tudnál létrehozni, az R2-t aktiválni kell a fiókon:
-Cloudflare dashboard → **R2** → *Get started with R2* →
-**Add R2 subscription to my account**. `Total Due Now: $0.00`.
+### 3.1 Fiók és bucket
 
-> **Bankkártya kell hozzá.** Az apróbetű szerint a számlázás a „payment method
-> on file"-ra megy, tehát a Cloudflare kártyát kér a fiókhoz akkor is, ha a
-> ingyenes kereten belül maradsz. Ez eltér az Aiventől, ahol nem kell kártya.
-> A díj $0 marad, amíg a limitek alatt vagy.
+1. Regisztráció: [backblaze.com](https://www.backblaze.com/cloud-storage)
+2. **B2 Cloud Storage** → *Buckets* → *Create a Bucket*
+   - Bucket name: `tappmancs-uploads` (globálisan egyedi kell legyen; ha foglalt,
+     tegyél mögé valamit)
+   - Files in Bucket: **Public** ← enélkül a képek nem jelennek meg
+   - Default Encryption: Disable
+   - Object Lock: Disable
+3. **Régió:** a fiók létrehozásakor választod. Válassz **EU**-t
+   (`eu-central-003`) a latencia miatt — minden képkérés ide megy.
 
-Az ingyenes keret:
+### 3.2 Application Key
 
-| | Keret | Mire kell |
-|---|---|---|
-| Storage | 10 GB / hó | pár kisállat-fotó, töredéke a keretnek |
-| Class A (írás: PUT, LIST) | 1M művelet / hó | feltöltésenként 1–2 |
-| Class B (olvasás: GET) | 10M művelet / hó | képmegjelenítés |
+*Account* → **Application Keys** → *Add a New Application Key*
 
-A **zero egress fee** itt lényeges: a képek kiszolgálása nem számláz forgalmi
-díjat. A fenti árak a *Standard* storage class-ra vonatkoznak — alapból ez
-használatos, nincs teendő.
+| Mező | Érték |
+|---|---|
+| Name | `tappmancs-vercel` |
+| Allow access to Bucket | `tappmancs-uploads` (ne „All") |
+| Type of Access | **Read and Write** |
 
-### 3.1 Bucket és token
+A létrehozás után **egyszer** látod a secretet — másold ki rögtön.
 
-1. Cloudflare dashboard → **R2** → *Create bucket*: `tappmancs-uploads`.
-2. Bucket → *Settings* → **Public access** → engedélyezés. Ettől kapsz egy
-   `https://pub-<hash>.r2.dev` URL-t. **Ez lesz az `AWS_URL`.**
-   Enélkül a képek nem jelennek meg az oldalon.
-3. R2 → *Manage API Tokens* → *Create API token*:
-   - Permission: **Object Read & Write**
-   - Bucket: `tappmancs-uploads`
-   - Megkapod: Access Key ID + Secret Access Key
-4. Az S3 végpont: `https://<account-id>.r2.cloudflarestorage.com`
-   (az account ID az R2 áttekintő oldalán van)
+| Amit kapsz | Env változó |
+|---|---|
+| `keyID` | `AWS_ACCESS_KEY_ID` |
+| `applicationKey` | `AWS_SECRET_ACCESS_KEY` |
+
+### 3.3 A két URL, amit el szoktak rontani
+
+**`AWS_ENDPOINT`** — az S3 API végpont, a bucket *details* oldalán szerepel
+`S3 Endpoint` néven:
+
+```
+https://s3.<region>.backblazeb2.com        pl. https://s3.eu-central-003.backblazeb2.com
+```
+
+A bucket nevét **ne** tedd bele — az SDK fűzi hozzá.
+
+**`AWS_URL`** — a publikus kiszolgálási cím, amiből a Laravel a képek URL-jét
+építi. B2-nél ez a „friendly URL" formája:
+
+```
+https://f<NNN>.backblazeb2.com/file/tappmancs-uploads
+```
+
+> **Az `f<NNN>` kódot a bucketedtől olvasd ki, ne találgasd.** Tölts fel egy
+> tesztfájlt a B2 felületén, nyisd meg a *Friendly URL*-jét, és abból vedd az
+> elejét a bucket nevéig bezárólag. A szám fiókonként/bucketenként eltér
+> (`f001`, `f003`, …).
+
+Ha az `AWS_URL` téves, a feltöltés **sikeres lesz**, de a képek nem jelennek meg
+— ez a leggyakoribb néma hiba ebben a lépésben.
 
 ### Miért `AWS_*` nevűek az env változók, ha nincs AWS?
 
-Az R2 az **S3 protokollt** beszéli, ezért a Laravel beépített `s3` diskje és a
+A B2 az **S3 protokollt** beszéli, ezért a Laravel beépített `s3` diskje és a
 `league/flysystem-aws-s3-v3` csomag kezeli — az pedig `AWS_` prefixű változókat
-olvas. **Nincs AWS-fiók a láncban**, a végpont a Cloudflare-é. Ezt a dolgozatban
+olvas. **Nincs AWS-fiók a láncban**, a végpont a Backblaze-é. Ezt a dolgozatban
 is érdemes így megfogalmazni.
+
+### Költség
+
+| Tétel | Keret |
+|---|---|
+| Tárhely | **10 GB ingyen**, utána $0.006/GB/hó |
+| Letöltés (egress) | ingyen a tárolt mennyiség **3×-áig** havonta |
+| Class B/C műveletek | napi ingyenes keret |
+
+A te használatod (néhány kisállat-fotó) nagyságrendekkel a keret alatt van, de a
+B2 — az R2-vel ellentétben — **nem korlátlan egressű**, ezért a 3× szabályt
+érdemes fejben tartani, ha egyszer sok képet szolgálnál ki.
 
 ### Ellenőrzés
 
-Tölts fel egy tesztfájlt a bucketbe a Cloudflare felületén, és nyisd meg a
-publikus URL-jén böngészőből. Ha 404 vagy 403, a public access nincs bekapcsolva.
+Tölts fel egy tesztfájlt a B2 felületén, és nyisd meg a *Friendly URL*-jét
+böngészőből. Ha 401 vagy 403, a bucket nincs **Public**-ra állítva.
 
 ---
 
@@ -437,14 +471,14 @@ QUEUE_CONNECTION=sync
 # A domain csak HTTPS-en szolgál ki, ne bízzuk auto-detectre
 SESSION_SECURE_COOKIE=true
 
-# Feltöltések: Cloudflare R2 (S3-kompatibilis)
+# Feltöltések: Backblaze B2 (S3-kompatibilis)
 UPLOADS_DISK=s3
-AWS_ACCESS_KEY_ID=<r2-access-key>
-AWS_SECRET_ACCESS_KEY=<r2-secret>
-AWS_DEFAULT_REGION=auto
+AWS_ACCESS_KEY_ID=<b2-keyID>
+AWS_SECRET_ACCESS_KEY=<b2-applicationKey>
+AWS_DEFAULT_REGION=<pl. eu-central-003>
 AWS_BUCKET=tappmancs-uploads
-AWS_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
-AWS_URL=<a 3. lépésben kapott pub-….r2.dev URL>
+AWS_ENDPOINT=https://s3.<region>.backblazeb2.com
+AWS_URL=https://f<NNN>.backblazeb2.com/file/tappmancs-uploads
 AWS_USE_PATH_STYLE_ENDPOINT=false
 
 # A Vercel Cron ezt küldi Bearer tokenként
@@ -593,11 +627,11 @@ emeld, **ne a tesztet lazítsd**.
 
 | Mit | Miért |
 |---|---|
-| **Képfeltöltés** (új kisállat képpel) | Ez az egyetlen út, amit az e2e nem fed le, és pont ez ment át R2-re |
+| **Képfeltöltés** (új kisállat képpel) | Ez az egyetlen út, amit az e2e nem fed le, és pont ez ment át B2-re |
 | Kép megjelenik a listában és az adatlapon | Az `AWS_URL` helyességét bizonyítja |
 | Regisztráció → login → logout | Session a MySQL-ben, cookie HTTPS-en |
 | CSS és képek betöltenek | A statikus asset routing működik |
-| Menhely szerkesztése borítóképpel | A `Storage::move` út R2-n |
+| Menhely szerkesztése borítóképpel | A `Storage::move` út B2-n |
 
 Böngésző devtools → *Console*: ne legyen mixed-content figyelmeztetés. Ha van,
 az a `trustProxies` vagy az `APP_URL` jele.
@@ -758,7 +792,7 @@ Nézd a function logot. Tipikus okok:
 
 ### A képek nem jelennek meg (de a feltöltés sikeres)
 
-Az `AWS_URL` téves, vagy az R2 bucketen nincs **public access**. Nyisd meg egy
+Az `AWS_URL` téves, vagy a B2 bucket nincs **Public**-ra állítva. Nyisd meg egy
 feltöltött fájl URL-jét közvetlenül — ha 403, a public access a hiba.
 
 ### `Too many connections`
