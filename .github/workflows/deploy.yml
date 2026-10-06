@@ -32,8 +32,11 @@ jobs:
 
       - name: Build frontend assets
         working-directory: app
+        # npm install, nem npm ci: a lockfile csak a generalo gep platformjanak
+        # Rollup-binarisat rogziti (npm/cli#4828), igy az `npm ci` linuxon
+        # "Cannot find module @rollup/rollup-linux-x64-gnu" hibaval all meg.
         run: |
-          npm ci
+          npm install --no-audit --no-fund
           npm run build
 
       - uses: actions/upload-artifact@v4

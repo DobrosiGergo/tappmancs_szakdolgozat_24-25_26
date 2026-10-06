@@ -479,8 +479,19 @@ egyszer kézzel:
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
-npm ci && npm run build
+node -v                      # v20.x
+
+cd /var/www/tappmancs/app
+npm install --no-audit --no-fund
+npm run build
 ```
+
+> **`npm install`, nem `npm ci`.** A `package-lock.json` csak annak a gépnek a
+> platformjára rögzíti a Rollup bináris-csomagját, amelyiken készült
+> (npm/cli#4828). Mivel a lockfile macOS-en generálódott, az `npm ci` linuxon
+> `Cannot find module @rollup/rollup-linux-x64-gnu` hibával áll meg. Az
+> `npm install` frissen old fel, és behúzza a megfelelő binárist.
+> A GitHub Actions workflow ugyanezért használ `npm install`-t.
 
 ### nginx
 
