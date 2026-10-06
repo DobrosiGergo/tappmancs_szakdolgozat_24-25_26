@@ -339,37 +339,66 @@ A `'localhost'` itt lényeges: a felhasználó **csak a gépről** tud belépni.
 
 ### Hozzáférés a saját gépedről — SSH alagúton
 
-A MySQL nincs kint az interneten, de a GUI kliensed simán eléri SSH-n át.
-Minden elterjedt kliens tudja natívan:
+A MySQL nincs kint az interneten (`127.0.0.1`-re kötve), de a GUI kliensed
+eléri SSH-n át. Két út van; az elsőt érdemes először próbálni, mert nem függ a
+kliens SSH-implementációjától.
 
-| Kliens | Hol |
-|---|---|
-| **TablePlus** | új kapcsolat → *Over SSH* fül |
-| **MySQL Workbench** | Connection Method → *Standard TCP/IP over SSH* |
-| **DBeaver** | kapcsolat → *SSH* fül |
+#### A. Kézi alagút (megbízható)
+
+A saját gépeden, külön terminálban — **hagyd futni**, amíg dolgozol:
+
+```bash
+ssh -N -L 3307:127.0.0.1:3306 deploy@<droplet-ip>
+```
+
+A géped 3307-es portját köti a droplet `127.0.0.1:3306`-jához. Az `-N` annyit
+jelent, hogy nem nyit shellt, csak az alagutat tartja.
+
+A kliensben ezután **sima TCP** kapcsolat:
 
 | Mező | Érték |
 |---|---|
-| SSH Host | a droplet IP-je |
-| SSH User | `deploy` |
-| SSH Key | `~/.ssh/id_ed25519` |
-| MySQL Host | `127.0.0.1` |
-| MySQL Port | `3306` |
-| MySQL User | `tappmancs` |
-| Database | `tappmancs` |
+| Connection Method | `Standard TCP/IP` |
+| Hostname | `127.0.0.1` |
+| Port | `3307` |
+| Username | `tappmancs` |
+| Default Schema | `tappmancs` |
 
-Így ugyanabból a kliensből kezeled a lokális és az éles adatbázist, és
-a 3306-os port kívülről zárva marad.
+A kliens azt hiszi, lokális adatbázishoz kapcsolódik, és az SSH-t teljesen
+megkerüli.
 
-Parancssorból, ha inkább úgy:
+#### B. A kliens beépített SSH-ja
+
+| Mező | Érték |
+|---|---|
+| Connection Method | `Standard TCP/IP over SSH` |
+| SSH Hostname | `<droplet-ip>:22` |
+| SSH Username | `deploy` |
+| SSH Key File | `~/.ssh/tappmancs_droplet` |
+| SSH Password | a kulcs **jelmondata** |
+| MySQL Hostname | `127.0.0.1` |
+| MySQL Server Port | `3306` |
+| Username | `tappmancs` |
+
+> **A két jelszó nem ugyanaz.** Az *SSH Password* mezőbe a kulcs jelmondata
+> megy, nem a MySQL jelszó — ez a leggyakoribb hiba ezen a képernyőn.
+
+> **ED25519 kulcs és a MySQL Workbench:** a Workbench SSH-ja Paramikót használ,
+> ami OpenSSH-formátumú ED25519 kulccsal tud `not a valid RSA private key file`
+> hibát adni. Ilyenkor vagy az A. változat, vagy egy PEM-formátumú másolat:
+>
+> ```bash
+> cp ~/.ssh/tappmancs_droplet ~/.ssh/tappmancs_droplet_pem
+> ssh-keygen -p -m PEM -f ~/.ssh/tappmancs_droplet_pem
+> ```
+
+#### Parancssorból
 
 ```bash
 ssh -L 3307:127.0.0.1:3306 deploy@<droplet-ip>
-# másik terminálban:
+# masik terminalban:
 mysql -h 127.0.0.1 -P 3307 -u tappmancs -p tappmancs
 ```
-
----
 
 ## 5. Alkalmazás kihelyezése
 
