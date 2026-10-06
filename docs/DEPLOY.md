@@ -110,7 +110,19 @@ cd ~/Projects/tappmancs/tappmancs_szakdolgozat_24-25_26
 git log --oneline -5
 ```
 
-**Ne pusholj**, amíg a 8. lépésig el nem jutottál — a push deployt indít.
+### Pushold fel a kódot
+
+Az 5. lépés a szerverre klónozza a repót, tehát a migráció kódjának **kint kell
+lennie a GitHubon**, mielőtt odáig érnél:
+
+```bash
+git push origin main
+```
+
+Ez elindítja a deploy workflow-t, ami **el fog hasalni**, mert a `DEPLOY_*`
+secretek még nem léteznek (8. lépés). Ez várt és ártalmatlan — egy sikertelen
+futás az Actions fülön. A szerver kézi beállítása (5–7. lépés) ettől
+függetlenül megy, és a 8. lépés után a következő push már végig fog futni.
 
 ### Jelöld meg a visszaállási pontot
 
