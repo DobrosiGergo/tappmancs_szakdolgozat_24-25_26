@@ -227,10 +227,15 @@ chmod 440 /etc/sudoers.d/deploy-fpm
 
 ```bash
 ufw allow OpenSSH
-ufw allow 'Nginx Full'
+ufw allow 80/tcp
+ufw allow 443/tcp
 ufw --force enable
 ufw status
 ```
+
+> Portszám és nem `'Nginx Full'` profil: azt a profilt az nginx csomag hozza
+> magával, ami még nincs telepítve (3. lépés), így a profilnév ezen a ponton
+> `ERROR: Could not find a profile matching 'Nginx Full'` hibát adna.
 
 **A MySQL portja (3306) szándékosan nincs nyitva** — kívülről nem lesz elérhető.
 A hozzáférés SSH-alagúton megy, lásd 4. lépés.
