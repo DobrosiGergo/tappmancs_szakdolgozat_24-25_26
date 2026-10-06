@@ -151,12 +151,49 @@ DigitalOcean → *Create* → **Droplets**
 > **Miért nem a $4-es:** 0.5 GB RAM-on a MySQL (~400 MB) mellett alig marad
 > valami a PHP-FPM-nek. Az 1 GB elég ehhez a projekthez.
 
-SSH kulcs, ha még nincs:
+### SSH kulcs
+
+> **A beállítás során két külön kulcs szerepel — ne keverd őket:**
+>
+> | | Hol generálod | Mi megy hova |
+> |---|---|---|
+> | **Ez a lépés** — te lépsz be | a saját gépeden | a **publikus** fele a DigitalOceanhoz |
+> | **8. lépés** — a CI lép be | **a dropleten** | a **privát** fele GitHub secretbe |
+>
+> A saját privát kulcsod soha ne kerüljön GitHub secretbe: az a személyes
+> azonosítód minden szerverhez. A deploy kulcs egy gépé, és önállóan
+> visszavonható.
+
+Ha már használsz SSH-t (pl. GitHubhoz), jó eséllyel van kulcsod:
 
 ```bash
-ssh-keygen -t ed25519 -C "tappmancs-deploy"
-cat ~/.ssh/id_ed25519.pub        # ezt másold a DigitalOcean felületére
+ls ~/.ssh/*.pub
 ```
+
+Ha van, használd azt — nem kell újat csinálni. Másold a vágólapra:
+
+```bash
+pbcopy < ~/.ssh/id_ed25519.pub
+```
+
+Ha nincs, generálj egyet:
+
+```bash
+ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)"
+# Enter a fájlnévnél (alapértelmezett hely), majd adj meg egy jelmondatot
+pbcopy < ~/.ssh/id_ed25519.pub
+```
+
+A jelmondat (passphrase) nem kötelező, de ajánlott: ha ellopják a laptopot, a
+kulcs önmagában használhatatlan. macOS-en egyszer kell beírni, utána a
+kulcskarika megjegyzi:
+
+```bash
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+```
+
+A DigitalOcean *Create Droplet* oldalán az **SSH Key** mezőbe illeszd be
+(`Cmd+V`) a publikus kulcsot.
 
 **Ellenőrzés:** `ssh root@<droplet-ip>` bejelentkezik.
 
@@ -506,14 +543,23 @@ cd /var/www/tappmancs/app && php artisan schedule:list
 
 ### Deploy kulcs
 
+Ez **nem** az a kulcs, amivel te lépsz be (1. lépés). Ezt a dropleten
+generálod, a GitHub Actions számára, és jelmondat nélkül — a CI-nak nincs
+hova beírnia.
+
 A dropleten, `deploy` felhasználóként:
 
 ```bash
 ssh-keygen -t ed25519 -f ~/.ssh/github_deploy -N ""
 cat ~/.ssh/github_deploy.pub >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
-cat ~/.ssh/github_deploy          # ezt a privát kulcsot másold a GitHub secretbe
+
+cat ~/.ssh/github_deploy          # a PRIVÁT kulcs -> GitHub secret
 ```
+
+A `cat` kimenetét **teljes egészében** másold, a
+`-----BEGIN OPENSSH PRIVATE KEY-----` és `-----END OPENSSH PRIVATE KEY-----`
+sorokkal együtt.
 
 ### Secretek
 
