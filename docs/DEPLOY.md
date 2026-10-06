@@ -296,18 +296,28 @@ systemctl status mysql
 mysql_secure_installation
 ```
 
-Válaszok: root jelszó **igen**, anonymous user **igen** (törlés), remote root
-**igen** (tiltás), test adatbázis **igen** (törlés), reload **igen**.
+A jelszó-ellenőrzés szintjénél **1 (MEDIUM)** jó választás. Ez a később
+létrehozott felhasználókra is érvényes: min. 8 karakter, szám, kis- és
+nagybetű, és speciális karakter. Ha a jelszó nem felel meg, a `CREATE USER`
+`ERROR 1819`-cel elszáll.
+
+A többi kérdésre mind **y**: anonymous user törlése, remote root tiltása, test
+adatbázis törlése, privilégiumok újratöltése.
+
+> **A root jelszaváról:** Ubuntu 24.04-en a MySQL root felhasználója
+> `auth_socket`-tel azonosít, ezért a `mysql_secure_installation` kihagyja a
+> jelszó beállítását. Ez így helyes és biztonságosabb: a root csak a gépről,
+> rendszer-rootként tud belépni. Emiatt a lenti parancs **`-p` nélkül** van.
 
 ### Adatbázis és felhasználó
 
 ```bash
-mysql -u root -p
+mysql -u root
 ```
 
 ```sql
 CREATE DATABASE tappmancs CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'tappmancs'@'localhost' IDENTIFIED BY '<erős-jelszó>';
+CREATE USER 'tappmancs'@'localhost' IDENTIFIED BY '<erős-jelszó>';   -- MEDIUM szabály!
 GRANT ALL PRIVILEGES ON tappmancs.* TO 'tappmancs'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
