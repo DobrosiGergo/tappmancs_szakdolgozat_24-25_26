@@ -225,7 +225,15 @@ Root helyett dedikált felhasználó:
 adduser --disabled-password --gecos "" deploy
 usermod -aG sudo deploy
 rsync --archive --chown=deploy:deploy ~/.ssh /home/deploy
+
+# sudo-hoz kell jelszo, kulonben az 5. lepes "Sorry, try again"-nel elakad
+passwd deploy
 ```
+
+> **Miért `--disabled-password`, ha utána mégis adunk jelszót:** a kapcsoló azt
+> akadályozza meg, hogy a fiók jelszóval *bejelentkezhető* legyen. Az SSH-n a
+> jelszavas belépés amúgy is tiltva van (`passwordauthentication no`), tehát ez
+> a jelszó kizárólag a `sudo`-hoz kell, és nem nyit új támadási felületet.
 
 A deploy workflow-nak `sudo` kell a PHP-FPM újratöltéséhez, jelszó nélkül:
 
