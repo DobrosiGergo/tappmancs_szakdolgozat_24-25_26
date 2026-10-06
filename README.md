@@ -59,6 +59,41 @@ AWS leállítása) a [docs/DEPLOY.md](docs/DEPLOY.md)-ben van leírva.
 > Az `UPLOADS_DISK` env változó akkor hasznos, ha egyszer object storage-ra
 > kellene váltani — a kódban egy helyen (`App\Support\UploadDisk`) dől el.
 
+## Éles adatbázis elérése
+
+A MySQL a dropleten csak a loopbacken figyel (`127.0.0.1:3306`), kívülről
+szándékosan nem elérhető. A hozzáférés SSH-alagúton megy.
+
+Indítsd el az alagutat, és hagyd futni, amíg dolgozol:
+
+```bash
+ssh -N -L 3307:127.0.0.1:3306 deploy@<droplet-ip>
+```
+
+Majd a GUI kliensedben (TablePlus, DBeaver, MySQL Workbench) egy **sima
+TCP** kapcsolat — az SSH-t a kliensben **ne** kapcsold be, azt az alagút
+intézi:
+
+| Mező | Érték |
+|---|---|
+| Host | `127.0.0.1` |
+| Port | `3307` |
+| User | `tappmancs` |
+| Database | `tappmancs` |
+
+Parancssorból ugyanez:
+
+```bash
+mysql -h 127.0.0.1 -P 3307 -u tappmancs -p tappmancs
+```
+
+> Ha a kliens beépített SSH-ját használnád, jelmondatos kulccsal elakadhat
+> (`Access denied`): a legtöbb kliens nem olvassa a rendszer ssh-agentjét.
+> A fenti alagutas út ezt megkerüli.
+
+Részletek és a kliens beépített SSH-jának beállítása:
+[docs/DEPLOY.md](docs/DEPLOY.md).
+
 ## E2E tesztek
 
 A Playwright tesztek az `app-e2e/` mappában találhatók (page object minta, `src/ui/po/` + `src/ui/features/`).
