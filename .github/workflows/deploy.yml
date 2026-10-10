@@ -30,14 +30,37 @@ jobs:
           node-version: '20'
           cache: npm
 
-      - name: Build frontend assets
-        working-directory: app
-        # npm install, nem npm ci: a lockfile csak a generalo gep platformjanak
-        # Rollup-binarisat rogziti (npm/cli#4828), igy az `npm ci` linuxon
-        # "Cannot find module @rollup/rollup-linux-x64-gnu" hibaval all meg.
+      # A repo npm workspaces monorepo (gyoker package.json -> app, app-e2e),
+      # ezert a telepites a gyokerben fut: minden workspace fuggosege a gyoker
+      # node_modules-aba hoistolodik, az app/package-lock.json mar nem hasznalt.
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      # A gyoker lockfile win32-on keszult, es csak a win32 nativ binarisokat
+      # rogziti (@esbuild/win32-x64, @rollup/rollup-win32-*), az npm pedig nem
+      # tolti be utolag a hianyzo opcionalis fuggosegeket (npm/cli#4828). Ezert
+      # a linuxos runneren kezzel huzzuk be a nativ csomagokat, pontosan a mar
+      # telepitett verzioval, hogy a build ne terjen el a lockfile-tol.
+      # Ha a gyoker lockfile ujrageneralasra kerul, ez a lepes torolheto.
+      - name: Install linux-native build binaries
         run: |
-          npm install --no-audit --no-fund
-          npm run build
+          set -e
+          pkgs=()
+          for mod in rollup:@rollup/rollup-linux-x64-gnu esbuild:@esbuild/linux-x64; do
+            name="${mod%%:*}"
+            native="${mod#*:}"
+            version="$(node -p "require('$name/package.json').version" 2>/dev/null || true)"
+            if [ -n "$version" ]; then
+              pkgs+=("$native@$version")
+            fi
+          done
+          if [ ${#pkgs[@]} -gt 0 ]; then
+            echo "Telepites: ${pkgs[*]}"
+            npm install --no-save --no-audit --no-fund "${pkgs[@]}"
+          fi
+
+      - name: Build frontend assets
+        run: npm run build
 
       - uses: actions/upload-artifact@v4
         with:
