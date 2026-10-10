@@ -4,26 +4,54 @@ Teljes, lépésenkénti útmutató a nulláról az élő oldalig, majd az AWS le
 
 ## Hol tartasz
 
-```
-KÉSZ (commitolva, de NINCS pusholva)
-  [x] SQLite -> MySQL (290 teszt verifikálva MySQL-en)
-  [x] Feltöltés UploadDisk seam mögött (env-vezérelt disk)
-  [x] Session és cache database driverre
-  [x] deploy.yml: EC2 helyett DigitalOcean, asset build a runneren
+**Éles cím:** https://tappmancs-szakdolgozat.hu — fut, HTTPS-sel.
+**Droplet:** `68.183.70.194` (Ubuntu 24.04, 1 GB RAM, Frankfurt, $6/hó)
 
-RÁD VÁR
-  [ ] 1.  Droplet létrehozása            -> 1. lépés
-  [ ] 2.  Szerver alapbeállítás          -> 2. lépés
-  [ ] 3.  nginx + PHP + MySQL telepítés  -> 3. lépés
-  [ ] 4.  Adatbázis létrehozása          -> 4. lépés
-  [ ] 5.  Alkalmazás kihelyezése         -> 5. lépés
-  [ ] 6.  Domain + TLS                   -> 6. lépés
-  [ ] 7.  Cron (scheduler)               -> 7. lépés
-  [ ] 8.  GitHub Actions deploy          -> 8. lépés
-  [ ] 9.  Mentés                         -> 9. lépés
-  [ ] 10. Ellenőrzés                     -> 10. lépés
-  [ ] 11. AWS leállítása                 -> 11. lépés
 ```
+KÉSZ
+  [x] 1. Droplet
+  [x] 2. deploy felhasználó, ufw (22/80/443), 2 GB swap
+  [x] 3. nginx 1.24 + PHP 8.4.26 + MySQL 8.0.46 + Composer
+  [x] 4. Adatbázis: tappmancs / felhasználó: tappmancs@localhost
+  [x] 5. Alkalmazás kihelyezve, migrálva, seedelve (25 user, 27 menhely, 54 kisállat)
+  [x] 6. Domain + TLS, www -> apex átirányítással
+  [x] 7. Cron: scheduler percenként + mentés 03:30
+  [x] 9. Mentés: /home/deploy/backup.sh, tesztelve, 14 napos megőrzés
+
+HÁTRAVAN
+  [ ] 8.  GitHub Actions deploy  <- ITT TARTUNK
+  [ ] 10. E2E ellenőrzés a prod ellen
+  [ ] 11. AWS leállítása
+```
+
+### Amit tudni kell a folytatáshoz
+
+**A szerveren a migráció ELŐTTI kód fut.** A 19 commit még nincs pusholva, így
+`origin/main` = `5d36b46`. A droplet ezt klónozta, és kézzel lett MySQL-re
+konfigurálva — működik, de hiányzik belőle az `App\Support\UploadDisk` seam és
+a `demo:reset` ütemezés. A 8. lépés push-a hozza rendbe.
+
+**Hozzáférés:**
+
+| | |
+|---|---|
+| SSH | `ssh tappmancs` (a `~/.ssh/config`-ban), kulcs: `~/.ssh/tappmancs_droplet`, jelmondatos |
+| root | kulccsal, `sudo` nélkül |
+| `deploy` | sudóhoz jelszó kell (a projekt gazdája állította be) |
+| Adatbázis | jelszó a szerver `.env`-jében, nincs a repóban |
+| DB kliensből | SSH-alagúton, lásd a README-t |
+
+**Buktatók, amikbe már belefutottunk:**
+
+- `npm ci` **nem** működik linuxon (a lockfile macOS-en készült, hiányzik belőle
+  a Rollup linuxos binárisa) — `npm install` kell. A workflow már ezt használja.
+- A `mysqldump`-nak `--no-tablespaces` kell, különben `PROCESS` jogosultságot
+  kérne, amit a `tappmancs` felhasználónak szándékosan nem adtunk.
+- A `tns1-4.eu` névszerverek akadoztak a Let's Encrypt lekérdezéseire; két
+  próbálkozás bukott, a harmadik ment át. Ha újra kell tanúsítvány, érdemes
+  egyszerre csak az apexre kérni.
+- Nagy szövegek nanóba illesztése a szerveren **elnyelheti a szöveg elejét** —
+  `cat > fajl <<'EOF'` heredoc a megbízható módszer.
 
 ### Tartalom
 
