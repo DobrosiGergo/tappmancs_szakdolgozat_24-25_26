@@ -16,20 +16,20 @@ KÉSZ
   [x] 5. Alkalmazás kihelyezve, migrálva, seedelve (25 user, 27 menhely, 54 kisállat)
   [x] 6. Domain + TLS, www -> apex átirányítással
   [x] 7. Cron: scheduler percenként + mentés 03:30
+  [x] 8. GitHub Actions deploy: secretek beállítva, a push zöldre futott
   [x] 9. Mentés: /home/deploy/backup.sh, tesztelve, 14 napos megőrzés
 
 HÁTRAVAN
-  [ ] 8.  GitHub Actions deploy  <- ITT TARTUNK
-  [ ] 10. E2E ellenőrzés a prod ellen
+  [ ] 10. E2E ellenőrzés a prod ellen  <- ITT TARTUNK
   [ ] 11. AWS leállítása
 ```
 
 ### Amit tudni kell a folytatáshoz
 
-**A szerveren a migráció ELŐTTI kód fut.** A 19 commit még nincs pusholva, így
-`origin/main` = `5d36b46`. A droplet ezt klónozta, és kézzel lett MySQL-re
-konfigurálva — működik, de hiányzik belőle az `App\Support\UploadDisk` seam és
-a `demo:reset` ütemezés. A 8. lépés push-a hozza rendbe.
+**A szerveren a friss kód fut.** A 8. lépés push-a felvitte a 20 commitot, így
+a dropleten megvan az `App\Support\UploadDisk` seam, és a `schedule:list` már
+a `demo:reset`-et is mutatja (04:00). A deployt a GitHub Actions végzi, kézzel
+nem kell a szerveren kódot húzni.
 
 **Hozzáférés:**
 
@@ -43,8 +43,19 @@ a `demo:reset` ütemezés. A 8. lépés push-a hozza rendbe.
 
 **Buktatók, amikbe már belefutottunk:**
 
-- `npm ci` **nem** működik linuxon (a lockfile macOS-en készült, hiányzik belőle
-  a Rollup linuxos binárisa) — `npm install` kell. A workflow már ezt használja.
+- **A gyökér lockfile hibás, nem az install-parancs.** A repó npm workspaces
+  monorepo, így csak a gyökér `package-lock.json` számít — az viszont Windowson
+  készült, és kizárólag a win32 natív csomagokat rögzíti
+  (`@esbuild/win32-x64`, `@rollup/rollup-win32-*`). Az npm nem tölti be utólag
+  a futó platformhoz hiányzó opcionális függőségeket (npm/cli#4828), ezért a
+  linuxos runneren a Vite build elhasal:
+  `Cannot find module @rollup/rollup-linux-x64-gnu`. Az `npm ci` → `npm install`
+  csere ezen **nem** segít. A workflow ezért a natív csomagokat kézzel húzza be,
+  a már telepített rollup/esbuild verzióhoz pinelve.
+  Következmény: a CI-build nem reprodukálható — a lockfile-ból hiányzó ~50
+  csomagot az npm minden futásnál frissen oldja fel, ezért pl. a `caniuse-lite`
+  eltérhet, és az autoprefixer más CSS-t ad (a kiszállított CSS hash-e gépenként
+  más lehet, a JS-é egyezik). Lásd lent: *Nyitott tétel: a gyökér lockfile*.
 - A `mysqldump`-nak `--no-tablespaces` kell, különben `PROCESS` jogosultságot
   kérne, amit a `tappmancs` felhasználónak szándékosan nem adtunk.
 - A `tns1-4.eu` névszerverek akadoztak a Let's Encrypt lekérdezéseire; két
@@ -678,7 +689,8 @@ Repo → *Settings* → *Secrets and variables* → *Actions*:
 
 ### Mit csinál a workflow
 
-1. A **runneren** buildeli az asseteket (`npm ci && npm run build`)
+1. A **runneren** buildeli az asseteket: `npm install` a repó gyökerében
+   (workspaces!), a hiányzó linuxos natív binárisok behúzása, majd `npm run build`
 2. SSH-n behúzza a kódot a dropletre, és futtatja a `composer install`-t
 3. Az assetet rsync-kel másolja fel
 4. `migrate --force`, cache-ek újraépítése, PHP-FPM reload
@@ -691,6 +703,42 @@ A seedelés **kézi**, hogy egy push ne írhassa újra az éles adatokat:
 ```
 Actions → Deploy → Run workflow → seed: true
 ```
+
+### Ami be van állítva
+
+| | |
+|---|---|
+| Deploy kulcs | `/home/deploy/.ssh/github_deploy`, jelmondat nélkül, a `.pub` fele a `deploy` `authorized_keys`-ében |
+| Secretek | `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_SSH_KEY` — beállítva |
+| Törölt secretek | `EC2_HOST`, `EC2_SSH_KEY` |
+| `sudo` a workflow-nak | `/etc/sudoers.d/deploy-fpm`: `NOPASSWD` **csak** a `systemctl reload php8.4-fpm`-re |
+
+A privát kulcs soha nem került a lemezre a saját gépen: a dropletről közvetlenül
+a `gh secret set` bemenetére ment.
+
+### Nyitott tétel: a gyökér lockfile
+
+A gyökér `package-lock.json` Windowson készült, és csak a win32 natív
+csomagokat rögzíti, plusz ~50 csomaggal kevesebbet, mint egy friss feloldás.
+A workflow ezt megkerüli, de a build így nem reprodukálható.
+
+A rendes javítás az újragenerálás:
+
+```bash
+rm package-lock.json && npm install
+```
+
+Ez minden platform binárisát felveszi, és utána az `npm ci` is használható
+lenne — a workflow natív-binárist behúzó lépése törölhető. **Áldozata viszont
+van:** 82 csomag verziója elmozdul, köztük olyanok, amiket a Vite a böngészőbe
+fordít (`alpinejs` 3.15 → 3.17, `axios` 1.15 → 1.20), és a `@playwright/test`
+is 1.59 → 1.64-re ugrik.
+
+Ezért ez **nem** a deploy közben elvégzendő munka: a 11. lépés után érdemes
+hozzáfogni, és utána végigfuttatni a teljes tesztkészletet, mielőtt pusholod.
+Az `app/package-lock.json` és az `app-e2e/package-lock.json` a workspaces
+átállás előttről maradt ott; a gyökér lockfile mellett nincs rájuk szükség,
+és félrevezetőek — ugyanekkor törölhetők.
 
 ---
 
