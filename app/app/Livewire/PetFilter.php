@@ -9,8 +9,10 @@ use Livewire\Component;
 class PetFilter extends Component
 {
     public string $species = '';
-    public string $gender  = '';
-    public string $status  = '';
+
+    public string $gender = '';
+
+    public string $status = '';
 
     public function mount(): void
     {
@@ -21,7 +23,7 @@ class PetFilter extends Component
 
     public function toggle(string $filter, string $value): void
     {
-        if ($this->$filter === $value) {
+        if ($value === $this->$filter) {
             $this->$filter = '';
         } else {
             $this->$filter = $value;

@@ -9,11 +9,11 @@ class WelcomeController extends Controller
 {
     public function index()
     {
-        $petCount = Pet::where('status', 'free')->count();
+        $petCount     = Pet::where('status', 'free')->count();
         $shelterCount = Shelter::count();
 
         $featuredPets = Pet::where('status', 'free')
-            ->with(['shelter' ,'breed'])
+            ->with(['shelter', 'breed'])
             ->latest()
             ->take(4)
             ->get();

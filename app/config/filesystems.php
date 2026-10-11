@@ -20,9 +20,9 @@ return [
     | Upload Disk
     |--------------------------------------------------------------------------
     |
-    | Disk holding user-uploaded images. Kept separate from the default disk
-    | because it must be writable at runtime: on serverless hosting the
-    | application filesystem is read-only, so this points at a bucket.
+    | Disk holding user-uploaded images (see App\Support\UploadDisk). It is a
+    | separate setting so that the images could be moved to object storage
+    | by changing UPLOADS_DISK alone. Locally and on the server it is "public".
     |
     */
 

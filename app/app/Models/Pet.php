@@ -6,6 +6,7 @@ use App\Models\Traits\HasUuid;
 use App\Support\UploadDisk;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Pet extends Model
 {
@@ -42,7 +43,7 @@ class Pet extends Model
         'adopted'  => 'Örökbefogadott',
     ];
 
-protected function casts()
+    protected function casts()
     {
         return [
             'arrival_date' => 'date',
@@ -120,13 +121,9 @@ protected function casts()
 
     public function getFirstImageUrlAttribute()
     {
-        $arr = $this->images_safe;
+        $path = $this->first_image_path;
 
-        if (count($arr)) {
-            return UploadDisk::url($arr[0]);
-        }
-
-        return null;
+        return $path ? UploadDisk::url($path) : null;
     }
 
     public function getFirstImagePathAttribute(): ?string
@@ -150,35 +147,31 @@ protected function casts()
 
     public static function genderOptions(): array
     {
-        $options = [];
-        foreach (self::GENDERS as $value => $label) {
-            $options[] = ['value' => $value, 'label' => $label];
-        }
-        return $options;
+        return self::selectOptions(self::GENDERS);
     }
 
     public static function statusOptions(): array
     {
-        $options = [];
-        foreach (self::STATUSES as $value => $label) {
-            $options[] = ['value' => $value, 'label' => $label];
-        }
-        return $options;
+        return self::selectOptions(self::STATUSES);
     }
 
-    public function getGenderLabelAttribute(): string
+    /**
+     * Turns a value => label list into the option format of the select inputs.
+     */
+    private static function selectOptions(array $labels): array
     {
-        return self::GENDERS[$this->gender] ?? 'Ismeretlen';
+        $options = [];
+
+        foreach ($labels as $value => $label) {
+            $options[] = ['value' => $value, 'label' => $label];
+        }
+
+        return $options;
     }
 
     public function getStatusLabelAttribute(): string
     {
-        return match ($this->status) {
-            'adopted'  => 'Örökbefogadott',
-            'reserved' => 'Foglalva',
-            'free'     => 'Elérhető',
-            default    => 'Ismeretlen',
-        };
+        return self::STATUSES[$this->status] ?? 'Ismeretlen';
     }
 
     public function getStatusClassAttribute(): string
@@ -202,15 +195,11 @@ protected function casts()
 
     public function getAgeLabelAttribute(): ?string
     {
-        if ($this->age) {
-            return $this->age . ' év';
-        }
-
-        return null;
+        return $this->age ? $this->age . ' év' : null;
     }
 
     public function getExcerptAttribute(): string
     {
-        return \Illuminate\Support\Str::limit($this->description ?? '', 120);
+        return Str::limit($this->description ?? '', 120);
     }
 }

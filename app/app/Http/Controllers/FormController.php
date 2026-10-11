@@ -30,11 +30,6 @@ class FormController extends Controller
             return back()->withErrors(['message' => 'Már küldtél üzenetet ezzel a kisállattal kapcsolatban.']);
         }
 
-        $petId = null;
-        if ($request->pet_id) {
-            $petId = $request->pet_id;
-        }
-
         if ($request->pet_id) {
             $subject = 'Érdeklődés kisállattal kapcsolatban – ' . $shelter->name;
         } else {
@@ -44,7 +39,7 @@ class FormController extends Controller
         Form::create([
             'user_id'    => Auth::id(),
             'shelter_id' => $shelter->id,
-            'pet_id'     => $petId,
+            'pet_id'     => $request->pet_id ?: null,
             'subject'    => $subject,
             'message'    => $request->message,
         ]);

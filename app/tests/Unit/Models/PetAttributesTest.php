@@ -35,26 +35,6 @@ it('first_image_path returns first element of images array', function () {
     expect($pet->first_image_path)->toBe('pets/a.jpg');
 });
 
-it('gender_label returns Hím for male', function () {
-    $pet = Pet::factory()->make(['gender' => 'male']);
-    expect($pet->gender_label)->toBe('Hím');
-});
-
-it('gender_label returns Nőstény for female', function () {
-    $pet = Pet::factory()->make(['gender' => 'female']);
-    expect($pet->gender_label)->toBe('Nőstény');
-});
-
-it('gender_label returns Ismeretlen for unknown', function () {
-    $pet = Pet::factory()->make(['gender' => 'unknown']);
-    expect($pet->gender_label)->toBe('Ismeretlen');
-});
-
-it('gender_label returns Ismeretlen for unrecognized value', function () {
-    $pet = Pet::factory()->make(['gender' => 'other']);
-    expect($pet->gender_label)->toBe('Ismeretlen');
-});
-
 it('status_label returns Elérhető for free', function () {
     $pet = Pet::factory()->make(['status' => 'free']);
     expect($pet->status_label)->toBe('Elérhető');

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Tools;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Support\UploadDisk;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Helpers\Tools;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;

@@ -21,7 +21,7 @@ class ShelterController extends Controller
             $term = $request->search;
             $query->where(function ($q) use ($term) {
                 $q->where('name', 'like', '%' . $term . '%')
-                  ->orWhere('location', 'like', '%' . $term . '%');
+                    ->orWhere('location', 'like', '%' . $term . '%');
             });
         }
 
@@ -39,54 +39,20 @@ class ShelterController extends Controller
         return view('shelters.show', compact('shelter', 'pets', 'petCount'));
     }
 
-    public function create()
-    {
-        return view('auth.registration.shelter.setup');
-    }
-
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'description' => 'required|string',
-            'location'    => 'nullable|string|max:255',
-        ], [
-            'name.required'        => 'A menhely neve kötelező.',
-            'name.max'             => 'A menhely neve legfeljebb 255 karakter lehet.',
-            'description.required' => 'A leírás megadása kötelező.',
-        ]);
-
-        if (array_key_exists('location', $validated)) {
-            $location = $validated['location'];
-        } else {
-            $location = null;
-        }
+        $validated = $this->validateShelter($request);
 
         $shelter = Shelter::create([
             'name'        => $validated['name'],
             'description' => $validated['description'],
-            'location'    => $location,
+            'location'    => $validated['location'] ?? null,
             'owner_id'    => auth()->id(),
         ]);
 
-        if (session()->has('shelter_temp_images')) {
-            $uploadedImages = [];
-
-            foreach (session('shelter_temp_images') as $tmpImagePath) {
-                $filename = basename($tmpImagePath);
-                $newPath  = 'shelters/' . $shelter->uuid . '/' . $filename;
-
-                if (UploadDisk::get()->exists($tmpImagePath)) {
-                    UploadDisk::get()->move($tmpImagePath, $newPath);
-                    $uploadedImages[] = $newPath;
-                }
-            }
-
-            $shelter->images = $uploadedImages;
-            $shelter->save();
-
-            session()->forget('shelter_temp_images');
-        }
+        $shelter->update([
+            'images' => UploadDisk::moveTempImages('shelter', $this->imageFolder($shelter)),
+        ]);
 
         return redirect()
             ->route('dashboard')
@@ -110,57 +76,20 @@ class ShelterController extends Controller
     {
         $this->authorize('update', $shelter);
 
-        $validated = $request->validate([
-            'name'            => 'required|string|max:255',
-            'description'     => 'required|string',
-            'location'        => 'nullable|string|max:255',
+        $validated = $this->validateShelter($request, [
             'remove_images'   => ['array'],
             'remove_images.*' => ['string'],
-        ], [
-            'name.required'        => 'A menhely neve kötelező.',
-            'name.max'             => 'A menhely neve legfeljebb 255 karakter lehet.',
-            'description.required' => 'A leírás megadása kötelező.',
         ]);
 
-        $existing = $shelter->images_safe;
-        $remove   = collect($validated['remove_images'] ?? []);
-        $kept     = [];
-
-        foreach ($existing as $imagePath) {
-            if (! $remove->contains($imagePath)) {
-                $kept[] = $imagePath;
-            }
-        }
-        $newUploaded = [];
-
-        if (session()->has('shelter_temp_images')) {
-            foreach (session('shelter_temp_images') as $tmpImagePath) {
-                $filename = basename($tmpImagePath);
-                $newPath  = 'shelters/' . $shelter->uuid . '/' . $filename;
-
-                if (UploadDisk::get()->exists($tmpImagePath)) {
-                    UploadDisk::get()->move($tmpImagePath, $newPath);
-                    $newUploaded[] = $newPath;
-                }
-            }
-        }
-
-        $images = array_values(array_unique([...$kept, ...$newUploaded]));
-
-        if (array_key_exists('location', $validated)) {
-            $location = $validated['location'];
-        } else {
-            $location = null;
-        }
+        $kept        = array_diff($shelter->images_safe, $validated['remove_images'] ?? []);
+        $newUploaded = UploadDisk::moveTempImages('shelter', $this->imageFolder($shelter));
 
         $shelter->update([
             'name'        => $validated['name'],
             'description' => $validated['description'],
-            'location'    => $location,
-            'images'      => $images,
+            'location'    => $validated['location'] ?? null,
+            'images'      => array_values(array_unique([...$kept, ...$newUploaded])),
         ]);
-
-        session()->forget('shelter_temp_images');
 
         return redirect()
             ->route('shelters.show', $shelter)
@@ -168,5 +97,24 @@ class ShelterController extends Controller
                 'message' => 'A menhely adatai sikeresen frissítve lettek.',
                 'type'    => 'success',
             ]);
+    }
+
+    private function validateShelter(Request $request, array $extraRules = []): array
+    {
+        return $request->validate([
+            'name'        => 'required|string|max:255',
+            'description' => 'required|string',
+            'location'    => 'nullable|string|max:255',
+            ...$extraRules,
+        ], [
+            'name.required'        => 'A menhely neve kötelező.',
+            'name.max'             => 'A menhely neve legfeljebb 255 karakter lehet.',
+            'description.required' => 'A leírás megadása kötelező.',
+        ]);
+    }
+
+    private function imageFolder(Shelter $shelter): string
+    {
+        return 'shelters/' . $shelter->uuid;
     }
 }

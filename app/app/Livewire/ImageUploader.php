@@ -41,7 +41,7 @@ class ImageUploader extends Component
         $this->maxSize       = $maxSize;
         $this->petId         = $petId;
         $this->existingCount = $existingCount;
-        $this->uid     = uniqid($context . '_');
+        $this->uid           = uniqid($context . '_');
 
         $existing       = session()->get($this->sessionKey(), []);
         $this->previews = collect($existing)->map(fn ($path) => [
@@ -186,7 +186,7 @@ class ImageUploader extends Component
             'isAtMax'       => $isAtMax,
             'isNearMax'     => $isNearMax,
             'fileSizeLabel' => $fileSizeLabel,
-            'badgeClass' => match (true) {
+            'badgeClass'    => match (true) {
                 $isAtMax   => 'bg-red-50 text-red-600 ring-red-200',
                 $isNearMax => 'bg-amber-50 text-amber-600 ring-amber-200',
                 default    => 'bg-neutral-100 text-neutral-600 ring-neutral-200',

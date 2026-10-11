@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Schedule;
 
 /*
 |--------------------------------------------------------------------------
-| Ideiglenes feltöltések törlése (temp storage tisztítás)
+| Félbehagyott képfeltöltések ideiglenes fájljainak törlése
 |--------------------------------------------------------------------------
 */
 
@@ -16,9 +15,13 @@ Schedule::command('uploads:prune')->daily();
 | Demo adatok napi visszaállítása
 |--------------------------------------------------------------------------
 |
-| A bemutatóhoz használt fiókok és tartalom minden hajnalban visszaáll, így a
-| próbálgatás nem hagy maga után rendetlenséget.
+| Minden hajnalban a teljes adatállomány (nem csak a demo fiókok) visszaáll
+| arra, amit a seederek leírnak. Így a látogatók próbálgatása és az e2e
+| tesztek adatai sem gyűlnek fel, az oldal pedig minden reggel bemutatható.
+|
+| A --force azért kell, mert a demo:reset production alatt megerősítést kér,
+| az ütemezőnek pedig nincs hol válaszolnia.
 |
 */
 
-Schedule::command('demo:reset')->dailyAt('04:00');
+Schedule::command('demo:reset --force')->dailyAt('04:00');

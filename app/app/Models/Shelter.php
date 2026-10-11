@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Form;
+use Illuminate\Support\Str;
 
 class Shelter extends Model
 {
@@ -89,6 +89,6 @@ class Shelter extends Model
 
     public function getExcerptAttribute(): string
     {
-        return \Illuminate\Support\Str::limit($this->description, 120);
+        return Str::limit($this->description, 120);
     }
 }

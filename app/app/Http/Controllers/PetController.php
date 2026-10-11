@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PetStoreRequest;
 use App\Models\Pet;
 use App\Models\Shelter;
-use App\Models\Specie;
 use App\Support\UploadDisk;
 use Illuminate\Http\Request;
 
@@ -13,16 +12,7 @@ class PetController extends Controller
 {
     public function create()
     {
-        $user = auth()->user();
-        abort_unless(in_array($user->type, ['Shelterowner', 'Shelterworker']), 403);
-
-        if ($user->type === 'Shelterowner') {
-            $shelter = Shelter::where('owner_id', $user->id)->firstOrFail();
-        } else {
-            $shelter = $user->worksAt;
-        }
-
-        abort_if(! $shelter, 403);
+        $shelter = $this->currentShelter();
 
         return view('pets.create', compact('shelter'));
     }
@@ -35,9 +25,9 @@ class PetController extends Controller
             $term = $request->search;
             $query->where(function ($q) use ($term) {
                 $q->where('name', 'like', '%' . $term . '%')
-                  ->orWhereHas('shelter', function ($sq) use ($term) {
-                      $sq->where('location', 'like', '%' . $term . '%');
-                  });
+                    ->orWhereHas('shelter', function ($sq) use ($term) {
+                        $sq->where('location', 'like', '%' . $term . '%');
+                    });
             });
         }
         if ($request->filled('species')) {
@@ -71,13 +61,8 @@ class PetController extends Controller
                 $q->where('owner_id', $user->id);
             });
         } else {
-            $worksAt   = $user->worksAt;
-            $shelterId = null;
-            if ($worksAt) {
-                $shelterId = $worksAt->id;
-            }
-            abort_if(! $shelterId, 403);
-            $query->where('shelter_id', $shelterId);
+            abort_if(! $user->worksAt, 403);
+            $query->where('shelter_id', $user->worksAt->id);
         }
 
         $pets = $query->latest()->paginate(12);
@@ -87,9 +72,7 @@ class PetController extends Controller
 
     public function updateStatus(Request $request, Pet $pet)
     {
-        $pet->load('shelter');
-        abort_if(! $pet->shelter, 403);
-        $this->authorize('managePets', $pet->shelter);
+        $this->authorizePet($pet);
 
         $request->validate(['status' => ['required', 'in:' . implode(',', array_keys(Pet::STATUSES))]]);
 
@@ -126,54 +109,21 @@ class PetController extends Controller
 
     public function edit(Pet $pet)
     {
-        $user   = auth()->user();
-        $userId = $user->id;
+        $this->authorizePet($pet);
 
-        $pet->load([
-            'shelter:id,name,owner_id',
-            'species:id,name',
-            'breed:id,name',
-        ]);
+        $pet->load(['species:id,name', 'breed:id,name']);
 
-        $isOwner  = $pet->shelter && $pet->shelter->owner_id === $userId;
-        $isWorker = $user->type === 'Shelterworker'
-            && $user->shelter_id !== null
-            && $user->shelter_id === $pet->shelter_id;
-
-        abort_unless($isOwner || $isWorker, 403);
-
-        $shelter = Shelter::where('owner_id', $userId)->first();
-
-        if (! $shelter && $pet->shelter) {
-            $shelter = $pet->shelter;
-        }
-
-        $birthDateValue   = now()->format('Y-m-d');
-        $arrivalDateValue = now()->format('Y-m-d');
-
-        if ($pet->birth_date) {
-            $birthDateValue = $pet->birth_date->format('Y-m-d');
-        }
-
-        if ($pet->arrival_date) {
-            $arrivalDateValue = $pet->arrival_date->format('Y-m-d');
-        }
+        $shelter          = $pet->shelter;
+        $birthDateValue   = ($pet->birth_date ?? now())->format('Y-m-d');
+        $arrivalDateValue = ($pet->arrival_date ?? now())->format('Y-m-d');
 
         return view('pets.update.edit', compact('pet', 'shelter', 'birthDateValue', 'arrivalDateValue'));
     }
 
     public function store(PetStoreRequest $request)
     {
-        $data = $request->validated();
-        $user = auth()->user();
-
-        if ($user->type === 'Shelterowner') {
-            $shelter = Shelter::where('owner_id', $user->id)->firstOrFail();
-        } else {
-            $shelter = $user->worksAt;
-        }
-
-        abort_if(! $shelter, 403);
+        $data    = $request->validated();
+        $shelter = $this->currentShelter();
 
         $pet = Pet::create([
             'name'         => $data['name'],
@@ -189,24 +139,8 @@ class PetController extends Controller
             'breed_id'     => $data['breed_id'],
         ]);
 
-        $paths = [];
-
-        if (session()->has('pet_temp_images')) {
-            foreach (session('pet_temp_images') as $tmpPath) {
-                $filename = basename($tmpPath);
-                $newPath  = 'pets/' . $shelter->uuid . '/' . $pet->uuid . '/' . $filename;
-
-                if (UploadDisk::get()->exists($tmpPath)) {
-                    UploadDisk::get()->move($tmpPath, $newPath);
-                    $paths[] = $newPath;
-                }
-            }
-
-            session()->forget('pet_temp_images');
-        }
-
         $pet->update([
-            'images' => $paths,
+            'images' => UploadDisk::moveTempImages('pet', $this->imageFolder($pet)),
         ]);
 
         return redirect()
@@ -219,39 +153,10 @@ class PetController extends Controller
 
     public function update(PetStoreRequest $request, Pet $pet)
     {
-        $user   = auth()->user();
-        $userId = $user->id;
+        $this->authorizePet($pet);
 
-        $pet->load([
-            'shelter:id,name,uuid,owner_id',
-        ]);
-
-        $isOwner  = $pet->shelter && $pet->shelter->owner_id === $userId;
-        $isWorker = $user->type === 'Shelterworker'
-            && $user->shelter_id !== null
-            && $user->shelter_id === $pet->shelter_id;
-
-        abort_unless($isOwner || $isWorker, 403);
-
-        $data = $request->validated();
-
-        $currentImages = $pet->images;
-
-        $newImages = [];
-
-        if (session()->has('pet_temp_images')) {
-            foreach (session('pet_temp_images') as $tmpPath) {
-                $filename = basename($tmpPath);
-                $newPath  = 'pets/' . $pet->shelter->uuid . '/' . $pet->uuid . '/' . $filename;
-
-                if (UploadDisk::get()->exists($tmpPath)) {
-                    UploadDisk::get()->move($tmpPath, $newPath);
-                    $newImages[] = $newPath;
-                }
-            }
-
-            session()->forget('pet_temp_images');
-        }
+        $data      = $request->validated();
+        $newImages = UploadDisk::moveTempImages('pet', $this->imageFolder($pet));
 
         $pet->update([
             'name'         => $data['name'],
@@ -262,7 +167,7 @@ class PetController extends Controller
             'gender'       => $data['gender'],
             'status'       => $data['status'] ?? $pet->status,
             'description'  => $data['description'],
-            'images'       => array_merge($currentImages, $newImages),
+            'images'       => array_merge($pet->images, $newImages),
         ]);
 
         return redirect()
@@ -275,31 +180,16 @@ class PetController extends Controller
 
     public function destroy(Pet $pet)
     {
-        $user   = auth()->user();
-        $userId = $user->id;
+        $this->authorizePet($pet);
 
-        $pet->load([
-            'shelter:id,name,uuid,owner_id',
-        ]);
+        $disk          = UploadDisk::get();
+        $petFolder     = $this->imageFolder($pet);
+        $shelterFolder = dirname($petFolder);
 
-        $isOwner  = $pet->shelter && $pet->shelter->owner_id === $userId;
-        $isWorker = $user->type === 'Shelterworker'
-            && $user->shelter_id !== null
-            && $user->shelter_id === $pet->shelter_id;
+        $disk->deleteDirectory($petFolder);
 
-        abort_unless($isOwner || $isWorker, 403);
-
-        $petFolder     = 'pets/' . $pet->shelter->uuid . '/' . $pet->uuid;
-        $shelterFolder = 'pets/' . $pet->shelter->uuid;
-
-        if (UploadDisk::get()->exists($petFolder)) {
-            UploadDisk::get()->deleteDirectory($petFolder);
-        }
-
-        if (
-            UploadDisk::get()->exists($shelterFolder) && empty(UploadDisk::get()->directories($shelterFolder)) && empty(UploadDisk::get()->files($shelterFolder))
-        ) {
-            UploadDisk::get()->deleteDirectory($shelterFolder);
+        if ($disk->exists($shelterFolder) && empty($disk->allFiles($shelterFolder))) {
+            $disk->deleteDirectory($shelterFolder);
         }
 
         $pet->delete();
@@ -310,5 +200,37 @@ class PetController extends Controller
                 'message' => 'A kisállat sikeresen törölve lett.',
                 'type'    => 'success',
             ]);
+    }
+
+    /**
+     * The shelter the signed-in user adds pets to: their own shelter for an
+     * owner, the shelter they work at for a worker.
+     */
+    private function currentShelter(): Shelter
+    {
+        $user = auth()->user();
+
+        if ($user->type === 'Shelterowner') {
+            return Shelter::where('owner_id', $user->id)->firstOrFail();
+        }
+
+        abort_if(! $user->worksAt, 403);
+
+        return $user->worksAt;
+    }
+
+    /**
+     * Only the owner and the workers of the pet's shelter may change the pet.
+     */
+    private function authorizePet(Pet $pet): void
+    {
+        abort_if(! $pet->shelter, 403);
+
+        $this->authorize('managePets', $pet->shelter);
+    }
+
+    private function imageFolder(Pet $pet): string
+    {
+        return 'pets/' . $pet->shelter->uuid . '/' . $pet->uuid;
     }
 }

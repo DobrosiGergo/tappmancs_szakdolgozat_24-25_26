@@ -12,10 +12,13 @@ use Illuminate\Support\Facades\Hash;
 
 class DemoSeeder extends Seeder
 {
-    public const OWNER_EMAIL  = 'demo.owner@example.com';
+    public const OWNER_EMAIL = 'demo.owner@example.com';
+
     public const WORKER_EMAIL = 'demo.worker@example.com';
-    public const USER_EMAIL   = 'demo.user@example.com';
-    public const PASSWORD     = 'DemoPassword123';
+
+    public const USER_EMAIL = 'demo.user@example.com';
+
+    public const PASSWORD = 'DemoPassword123';
 
     public function run(): void
     {
@@ -35,40 +38,40 @@ class DemoSeeder extends Seeder
             'images'      => [],
         ]);
 
-        $dog    = Specie::where('name', 'Kutya')->first();
-        $cat    = Specie::where('name', 'Macska')->first();
-        $mixed  = Breed::where('name', 'Keverék')->first();
+        $dog   = Specie::where('name', 'Kutya')->first();
+        $cat   = Specie::where('name', 'Macska')->first();
+        $mixed = Breed::where('name', 'Keverék')->first();
 
         $pets = [
             [
-                'name'        => 'Bodri',
-                'species_id'  => $dog?->id ?? 1,
-                'breed_id'    => $mixed?->id ?? 1,
-                'gender'      => 'male',
-                'birth_date'  => now()->subYears(2)->subMonths(3),
-                'arrival_date'=> now()->subMonths(6),
-                'status'      => 'free',
-                'description' => 'Bodri egy barátságos, energikus keverék kutya, aki imád játszani és futni. Gyerekekkel is jól kijön, és más állatokhoz is szokott.',
+                'name'         => 'Bodri',
+                'species_id'   => $dog?->id   ?? 1,
+                'breed_id'     => $mixed?->id ?? 1,
+                'gender'       => 'male',
+                'birth_date'   => now()->subYears(2)->subMonths(3),
+                'arrival_date' => now()->subMonths(6),
+                'status'       => 'free',
+                'description'  => 'Bodri egy barátságos, energikus keverék kutya, aki imád játszani és futni. Gyerekekkel is jól kijön, és más állatokhoz is szokott.',
             ],
             [
-                'name'        => 'Cirmi',
-                'species_id'  => $cat?->id ?? 2,
-                'breed_id'    => $mixed?->id ?? 1,
-                'gender'      => 'female',
-                'birth_date'  => now()->subYears(1)->subMonths(5),
-                'arrival_date'=> now()->subMonths(4),
-                'status'      => 'free',
-                'description' => 'Cirmi egy szelíd, önálló macska, aki szereti az ölelést, de csak a saját feltételei szerint. Csendes otthont keres.',
+                'name'         => 'Cirmi',
+                'species_id'   => $cat?->id   ?? 2,
+                'breed_id'     => $mixed?->id ?? 1,
+                'gender'       => 'female',
+                'birth_date'   => now()->subYears(1)->subMonths(5),
+                'arrival_date' => now()->subMonths(4),
+                'status'       => 'free',
+                'description'  => 'Cirmi egy szelíd, önálló macska, aki szereti az ölelést, de csak a saját feltételei szerint. Csendes otthont keres.',
             ],
             [
-                'name'        => 'Morzsa',
-                'species_id'  => $dog?->id ?? 1,
-                'breed_id'    => $mixed?->id ?? 1,
-                'gender'      => 'male',
-                'birth_date'  => now()->subMonths(8),
-                'arrival_date'=> now()->subMonths(2),
-                'status'      => 'free',
-                'description' => 'Morzsa egy kölyökkutya, aki még tanul mindent. Rengeteg energiával és szeretettel van tele – tökéletes aktív gazdiknak.',
+                'name'         => 'Morzsa',
+                'species_id'   => $dog?->id   ?? 1,
+                'breed_id'     => $mixed?->id ?? 1,
+                'gender'       => 'male',
+                'birth_date'   => now()->subMonths(8),
+                'arrival_date' => now()->subMonths(2),
+                'status'       => 'free',
+                'description'  => 'Morzsa egy kölyökkutya, aki még tanul mindent. Rengeteg energiával és szeretettel van tele – tökéletes aktív gazdiknak.',
             ],
         ];
 

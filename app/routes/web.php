@@ -6,6 +6,8 @@ use App\Http\Controllers\PetController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShelterController;
 use App\Http\Controllers\StaffingController;
+use App\Http\Controllers\WelcomeController;
+use App\Models\Shelter;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
 Route::get('/about', function () {
     $resultsPath = resource_path('data/e2e-results.json');
@@ -52,8 +54,7 @@ Route::middleware('auth')->group(function () {
         ->name('notifications.index');
 
     /*
-    | Fiókbeállítások – verified nélkül is elérhető,
-    | hogy a felhasználó el tudja küldeni az email-megerősítést.
+    | Fiókbeállítások: minden bejelentkezett felhasználónak elérhető.
     */
     Route::prefix('settings')->name('settings.')->controller(SettingsController::class)->group(function () {
         Route::get('/', 'index')->name('index');
@@ -65,15 +66,14 @@ Route::middleware('auth')->group(function () {
     });
 
     /*
-    | Menhely-kezelés – email-megerősítés kötelező.
-    | A shelter.setup a regisztrációs folyamathoz szükséges,
-    | de a tényleges létrehozás/szerkesztés verified-et igényel.
+    | Menhely-kezelés. A setup a tulajdonosi regisztráció utolsó lépése,
+    | a szerkesztést és a munkatársak kezelését a ShelterPolicy a menhely
+    | tulajdonosára korlátozza.
     */
     Route::prefix('shelter')->name('shelter.')->group(function () {
 
         Route::get('/setup', [ShelterController::class, 'setup'])->name('setup');
 
-        Route::get('/create', [ShelterController::class, 'create'])->name('create');
         Route::post('/', [ShelterController::class, 'store'])->name('store');
 
         Route::get('/{shelter:uuid}/edit', [ShelterController::class, 'edit'])
@@ -105,8 +105,7 @@ Route::middleware('auth')->group(function () {
     });
 
     /*
-    | Kisállat-kezelés – csak menhely-tulajdonos vagy munkatárs,
-    | email-megerősítés kötelező.
+    | Kisállat-kezelés: csak menhely-tulajdonos vagy munkatárs.
     */
     Route::prefix('pets')->name('pets.')
         ->middleware(['role:Shelterowner,Shelterworker'])
@@ -135,7 +134,7 @@ Route::middleware('auth')->group(function () {
         });
 
     /*
-    | Munkatárs önkéntes kilépés a menhelyből.
+    | A munkatárs saját maga is kiléphet a menhelyből.
     */
     Route::delete('/staffing/leave', [StaffingController::class, 'leave'])
         ->middleware('role:Shelterworker')
@@ -154,12 +153,12 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Legacy ID-alapú redirect (régi numerikus URL-ek visszafelé-kompatibilitás)
+| A régi, numerikus azonosítós menhely-URL-ek átirányítása az UUID-s címre
 |--------------------------------------------------------------------------
 */
 
 Route::get('/shelters/{id}', function ($id) {
-    $shelter = \App\Models\Shelter::findOrFail((int) $id);
+    $shelter = Shelter::findOrFail((int) $id);
 
     return redirect()->route('shelters.show', $shelter, 301);
 })->whereNumber('id');

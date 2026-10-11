@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Breed;
 use App\Models\Pet;
 use App\Models\Shelter;
 use App\Models\Specie;

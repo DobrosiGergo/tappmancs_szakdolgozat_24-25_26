@@ -8,16 +8,23 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\View\View;
 use Livewire\Component;
 
 class RegisterForm extends Component
 {
     public string $email = '';
+
     public string $name = '';
+
     public string $password = '';
+
     public string $password_confirmation = '';
+
     public string $phoneNumber = '';
+
     public string $role = '';
+
     public string $role_shelter = '';
 
     public bool $emailTaken = false;
@@ -58,27 +65,12 @@ class RegisterForm extends Component
             'phoneNumber.max'    => 'A telefonszám legfeljebb 15 karakter lehet.',
         ]);
 
-        $map = [
-            'shelterOwner'  => 'Shelterowner',
-            'shelterWorker' => 'Shelterworker',
-        ];
-
-        if ($this->role === 'shelter') {
-            if (isset($map[$this->role_shelter])) {
-                $type = $map[$this->role_shelter];
-            } else {
-                $type = 'Shelterowner';
-            }
-        } else {
-            $type = 'User';
-        }
-
         $user = User::create([
-            'type'        => $type,
+            'type'        => $this->userType(),
             'name'        => $this->name,
             'email'       => strtolower(trim($this->email)),
             'password'    => Hash::make($this->password),
-            'phoneNumber' => $this->phoneNumber ? $this->phoneNumber : null,
+            'phoneNumber' => $this->phoneNumber ?: null,
         ]);
 
         Auth::login($user);
@@ -88,6 +80,7 @@ class RegisterForm extends Component
                 'role'         => 'shelter',
                 'role_shelter' => 'shelterOwner',
             ]));
+
             return;
         }
 
@@ -98,7 +91,19 @@ class RegisterForm extends Component
         $this->redirect(route('dashboard'));
     }
 
-    public function render(): \Illuminate\View\View
+    /**
+     * The account type that belongs to the role chosen on the previous steps.
+     */
+    private function userType(): string
+    {
+        if ($this->role !== 'shelter') {
+            return 'User';
+        }
+
+        return $this->role_shelter === 'shelterWorker' ? 'Shelterworker' : 'Shelterowner';
+    }
+
+    public function render(): View
     {
         return view('livewire.register-form');
     }

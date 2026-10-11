@@ -2,15 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Helpers\Tools;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -67,62 +61,5 @@ class RegisteredUserController extends Controller
             'role'         => 'shelter',
             'role_shelter' => $validated['role_shelter'],
         ]);
-    }
-
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'name'         => ['required', 'string', 'max:255'],
-            'email'        => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password'     => ['required', 'confirmed', Rules\Password::defaults()],
-            'phoneNumber'  => ['nullable', 'string', 'max:15'],
-            'role'         => ['required', 'in:shelter,User'],
-            'role_shelter' => ['nullable', 'in:shelterOwner,shelterWorker', 'required_if:role,shelter'],
-        ], [
-            'name.required'      => 'A név megadása kötelező.',
-            'name.max'           => 'A név legfeljebb 255 karakter lehet.',
-            'email.required'     => 'Az e-mail cím megadása kötelező.',
-            'email.email'        => 'Érvénytelen e-mail cím.',
-            'email.unique'       => 'Ez az e-mail cím már foglalt.',
-            'password.required'  => 'A jelszó megadása kötelező.',
-            'password.confirmed' => 'A két jelszó nem egyezik.',
-            'phoneNumber.max'    => 'A telefonszám legfeljebb 15 karakter lehet.',
-        ]);
-
-        $role        = $validated['role'];
-        $roleShelter = $validated['role_shelter'] ?? null;
-
-        $map = [
-            'shelterOwner'  => 'Shelterowner',
-            'shelterWorker' => 'Shelterworker',
-            'User'          => 'User',
-        ];
-
-        $type = $role === 'shelter'
-            ? ($map[$roleShelter] ?? 'Shelterowner')
-            : ($map['User']);
-
-        $user = User::create([
-            'type'        => $type,
-            'name'        => $validated['name'],
-            'email'       => $validated['email'],
-            'password'    => Hash::make($validated['password']),
-            'phoneNumber' => $validated['phoneNumber'] ?? null,
-        ]);
-
-        Auth::login($user);
-
-        if ($user->type === 'Shelterowner') {
-            return redirect()->route('shelter.setup', [
-                'role'         => 'shelter',
-                'role_shelter' => 'shelterOwner',
-            ]);
-        }
-
-        event(new Registered($user));
-
-        Tools::flash('Sikeres regisztráció, üdvözlünk!');
-
-        return redirect()->route('dashboard');
     }
 }

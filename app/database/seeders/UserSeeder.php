@@ -9,16 +9,13 @@ use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $faker = Faker::create();
 
         User::create([
             'name'              => 'Developer User',
-            'email'             => 'developer@exapmle.com',
+            'email'             => 'developer@example.com',
             'password'          => Hash::make('DeveloperPassword123'),
             'phoneNumber'       => '111111111',
             'type'              => 'Developer',

@@ -87,7 +87,7 @@
         </x-ui.action-card>
       @else
         <x-ui.action-card
-          :href="route('shelter.create')"
+          :href="route('shelter.setup')"
           title="Menhely létrehozása"
           description="Állítsd be a menhelyed nevét, leírását és tölts fel képeket."
           icon-class="bg-blue-50 text-blue-600"

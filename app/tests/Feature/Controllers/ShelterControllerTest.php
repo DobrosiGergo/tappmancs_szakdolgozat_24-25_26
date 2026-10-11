@@ -10,10 +10,9 @@ use function Pest\Laravel\post;
 use function Pest\Laravel\put;
 
 it('requires auth for shelter routes', function () {
-get(route('shelter.setup'))->assertRedirect(route('login'));
-    get(route('shelter.create'))->assertRedirect(route('login'));
+    get(route('shelter.setup'))->assertRedirect(route('login'));
     post(route('shelter.store'), [])->assertRedirect(route('login'));
-    });
+});
 
 it('shows setup view for authenticated user', function () {
     $user = User::factory()->create();
@@ -106,12 +105,6 @@ it('index filters shelters by search query', function () {
 
     get(route('shelters.index', ['search' => 'Budapest']))
         ->assertViewHas('shelters', fn ($s) => $s->contains($match) && ! $s->contains($noMatch));
-});
-
-it('create returns the setup view for authenticated user', function () {
-    actingAs(User::factory()->create());
-
-    get(route('shelter.create'))->assertOk()->assertViewIs('auth.registration.shelter.setup');
 });
 
 it('edit returns 403 for non-owner', function () {

@@ -31,6 +31,7 @@ class Specie extends Model
         foreach (static::orderBy('name')->get(['id', 'name']) as $specie) {
             $options[] = ['value' => (string) $specie->id, 'label' => $specie->name];
         }
+
         return $options;
     }
 
