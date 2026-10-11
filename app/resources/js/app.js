@@ -1,5 +1,3 @@
-import './bootstrap';
-
 document.addEventListener('alpine:init', () => {
     window.Alpine.data('speciesBreedSelect', (species, breeds, speciesId, breedId) => ({
         speciesOpen: false,
