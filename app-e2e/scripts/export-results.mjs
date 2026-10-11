@@ -1,8 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { basename, dirname, resolve } from 'node:path';
 
-// Keyed by spec file name, not by full path, so moving a spec between folders
-// does not silently break the labels shown on the /about page.
+// The Hungarian section title shown on the /about page for each spec file.
 const AREAS = {
     'about.spec.ts': 'Tudj meg többet oldal',
     'login.spec.ts': 'Bejelentkezés',

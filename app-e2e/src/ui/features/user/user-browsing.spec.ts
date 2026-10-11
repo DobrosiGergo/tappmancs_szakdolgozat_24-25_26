@@ -1,6 +1,6 @@
 import { test } from '../../../fixtures/test';
 import { CONTACT_MESSAGE } from '../../../utils/form-texts';
-import { uniqueUser } from '../../../utils/users';
+import { USER_PREFIXES } from '../../../utils/users';
 
 test.describe('User browsing @ui @user', () => {
     test('should let a logged-in user browse the shelters', async ({ authSteps, shelterSteps }) => {
@@ -18,12 +18,11 @@ test.describe('User browsing @ui @user', () => {
         await shelterSteps.expectShelterPageLoaded();
     });
 
-    test("should send a message to a pet's shelter @mutating", async ({ registrationSteps, petsSteps, settingsSteps }) => {
-        const sender = uniqueUser('sender');
+    test("should send a message to a pet's shelter", async ({ registrationSteps, petsSteps, createUser }) => {
+        const sender = createUser(USER_PREFIXES.sender);
         await registrationSteps.registerAdopter(sender);
         await petsSteps.openPetsList();
         await petsSteps.openPetAndExpectDetails();
         await petsSteps.sendContactMessage(CONTACT_MESSAGE);
-        await settingsSteps.deleteAccount(sender.password);
     });
 });

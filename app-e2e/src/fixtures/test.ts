@@ -27,10 +27,11 @@ import { RegistrationSteps } from '../ui/steps/registration.steps';
 import { SettingsSteps } from '../ui/steps/settings.steps';
 import { ShelterSteps } from '../ui/steps/shelter.steps';
 import { StaffingSteps } from '../ui/steps/staffing.steps';
+import { uniqueUser, type NewUser, type UserPrefix } from '../utils/users';
 
 /**
- * Specs only ever ask for step fixtures; the page objects they need are built here.
- * Add a new fixture when a spec needs a new set of steps.
+ * The fixtures the specs can ask for. A spec only uses step objects; the page
+ * objects behind them are created here.
  */
 type StepFixtures = {
     commonSteps: CommonSteps;
@@ -44,6 +45,13 @@ type StepFixtures = {
     settingsSteps: SettingsSteps;
     shelterSteps: ShelterSteps;
     staffingSteps: StaffingSteps;
+
+    /**
+     * Returns the data of a new user for the test to register. When the test
+     * ends, the fixture signs in as that user and deletes the account on the
+     * site's own delete page, so the specs need no cleanup steps.
+     */
+    createUser: (prefix: UserPrefix) => NewUser;
 };
 
 export const test = base.extend<StepFixtures>({
@@ -79,6 +87,22 @@ export const test = base.extend<StepFixtures>({
     },
     staffingSteps: async ({ page, commonSteps }, use) => {
         await use(new StaffingSteps(page, new StaffingPage(page), commonSteps));
+    },
+    createUser: async ({ page, authSteps, settingsSteps }, use) => {
+        const users: NewUser[] = [];
+
+        await use(prefix => {
+            const user = uniqueUser(prefix);
+            users.push(user);
+            return user;
+        });
+
+        for (const user of users) {
+            // The test may have ended signed in as a different user.
+            await page.context().clearCookies();
+            await authSteps.login(user.email, user.password);
+            await settingsSteps.deleteAccount(user.password);
+        }
     },
 });
 

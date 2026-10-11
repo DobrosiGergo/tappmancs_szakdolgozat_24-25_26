@@ -1,11 +1,9 @@
 {
   "name": "app-e2e",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "test:e2e": "npx playwright test",
-    "test:e2e:prod": "E2E_TARGET=production npx playwright test --grep-invert @mutating",
+    "test:e2e:prod": "npx playwright test --config playwright.config.prod.ts",
     "test:e2e:smoke": "npx playwright test --grep @smoke",
     "test:e2e:headed": "npx playwright test --headed",
     "test:e2e:ui": "npx playwright test --ui",
@@ -13,25 +11,23 @@
     "prepare": "husky",
     "lint": "eslint \"src/**/*.{ts,tsx}\"  --max-warnings=0",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
-    "format": "prettier --check \"{src,tests}/**/*.{ts,tsx,js,json,md}\"",
-    "format:fix": "prettier --write \"{src,tests}/**/*.{ts,tsx,js,json,md}\"",
+    "format": "prettier --check \"src/**/*.{ts,tsx,js,json,md}\"",
+    "format:fix": "prettier --write \"src/**/*.{ts,tsx,js,json,md}\"",
     "test:e2e:export": "npx playwright test --workers=1 --reporter=json > /tmp/e2e-report.json && node scripts/export-results.mjs /tmp/e2e-report.json ../app/resources/data/e2e-results.json"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
       "eslint --fix"
     ],
-    "{src,tests}/**/*.{ts,tsx,js,json,md}": [
+    "src/**/*.{ts,tsx,js,json,md}": [
       "prettier --write"
     ]
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
     "@eslint/js": "^9.35.0",
-    "@playwright/test": "^1.54.2",
+    "@playwright/test": "^1.64.0",
     "@types/node": "^24.3.1",
     "@typescript-eslint/eslint-plugin": "^8.42.0",
     "@typescript-eslint/parser": "^8.42.0",

@@ -1,4 +1,3 @@
-// eslint.config.cjs — ESLint 9 flat config (CJS) + TS + Playwright + Prettier
 const js = require('@eslint/js');
 const tseslint = require('typescript-eslint');
 const prettier = require('eslint-plugin-prettier');

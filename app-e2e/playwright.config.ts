@@ -1,27 +1,10 @@
-import { defineConfig, devices } from '@playwright/test';
-import { env } from './src/config/env';
+import { defineConfig } from '@playwright/test';
+import { configFor } from './playwright.config.base';
 
-export default defineConfig({
-  testDir: './src',
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : 4,
-  reporter: 'html',
-  use: {
-    baseURL: env.baseUrl,
-    testIdAttribute: 'data-test-id',
-    trace: 'on-first-retry',
-  },
-
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-  ],
-});
+/**
+ * Run against the local development server: npm run test:e2e
+ *
+ * This file has Playwright's default config name, so `npx playwright test`
+ * and the editor extensions use it without a --config option.
+ */
+export default defineConfig(configFor('local'));

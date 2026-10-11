@@ -3,7 +3,7 @@ import { test } from '../../../fixtures/test';
 import { PET_TEXTS, uniqueName } from '../../../utils/form-texts';
 import { PET_STATUSES, ROLE_LABELS } from '../../../utils/labels';
 
-test.describe('Shelter worker interactions @ui @worker @mutating', () => {
+test.describe('Shelter worker interactions @ui @worker', () => {
     test('should let an employed worker manage pets and then leave the shelter', async ({ authSteps, staffingSteps, dashboardSteps, petManagementSteps }) => {
         const petName = uniqueName('Pet');
         const renamedPetName = `${petName} Renamed`;
