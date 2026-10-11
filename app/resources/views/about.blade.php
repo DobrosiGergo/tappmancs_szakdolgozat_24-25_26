@@ -84,6 +84,123 @@
     </div>
   </section>
 
+  <section class="bg-neutral-900 border-t border-white/[0.07] py-20 md:py-28 text-white" data-test-id="about-accounts">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+
+      <div class="mb-14 flex items-center gap-5">
+        <span class="text-[11px] uppercase tracking-[0.2em] text-white/40 shrink-0">Kipróbálható fiókok</span>
+        <div class="flex-1 h-px bg-white/10"></div>
+      </div>
+
+      <p class="text-white/60 text-base leading-relaxed max-w-2xl">
+        Az oldal bemutató céllal fut, ezért az alábbi fiókokkal bárki kipróbálhatja. Az adatok
+        minden hajnalban visszaállnak a kiinduló állapotra, így a saját regisztrációk nem maradnak meg.
+      </p>
+
+      <div class="mt-10 divide-y divide-white/[0.07] rounded-2xl ring-1 ring-white/10">
+        @foreach([
+          ['Menhely tulajdonos', 'demo.owner@example.com', 'DemoPassword123'],
+          ['Munkatárs', 'demo.worker@example.com', 'DemoPassword123'],
+          ['Felhasználó', 'demo.user@example.com', 'DemoPassword123'],
+        ] as [$role, $email, $password])
+          <div class="px-5 py-4 flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:gap-6">
+            <span class="sm:w-56 sm:shrink-0 font-medium text-white">{{ $role }}</span>
+            <span class="sm:flex-1 font-mono text-white/70 break-all">{{ $email }}</span>
+            <span class="font-mono text-white/70">{{ $password }}</span>
+          </div>
+        @endforeach
+      </div>
+
+    </div>
+  </section>
+
+  <section class="bg-white py-20 md:py-28" data-test-id="about-design">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+
+      <div class="mb-14 flex items-center gap-5">
+        <span class="text-[11px] uppercase tracking-[0.2em] text-neutral-400 shrink-0">Tervezés és megvalósítás</span>
+        <div class="flex-1 h-px bg-neutral-200"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        @foreach([
+          ['Architektúra', 'Szerveroldalon renderelt Laravel MVC alkalmazás. Ahol az oldalnak újratöltés nélkül kell reagálnia (regisztráció, képfeltöltés, szűrés, faj- és fajtaválasztó), Livewire komponens dolgozik, a kisebb böngészőoldali interakciókat Alpine.js kezeli.'],
+          ['Adatmodell', 'Felhasználók, menhelyek, fajok és fajták, kisállatok, üzenetek és értesítések. Az URL-ekben sorszám helyett uuid szerepel, így az azonosítók nem találgathatók. A tulajdonos törlésével törlődik a menhelye, a kisállatai és az üzenetei.'],
+          ['Jogosultságkezelés', 'Három szinten történik: a bejelentkezést az auth middleware, a szerepkört a role middleware, az adott menhelyhez való hozzáférést a ShelterPolicy ellenőrzi. Szerkeszteni csak a tulajdonos tud, kisállatot a tulajdonos és a munkatársak.'],
+          ['Képfeltöltés', 'A képek először ideiglenes mappába kerülnek, és csak az űrlap mentésekor mozognak a végleges helyükre. A félbehagyott feltöltések fájljait egy ütemezett parancs naponta törli.'],
+        ] as [$title, $desc])
+          <div class="rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
+            <h3 class="text-base font-semibold text-neutral-900 mb-3">{{ $title }}</h3>
+            <p class="text-sm leading-relaxed text-neutral-500">{{ $desc }}</p>
+          </div>
+        @endforeach
+      </div>
+
+    </div>
+  </section>
+
+  <section class="bg-neutral-900 border-t border-white/[0.07] py-20 md:py-28 text-white" data-test-id="about-tech">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+
+      <div class="mb-14 flex items-center gap-5">
+        <span class="text-[11px] uppercase tracking-[0.2em] text-white/40 shrink-0">Technológiák</span>
+        <div class="flex-1 h-px bg-white/10"></div>
+      </div>
+
+      <dl class="divide-y divide-white/[0.07] border-y border-white/[0.07]">
+        @foreach([
+          ['Backend', 'PHP 8.4, Laravel 11'],
+          ['Dinamikus komponensek', 'Livewire 3, Alpine.js'],
+          ['Felület', 'Blade, Tailwind CSS 3, Heroicons, Vite 6'],
+          ['Adatbázis', 'MySQL 8'],
+          ['Backend tesztek', 'Pest 3'],
+          ['E2E tesztek', 'Playwright, TypeScript, Chromium és Firefox'],
+          ['Kódstílus', 'Laravel Pint, ESLint, Prettier'],
+          ['Szerver', 'DigitalOcean Droplet, Ubuntu 24.04, nginx, PHP-FPM'],
+          ['CI/CD', 'GitHub Actions'],
+          ['AI asszisztens', 'Claude Code'],
+        ] as [$layer, $tools])
+          <div class="py-4 flex flex-col gap-1 sm:flex-row sm:gap-6">
+            <dt class="sm:w-56 sm:shrink-0 text-sm font-medium text-white">{{ $layer }}</dt>
+            <dd class="text-sm text-white/50">{{ $tools }}</dd>
+          </div>
+        @endforeach
+      </dl>
+
+    </div>
+  </section>
+
+  <section class="bg-white py-20 md:py-28" data-test-id="about-ai">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+
+      <div class="mb-14 flex items-center gap-5">
+        <span class="text-[11px] uppercase tracking-[0.2em] text-neutral-400 shrink-0">AI-val gyorsított fejlesztés</span>
+        <div class="flex-1 h-px bg-neutral-200"></div>
+      </div>
+
+      <p class="text-neutral-600 text-base leading-relaxed max-w-2xl">
+        A projekt AI-val gyorsított fejlesztéssel készült: AI kódasszisztens segített a kódírásban,
+        a refaktorálásban, a tesztek írásában, a hibakeresésben, az üzemeltetés beállításában és a
+        dokumentációban. Az AI-val való hatékony munka ma a szoftverfejlesztő alapkészségei közé
+        tartozik, ezért a szakdolgozat ezt is bemutatja.
+      </p>
+
+      <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+        @foreach([
+          ['Pontos feladatmegadás', 'Az eredmény minősége a megfogalmazott célon és a megadott kontextuson múlik.'],
+          ['Ellenőrzés', 'Az AI által írt kód csak akkor került be, ha a tesztek és a kódstílus-ellenőrzés átment, és a szerző átnézte.'],
+          ['Felelősség', 'A tervezési döntések a szerzőé, az AI ezek kivitelezését gyorsítja.'],
+        ] as [$title, $desc])
+          <div class="rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
+            <h3 class="text-base font-semibold text-neutral-900 mb-3">{{ $title }}</h3>
+            <p class="text-sm leading-relaxed text-neutral-500">{{ $desc }}</p>
+          </div>
+        @endforeach
+      </div>
+
+    </div>
+  </section>
+
   @if($e2e)
     <section class="bg-neutral-900 border-t border-white/[0.07] py-20 md:py-28 text-white" data-test-id="about-e2e">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
@@ -162,6 +279,94 @@ Running {{ $e2e['runs'] }} tests using 1 worker
     </section>
   @endif
 
+  <section class="bg-white py-20 md:py-28" data-test-id="about-ops">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+
+      <div class="mb-14 flex items-center gap-5">
+        <span class="text-[11px] uppercase tracking-[0.2em] text-neutral-400 shrink-0">Üzemeltetés és kihelyezés</span>
+        <div class="flex-1 h-px bg-neutral-200"></div>
+      </div>
+
+      <p class="text-neutral-600 text-base leading-relaxed max-w-2xl">
+        Az oldal egy frankfurti DigitalOcean Dropleten fut (Ubuntu 24.04, nginx, PHP-FPM 8.4, MySQL 8),
+        saját domainnel és Let's Encrypt tanúsítvánnyal. A kihelyezést a GitHub Actions végzi a
+        main ágra érkező minden változásnál, egymásra épülő szakaszokban.
+      </p>
+
+      <ol class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        @foreach([
+          ['Build', 'A CSS és a JavaScript lefordítása'],
+          ['Tesztek', 'A backend tesztek futtatása, hiba esetén a szerverhez semmi nem nyúl'],
+          ['Kód', 'A kód frissítése a szerveren'],
+          ['Assetek', 'A lefordított fájlok feltöltése'],
+          ['Migráció', 'Adatbázis-migráció és a cache-ek újraépítése'],
+        ] as [$stage, $desc])
+          <li class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+            <span class="text-[11px] uppercase tracking-[0.18em] text-neutral-400">{{ $loop->iteration }}. lépés</span>
+            <h3 class="mt-2 text-base font-semibold text-neutral-900">{{ $stage }}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-neutral-500">{{ $desc }}</p>
+          </li>
+        @endforeach
+      </ol>
+
+    </div>
+  </section>
+
+  <section class="bg-neutral-900 border-t border-white/[0.07] py-20 md:py-28 text-white" data-test-id="about-timeline">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+
+      <div class="mb-14 flex items-center gap-5">
+        <span class="text-[11px] uppercase tracking-[0.2em] text-white/40 shrink-0">A projekt időrendje</span>
+        <div class="flex-1 h-px bg-white/10"></div>
+      </div>
+
+      <div class="divide-y divide-white/[0.07] border-y border-white/[0.07]">
+        @foreach([
+          ['2024. december', 'Laravel projekt, adatmodell, migrációk, Eloquent kapcsolatok'],
+          ['2025. február és március', 'Többlépéses regisztráció, nyitóoldal, bejelentkezés'],
+          ['2025. június és szeptember', 'Felhasználói oldalak, az e2e tesztkörnyezet alapjai, kódstílus-ellenőrzés'],
+          ['2026. március és április', 'Kisállatlista, adatlap, szerkesztés és törlés, menhely adatlap galériával, hibaoldalak'],
+          ['2026. május', 'Keresés és szűrés, munkatárskezelés'],
+          ['2026. június', 'Üzenetküldés, automatikus kihelyezés, mobilnézet, unit tesztek'],
+          ['2026. október', 'Saját szerver és domain, napi demo-visszaállítás, e2e tesztek az éles oldal ellen, kódtisztítás'],
+        ] as [$period, $work])
+          <div class="py-5 flex flex-col gap-1 sm:flex-row sm:gap-6">
+            <span class="sm:w-56 sm:shrink-0 text-sm font-medium text-white">{{ $period }}</span>
+            <span class="text-sm text-white/50 leading-relaxed">{{ $work }}</span>
+          </div>
+        @endforeach
+      </div>
+
+    </div>
+  </section>
+
+  <section class="bg-white py-20 md:py-28" data-test-id="about-improvements">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+
+      <div class="mb-14 flex items-center gap-5">
+        <span class="text-[11px] uppercase tracking-[0.2em] text-neutral-400 shrink-0">Továbbfejlesztési lehetőségek</span>
+        <div class="flex-1 h-px bg-neutral-200"></div>
+      </div>
+
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 max-w-4xl">
+        @foreach([
+          'Kedvelések, hozzászólások és örökbefogadási folyamat',
+          'Több menhely kezelése egy tulajdonossal',
+          'Adminisztrátori szerepkör',
+          'A kisállat nemének megjelenítése az adatlapon',
+          'Válasz az üzenetekre az oldalon belül, értesítés új üzenetről',
+          'Kedvencek listája és értesítés státuszváltozásról',
+        ] as $item)
+          <li class="flex gap-3 text-sm leading-relaxed text-neutral-600">
+            <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-300"></span>
+            {{ $item }}
+          </li>
+        @endforeach
+      </ul>
+
+    </div>
+  </section>
+
   <section class="bg-neutral-900 py-20 md:py-24 text-white" data-test-id="about-project">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
 
@@ -172,10 +377,10 @@ Running {{ $e2e['runs'] }} tests using 1 worker
 
       <div class="max-w-2xl">
         <p class="text-white/60 text-base leading-relaxed">
-          Ez az oldal egy egyetemi szakdolgozat részeként készült, Laravel 11, Livewire 3
-          és Tailwind CSS technológiákkal. Megvalósított területek: hitelesítés,
-          szerepköralapú hozzáférés-szabályozás, fájlkezelés, valós idejű komponensek
-          és reszponzív felhasználói felület.
+          Ez az oldal egy egyetemi szakdolgozat részeként készült 2024 decembere és 2026 októbere
+          között. A szakdolgozat a rendszer teljes életciklusát mutatja be: adatmodell, szerveroldali
+          logika, reszponzív felület, szerepköralapú jogosultságkezelés, képfeltöltés, automatizált
+          tesztelés és éles üzemeltetés automatikus kihelyezéssel.
         </p>
       </div>
 

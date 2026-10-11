@@ -13,6 +13,20 @@ export class AboutPage extends MainPage {
 
     readonly rolesSection: Locator;
 
+    readonly accountsSection: Locator;
+
+    readonly designSection: Locator;
+
+    readonly techSection: Locator;
+
+    readonly aiSection: Locator;
+
+    readonly opsSection: Locator;
+
+    readonly timelineSection: Locator;
+
+    readonly improvementsSection: Locator;
+
     readonly projectSection: Locator;
 
     readonly e2eSection: Locator;
@@ -24,6 +38,13 @@ export class AboutPage extends MainPage {
         this.sheltersLink = page.getByTestId('about-shelters-link');
         this.featuresSection = page.getByTestId('about-features');
         this.rolesSection = page.getByTestId('about-roles');
+        this.accountsSection = page.getByTestId('about-accounts');
+        this.designSection = page.getByTestId('about-design');
+        this.techSection = page.getByTestId('about-tech');
+        this.aiSection = page.getByTestId('about-ai');
+        this.opsSection = page.getByTestId('about-ops');
+        this.timelineSection = page.getByTestId('about-timeline');
+        this.improvementsSection = page.getByTestId('about-improvements');
         this.projectSection = page.getByTestId('about-project');
         this.e2eSection = page.getByTestId('about-e2e');
     }

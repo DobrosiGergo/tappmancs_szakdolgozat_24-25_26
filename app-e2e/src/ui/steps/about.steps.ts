@@ -21,6 +21,13 @@ export class AboutSteps extends BaseSteps {
         await expect(this.aboutPage.title).toHaveText(APP_NAME);
         await expect(this.aboutPage.featuresSection).toBeVisible();
         await expect(this.aboutPage.rolesSection).toBeVisible();
+        await expect(this.aboutPage.accountsSection).toBeVisible();
+        await expect(this.aboutPage.designSection).toBeVisible();
+        await expect(this.aboutPage.techSection).toBeVisible();
+        await expect(this.aboutPage.aiSection).toBeVisible();
+        await expect(this.aboutPage.opsSection).toBeVisible();
+        await expect(this.aboutPage.timelineSection).toBeVisible();
+        await expect(this.aboutPage.improvementsSection).toBeVisible();
         await expect(this.aboutPage.projectSection).toBeVisible();
     }
 
