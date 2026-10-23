@@ -40,13 +40,14 @@ class DemoSeeder extends Seeder
 
         $dog   = Specie::where('name', 'Kutya')->first();
         $cat   = Specie::where('name', 'Macska')->first();
-        $mixed = Breed::where('name', 'Keverék')->first();
+        $mixedDog = Breed::where('name', 'Keverék')->where('species_id', $dog?->id)->first();
+        $mixedCat = Breed::where('name', 'Keverék')->where('species_id', $cat?->id)->first();
 
         $pets = [
             [
                 'name'         => 'Bodri',
                 'species_id'   => $dog?->id   ?? 1,
-                'breed_id'     => $mixed?->id ?? 1,
+                'breed_id'     => $mixedDog?->id ?? 1,
                 'gender'       => 'male',
                 'birth_date'   => now()->subYears(2)->subMonths(3),
                 'arrival_date' => now()->subMonths(6),
@@ -56,7 +57,7 @@ class DemoSeeder extends Seeder
             [
                 'name'         => 'Cirmi',
                 'species_id'   => $cat?->id   ?? 2,
-                'breed_id'     => $mixed?->id ?? 1,
+                'breed_id'     => $mixedCat?->id ?? 1,
                 'gender'       => 'female',
                 'birth_date'   => now()->subYears(1)->subMonths(5),
                 'arrival_date' => now()->subMonths(4),
@@ -66,7 +67,7 @@ class DemoSeeder extends Seeder
             [
                 'name'         => 'Morzsa',
                 'species_id'   => $dog?->id   ?? 1,
-                'breed_id'     => $mixed?->id ?? 1,
+                'breed_id'     => $mixedDog?->id ?? 1,
                 'gender'       => 'male',
                 'birth_date'   => now()->subMonths(8),
                 'arrival_date' => now()->subMonths(2),
