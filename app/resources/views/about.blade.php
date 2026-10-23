@@ -149,7 +149,7 @@
 
       <dl class="divide-y divide-white/[0.07] border-y border-white/[0.07]">
         @foreach([
-          ['Backend', 'PHP 8.4, Laravel 11'],
+          ['Backend', 'PHP 8.5, Laravel 11'],
           ['Dinamikus komponensek', 'Livewire 3, Alpine.js'],
           ['Felület', 'Blade, Tailwind CSS 3, Heroicons, Vite 6'],
           ['Adatbázis', 'MySQL 8'],
@@ -288,7 +288,7 @@ Running {{ $e2e['runs'] }} tests using 1 worker
       </div>
 
       <p class="text-neutral-600 text-base leading-relaxed max-w-2xl">
-        Az oldal egy frankfurti DigitalOcean Dropleten fut (Ubuntu 24.04, nginx, PHP-FPM 8.4, MySQL 8),
+        Az oldal egy frankfurti DigitalOcean Dropleten fut (Ubuntu 24.04, nginx, PHP-FPM 8.5, MySQL 8),
         saját domainnel és Let's Encrypt tanúsítvánnyal. A kihelyezést a GitHub Actions végzi a
         main ágra érkező minden változásnál, egymásra épülő szakaszokban.
       </p>

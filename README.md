@@ -59,7 +59,7 @@ kihelyezéssel.
 
 | Réteg | Technológia |
 |---|---|
-| Backend | PHP 8.2+ (a szerveren 8.4), Laravel 11 |
+| Backend | PHP 8.2+ (a szerveren 8.5), Laravel 11 |
 | Dinamikus komponensek | Livewire 3, Alpine.js |
 | Felület | Blade, Tailwind CSS 3, Heroicons |
 | Asset build | Vite 6 |
@@ -216,7 +216,7 @@ Gyors indítás a telepítés után, a gyökérből: `npm run dev` (alkalmazás)
 | Szolgáltató | DigitalOcean Droplet, Frankfurt |
 | Méret | 1 vCPU, 1 GB RAM, 25 GB SSD, 2 GB swap |
 | Operációs rendszer | Ubuntu 24.04 LTS |
-| Webszerver | nginx, PHP-FPM 8.4 |
+| Webszerver | nginx, PHP-FPM 8.5 |
 | Adatbázis | MySQL 8.0, ugyanazon a gépen |
 | Képek | A gép lemezén (`storage/app/public`) |
 | TLS | Let's Encrypt (certbot), automatikus megújítással |
