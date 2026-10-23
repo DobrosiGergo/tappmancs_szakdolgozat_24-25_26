@@ -14,13 +14,12 @@ app/
     Console/Commands/     demo:reset, demo:seed, uploads:prune
     Helpers/              Tools (flash üzenet)
     Http/
-      Controllers/        Pet, Shelter, Staffing, Form, Settings, Welcome, Notifications
+      Controllers/        Pet, Shelter, Staffing, Form, Settings, Welcome
       Controllers/Auth/   Bejelentkezés, regisztrációs lépések, jelszókezelés
       Middleware/         EnsureUserHasRole
       Requests/           Űrlapvalidáció
     Livewire/             RegisterForm, ImageUploader, PetFilter, PetSpeciesBreedSelect
     Models/               User, Shelter, Pet, Specie, Breed, Form, Like, Comment, Adoption
-    Notifications/        WorkerAssigned
     Policies/             ShelterPolicy
     Support/              UploadDisk
     View/Components/      Elrendezések és navigáció

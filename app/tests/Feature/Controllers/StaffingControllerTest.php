@@ -2,8 +2,6 @@
 
 use App\Models\Shelter;
 use App\Models\User;
-use App\Notifications\WorkerAssigned;
-use Illuminate\Support\Facades\Notification;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\delete;
@@ -111,9 +109,7 @@ it('returns error when user is already a worker at this shelter', function () {
         ->assertSessionHasErrors('email');
 });
 
-it('assigns a User type user as Shelterworker, sets shelter_id, sends notification', function () {
-    Notification::fake();
-
+it('assigns a User type user as Shelterworker and sets shelter_id', function () {
     $owner   = User::factory()->shelterOwner()->create();
     $shelter = Shelter::factory()->create(['owner_id' => $owner->id]);
     $user    = User::factory()->create(['type' => 'User']);
@@ -125,15 +121,9 @@ it('assigns a User type user as Shelterworker, sets shelter_id, sends notificati
     $user->refresh();
     expect($user->type)->toBe('Shelterworker')
         ->and($user->shelter_id)->toBe($shelter->id);
-
-    Notification::assertSentTo($user, WorkerAssigned::class,
-        fn ($n) => $n->shelter->is($shelter)
-    );
 });
 
 it('assigns an unattached Shelterworker to the shelter', function () {
-    Notification::fake();
-
     $owner   = User::factory()->shelterOwner()->create();
     $shelter = Shelter::factory()->create(['owner_id' => $owner->id]);
     $worker  = User::factory()->shelterWorker()->create(['shelter_id' => null]);

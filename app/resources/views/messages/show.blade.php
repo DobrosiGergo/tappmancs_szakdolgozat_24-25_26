@@ -35,9 +35,6 @@
                 </a>
             @endif
 
-            <div class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">Tárgy</div>
-            <p class="mb-6 text-sm font-medium text-neutral-700">{{ $form->subject }}</p>
-
             <div class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">Üzenet</div>
             <p class="whitespace-pre-line text-sm leading-7 text-neutral-800">{{ $form->message }}</p>
 

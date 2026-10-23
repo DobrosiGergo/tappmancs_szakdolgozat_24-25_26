@@ -15,20 +15,14 @@
         $shelterStaffUrl = route('shelter.setup');
     }
     $unreadCount = 0;
-    if ($user) {
-        $unreadCount = $user->unreadNotifications()->count();
+    if ($isOwner && $ownShelter) {
+        $unreadCount = $ownShelter->formMessages()->whereNull('read_at')->count();
     }
 
     if (auth()->check()) {
         $logoHref = route('dashboard');
     } else {
         $logoHref = route('home');
-    }
-
-    if ($dark) {
-        $bellClass = 'text-white/60 hover:text-white hover:bg-white/10';
-    } else {
-        $bellClass = 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100';
     }
 @endphp
 
@@ -40,9 +34,12 @@
 
   @if($isOwner)
 
-    <div class="col-start-5 col-span-2 hidden lg:flex items-center"
+    <div class="col-start-5 col-span-2 hidden lg:flex items-center gap-1.5"
          @mouseenter="open = 'shelter'" @focusin="open = 'shelter'">
       <x-navbar.menu-item :dark="$dark" label="Menhelyem" :href="$shelterShowUrl" data-test-id="nav-my-shelter" />
+      @if($unreadCount > 0)
+        <span class="h-2 w-2 rounded-full bg-red-500" title="Olvasatlan üzenet" data-test-id="nav-unread-dot"></span>
+      @endif
     </div>
 
     <div class="col-start-7 col-span-2 hidden lg:flex items-center"
@@ -105,20 +102,6 @@
 
   @endif
 
-  @if($user)
-    <div class="col-start-12 col-span-1 hidden md:flex items-center justify-center">
-      <a href="{{ route('notifications.index') }}"
-         class="relative flex h-8 w-8 items-center justify-center rounded-full transition {{ $bellClass }}">
-        <x-icon name="bell" class="h-5 w-5" />
-        @if($unreadCount > 0)
-          <span class="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-            {{ $unreadCount }}
-          </span>
-        @endif
-      </a>
-    </div>
-  @endif
-
   <div class="lg:hidden col-start-12 col-span-1 flex items-center justify-end">
     <button type="button"
       @click="if (open === 'mobile') { open = null } else { open = 'mobile' }"
@@ -150,7 +133,12 @@
             <x-navbar.section title="Menhelyem">
               <x-navbar.link :href="$shelterShowUrl">Publikus oldal</x-navbar.link>
               <x-navbar.link :href="$shelterEditUrl" data-test-id="nav-edit-shelter">Szerkesztés</x-navbar.link>
-              <x-navbar.link :href="route('messages.index')">Üzenetek</x-navbar.link>
+              <x-navbar.link :href="route('messages.index')">
+                Üzenetek
+              @if($unreadCount > 0)
+                <span class="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white" data-test-id="nav-unread-count">{{ $unreadCount }}</span>
+              @endif
+              </x-navbar.link>
             </x-navbar.section>
           </div>
 
@@ -242,13 +230,23 @@
           <div class="border-b border-white/10">
             <button @click="if (section === 'shelter') { section = null } else { section = 'shelter' }"
                     class="flex w-full items-center justify-between py-3.5 text-sm font-medium text-white">
-              Menhelyem
+              <span class="flex items-center gap-2">
+                Menhelyem
+                @if($unreadCount > 0)
+                  <span class="h-2 w-2 rounded-full bg-red-500"></span>
+                @endif
+              </span>
               <x-icon name="chevron-right" class="h-4 w-4 text-white/40 transition-transform duration-200" x-bind:class="{ 'rotate-90': section === 'shelter' }" />
             </button>
             <div x-show="section === 'shelter'" x-cloak class="pb-3 pl-3 flex flex-col gap-1">
               <a href="{{ $shelterShowUrl }}" class="block py-2 text-sm text-white/60 hover:text-white transition-colors">Publikus oldal</a>
               <a href="{{ $shelterEditUrl }}" class="block py-2 text-sm text-white/60 hover:text-white transition-colors">Szerkesztés</a>
-              <a href="{{ route('messages.index') }}" class="block py-2 text-sm text-white/60 hover:text-white transition-colors">Üzenetek</a>
+              <a href="{{ route('messages.index') }}" class="block py-2 text-sm text-white/60 hover:text-white transition-colors">
+                Üzenetek
+                @if($unreadCount > 0)
+                  <span class="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">{{ $unreadCount }}</span>
+                @endif
+              </a>
             </div>
           </div>
 
@@ -316,15 +314,6 @@
         @endif
 
         @auth
-          <a href="{{ route('notifications.index') }}"
-             class="flex items-center justify-between py-3.5 text-sm font-medium text-white border-b border-white/10">
-            <span>Értesítések</span>
-            @if($unreadCount > 0)
-              <span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                {{ $unreadCount }}
-              </span>
-            @endif
-          </a>
           <a href="{{ route('settings.index') }}"
              class="flex items-center py-3.5 text-sm font-medium text-white border-b border-white/10">
             Beállítások

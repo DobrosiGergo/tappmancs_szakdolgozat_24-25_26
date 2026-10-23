@@ -125,7 +125,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @foreach([
           ['Architektúra', 'Szerveroldalon renderelt Laravel MVC alkalmazás. Ahol az oldalnak újratöltés nélkül kell reagálnia (regisztráció, képfeltöltés, szűrés, faj- és fajtaválasztó), Livewire komponens dolgozik, a kisebb böngészőoldali interakciókat Alpine.js kezeli.'],
-          ['Adatmodell', 'Felhasználók, menhelyek, fajok és fajták, kisállatok, üzenetek és értesítések. Az URL-ekben sorszám helyett uuid szerepel, így az azonosítók nem találgathatók. A tulajdonos törlésével törlődik a menhelye, a kisállatai és az üzenetei.'],
+          ['Adatmodell', 'Felhasználók, menhelyek, fajok és fajták, kisállatok és üzenetek. Az URL-ekben sorszám helyett uuid szerepel, így az azonosítók nem találgathatók. A tulajdonos törlésével törlődik a menhelye, a kisállatai és az üzenetei.'],
           ['Jogosultságkezelés', 'Három szinten történik: a bejelentkezést az auth middleware, a szerepkört a role middleware, az adott menhelyhez való hozzáférést a ShelterPolicy ellenőrzi. Szerkeszteni csak a tulajdonos tud, kisállatot a tulajdonos és a munkatársak.'],
           ['Képfeltöltés', 'A képek először ideiglenes mappába kerülnek, és csak az űrlap mentésekor mozognak a végleges helyükre. A félbehagyott feltöltések fájljait egy ütemezett parancs naponta törli.'],
         ] as [$title, $desc])
@@ -354,7 +354,7 @@ Running {{ $e2e['runs'] }} tests using 1 worker
           'Több menhely kezelése egy tulajdonossal',
           'Adminisztrátori szerepkör',
           'A kisállat nemének megjelenítése az adatlapon',
-          'Válasz az üzenetekre az oldalon belül, értesítés új üzenetről',
+          'Válasz az üzenetekre az oldalon belül, e-mail értesítés új üzenetről',
           'Kedvencek listája és értesítés státuszváltozásról',
         ] as $item)
           <li class="flex gap-3 text-sm leading-relaxed text-neutral-600">

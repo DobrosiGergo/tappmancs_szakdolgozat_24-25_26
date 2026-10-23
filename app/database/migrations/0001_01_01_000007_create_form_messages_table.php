@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('subject');
             $table->string('message');
             $table->foreignId('shelter_id')->references('id')->on('shelter')->onDelete('cascade');
             $table->foreignId('pet_id')->references('id')->on('pets')->onDelete('cascade');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });
     }

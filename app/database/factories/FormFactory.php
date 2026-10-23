@@ -15,7 +15,6 @@ class FormFactory extends Factory
     public function definition(): array
     {
         return [
-            'subject'    => $this->faker->sentence(3),
             'message'    => $this->faker->paragraph(),
             'user_id'    => User::factory(),
             'shelter_id' => Shelter::factory(),

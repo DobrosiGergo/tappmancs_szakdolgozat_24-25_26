@@ -167,6 +167,42 @@ it('show displays the message for the correct shelter owner', function () {
         ->assertViewHas('form', fn ($f) => $f->is($form));
 });
 
+it('show marks the message as read', function () {
+    $owner   = User::factory()->shelterOwner()->create();
+    $shelter = Shelter::factory()->create(['owner_id' => $owner->id]);
+    $form    = Form::factory()->create(['shelter_id' => $shelter->id]);
+    actingAs($owner);
+
+    expect($form->read_at)->toBeNull();
+
+    get(route('messages.show', $form))->assertOk();
+
+    expect($form->fresh()->read_at)->not->toBeNull();
+});
+
+it('navbar shows the unread message count to the shelter owner', function () {
+    $owner   = User::factory()->shelterOwner()->create();
+    $shelter = Shelter::factory()->create(['owner_id' => $owner->id]);
+    Form::factory()->count(2)->create(['shelter_id' => $shelter->id]);
+    Form::factory()->create(['shelter_id' => $shelter->id, 'read_at' => now()]);
+    actingAs($owner);
+
+    get(route('messages.index'))
+        ->assertSee('data-test-id="nav-unread-dot"', false)
+        ->assertSeeInOrder(['data-test-id="nav-unread-count"', '2'], false);
+});
+
+it('navbar hides the unread marker when every message is read', function () {
+    $owner   = User::factory()->shelterOwner()->create();
+    $shelter = Shelter::factory()->create(['owner_id' => $owner->id]);
+    Form::factory()->create(['shelter_id' => $shelter->id, 'read_at' => now()]);
+    actingAs($owner);
+
+    get(route('messages.index'))
+        ->assertDontSee('data-test-id="nav-unread-dot"', false)
+        ->assertDontSee('data-test-id="nav-unread-count"', false);
+});
+
 // ─── destroy ──────────────────────────────────────────────────────────────────
 
 it('destroy redirects guests to login', function () {

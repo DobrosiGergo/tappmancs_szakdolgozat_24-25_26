@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Shelter;
 use App\Models\User;
-use App\Notifications\WorkerAssigned;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -52,8 +51,6 @@ class StaffingController extends Controller
             'type'       => 'Shelterworker',
             'shelter_id' => $shelter->id,
         ]);
-
-        $user->notify(new WorkerAssigned($shelter));
 
         return back()->with('flash', [
             'message' => "{$user->name} sikeresen hozzáadva munkatársként.",

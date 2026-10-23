@@ -14,7 +14,6 @@ class Form extends Model
 
     protected $fillable = [
         'uuid',
-        'subject',
         'message',
         'user_id',
         'shelter_id',
@@ -22,6 +21,10 @@ class Form extends Model
     ];
 
     protected $hidden = ['user_id'];
+
+    protected $casts = [
+        'read_at' => 'datetime',
+    ];
 
     public function getRouteKeyName(): string
     {

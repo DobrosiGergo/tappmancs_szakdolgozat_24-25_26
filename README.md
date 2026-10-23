@@ -43,8 +43,8 @@ kihelyezéssel.
 | Regisztráció | Többlépéses folyamat szerepkörválasztással, élő e-mail-ellenőrzéssel |
 | Menhelykezelés | Menhely létrehozása és szerkesztése, képek kezelése |
 | Kisállatkezelés | Felvétel, szerkesztés, törlés, státuszváltás |
-| Munkatársak | A tulajdonos e-mail cím alapján vesz fel munkatársat, aki értesítést kap, és ki is léphet |
-| Üzenetek | A felhasználó üzen a menhelynek egy kisállatról, a tulajdonos listázza és törli az üzeneteket |
+| Munkatársak | A tulajdonos e-mail cím alapján vesz fel munkatársat, aki ki is léphet |
+| Üzenetek | A felhasználó üzen a menhelynek egy kisállatról, a tulajdonos listázza és törli az üzeneteket, az olvasatlanokat a navbar jelzi |
 | Fiókbeállítások | Profil és jelszó módosítása, fiók törlése |
 | Tudj meg többet | A projekt bemutatása és a legutóbbi e2e futás eredménye |
 
@@ -118,7 +118,6 @@ böngészőoldali interakciókat (menük, galéria, modális ablakok) Alpine.js 
 | `species`, `breeds` | Fajok és fajták | Egy fajhoz több fajta tartozik |
 | `pets` | Kisállatok, a képek JSON mezőben | Menhely, faj, fajta, felvevő felhasználó |
 | `form_messages` | A menhelynek küldött üzenetek | Felhasználó, menhely, kisállat |
-| `notifications` | Rendszerértesítések | Felhasználó |
 | `likes`, `comments`, `adoptions` | Előkészített táblák | Felület még nem épül rájuk |
 
 Az URL-ekben sorszám helyett `uuid` szerepel (`HasUuid` trait), így az
@@ -293,5 +292,5 @@ Kézi indítás: Actions fül, Deploy workflow, „Run workflow".
 - Több menhely kezelése egy tulajdonossal.
 - Adminisztrátori szerepkör (a `Developer` típus létezik, jogosultság nélkül).
 - A kisállat nemének megjelenítése az adatlapon.
-- Válasz az üzenetekre az oldalon belül, értesítés új üzenetről.
+- Válasz az üzenetekre az oldalon belül, e-mail értesítés új üzenetről.
 - Kedvencek listája és értesítés státuszváltozásról.

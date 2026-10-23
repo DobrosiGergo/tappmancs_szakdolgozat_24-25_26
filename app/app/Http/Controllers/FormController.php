@@ -30,17 +30,10 @@ class FormController extends Controller
             return back()->withErrors(['message' => 'Már küldtél üzenetet ezzel a kisállattal kapcsolatban.']);
         }
 
-        if ($request->pet_id) {
-            $subject = 'Érdeklődés kisállattal kapcsolatban – ' . $shelter->name;
-        } else {
-            $subject = 'Üzenet – ' . $shelter->name;
-        }
-
         Form::create([
             'user_id'    => Auth::id(),
             'shelter_id' => $shelter->id,
             'pet_id'     => $request->pet_id ?: null,
-            'subject'    => $subject,
             'message'    => $request->message,
         ]);
 
@@ -72,6 +65,10 @@ class FormController extends Controller
 
         if (! $shelter || $form->shelter_id !== $shelter->id) {
             abort(403);
+        }
+
+        if (! $form->read_at) {
+            $form->forceFill(['read_at' => now()])->save();
         }
 
         $form->load(['user', 'pet']);

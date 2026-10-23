@@ -39,7 +39,6 @@ class DemoResetCommand extends Command
         'shelter',
         'breeds',
         'species',
-        'notifications',
         'password_reset_tokens',
         'sessions',
         'users',

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\FormController;
-use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShelterController;
@@ -49,9 +48,6 @@ Route::prefix('pets')->name('pets.')->group(function () {
 Route::middleware('auth')->group(function () {
 
     Route::view('/dashboard', 'dashboard')->name('dashboard');
-
-    Route::get('/notifications', [NotificationsController::class, 'index'])
-        ->name('notifications.index');
 
     /*
     | Fiókbeállítások: minden bejelentkezett felhasználónak elérhető.

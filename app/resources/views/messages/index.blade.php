@@ -30,14 +30,17 @@
 
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center justify-between gap-3">
-                                <p class="truncate text-sm font-semibold text-neutral-900">
-                                    {{ $message->user?->name ?? 'Ismeretlen felhasználó' }}
+                                <p class="flex min-w-0 items-center gap-2 text-sm font-semibold text-neutral-900">
+                                    @unless($message->read_at)
+                                        <span class="h-2 w-2 shrink-0 rounded-full bg-red-500" title="Olvasatlan" data-test-id="message-unread"></span>
+                                    @endunless
+                                    <span class="truncate">{{ $message->user?->name ?? 'Ismeretlen felhasználó' }}</span>
                                 </p>
                                 <span class="shrink-0 text-xs text-neutral-400">
                                     {{ $message->created_at->diffForHumans() }}
                                 </span>
                             </div>
-                            <p class="mt-0.5 truncate text-sm text-neutral-500">{{ $message->subject }}</p>
+                            <p class="mt-0.5 truncate text-sm text-neutral-500">{{ $message->message }}</p>
                             @if($message->pet)
                                 <span class="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs text-neutral-500">
                                     <x-icon name="paw" class="h-3 w-3" />
