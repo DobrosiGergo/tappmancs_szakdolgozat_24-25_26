@@ -2,7 +2,7 @@
   <x-ui.breadcrumbs :items="[['label' => 'Menhelyek']]" />
 
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-    <h1 class="text-2xl font-bold text-neutral-900">Elérhető menhelyek</h1>
+    <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900">Elérhető menhelyek</h1>
     <div class="w-full sm:w-72">
       <x-ui.search-filter
         :action="route('shelters.index')"

@@ -25,7 +25,7 @@
                     value="{{ old('email') }}"
                 />
 
-                <x-primary-button class="w-full py-3 text-base rounded-xl !bg-[#333333]">
+                <x-primary-button class="w-full py-3 text-base rounded-xl">
                     Link küldése
                 </x-primary-button>
             </form>

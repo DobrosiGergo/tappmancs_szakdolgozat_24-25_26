@@ -1,6 +1,6 @@
 <x-app-layout>
 
-    <section class="relative overflow-hidden bg-[#333333]">
+    <section class="relative overflow-hidden bg-neutral-900">
 
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
             <div class="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-white opacity-[0.03] blur-3xl"></div>
@@ -26,7 +26,7 @@
                         Állatmenhely
                     </p>
 
-                    <h1 class="text-2xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-7xl">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white">
                         {{ $shelter->name }}
                     </h1>
 
@@ -174,7 +174,7 @@
 
             <div class="flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
 
-                <div class="rounded-2xl bg-[#333333] px-6 py-6 shadow-sm">
+                <div class="rounded-2xl bg-neutral-900 px-6 py-6 shadow-sm">
                     <p class="mb-4 text-xs font-semibold uppercase tracking-widest text-neutral-500">
                         Tulajdonos
                     </p>
@@ -199,22 +199,22 @@
                         @if($shelter->location)
                             <div class="flex items-center justify-between py-2.5 text-sm">
                                 <dt class="text-neutral-400">Helyszín</dt>
-                                <dd class="font-medium text-neutral-800">{{ $shelter->location }}</dd>
+                                <dd class="font-medium text-neutral-900">{{ $shelter->location }}</dd>
                             </div>
                         @endif
                         <div class="flex items-center justify-between py-2.5 text-sm">
                             <dt class="text-neutral-400">Kisállatok</dt>
-                            <dd class="font-medium text-neutral-800">{{ $petCount }} db</dd>
+                            <dd class="font-medium text-neutral-900">{{ $petCount }} db</dd>
                         </div>
                         <div class="flex items-center justify-between py-2.5 text-sm">
                             <dt class="text-neutral-400">Létrehozva</dt>
-                            <dd class="font-medium text-neutral-800">
+                            <dd class="font-medium text-neutral-900">
                                 {{ $shelter->created_at->format('Y.m.d.') }}
                             </dd>
                         </div>
                         <div class="flex items-center justify-between py-2.5 text-sm">
                             <dt class="text-neutral-400">Frissítve</dt>
-                            <dd class="font-medium text-neutral-800">
+                            <dd class="font-medium text-neutral-900">
                                 {{ $shelter->updated_at->diffForHumans() }}
                             </dd>
                         </div>

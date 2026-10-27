@@ -1,6 +1,6 @@
 <x-app-layout>
 
-    <section class="relative overflow-hidden bg-[#333333]">
+    <section class="relative overflow-hidden bg-neutral-900">
 
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
             <div class="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-white opacity-[0.03] blur-3xl"></div>
@@ -23,7 +23,7 @@
                 <span class="text-neutral-400">Munkatársak</span>
             </nav>
 
-            <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white">
                 Munkatársak kezelése
             </h1>
             <p class="mt-4 text-neutral-400">
@@ -112,7 +112,7 @@
 
                         <button type="submit"
                                 data-test-id="staffing-add-button"
-                                class="w-full rounded-xl bg-[#333333] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-700">
+                                class="w-full rounded-xl bg-neutral-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800">
                             Hozzáadás
                         </button>
                     </form>

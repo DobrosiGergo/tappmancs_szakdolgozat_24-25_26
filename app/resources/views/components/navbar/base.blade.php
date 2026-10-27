@@ -1,6 +1,6 @@
 @props(['dark' => false])
 <header {{ $attributes->merge(['class' => 'sticky top-0 z-50']) }}>
-  <div class="relative" @mouseleave="open = null" @keydown.escape.window="open = null">
+  <div class="relative" @mouseleave="leave()" @mouseenter="stay()" @keydown.escape.window="open = null">
     <div
       class="transition-colors duration-300"
       :class="{ 'bg-neutral-900 shadow-none': @json($dark) || open !== null, 'bg-white border-b border-neutral-100 shadow-sm': !@json($dark) && open === null }"

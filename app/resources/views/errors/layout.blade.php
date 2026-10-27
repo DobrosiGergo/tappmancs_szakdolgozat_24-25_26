@@ -22,7 +22,7 @@
         @yield('code')
       </div>
 
-      <h1 class="text-2xl md:text-3xl font-semibold text-neutral-900 -mt-4 mb-3">
+      <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900 -mt-4 mb-3">
         @yield('title')
       </h1>
 
@@ -40,7 +40,7 @@
         </button>
         <a
           href="/"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neutral-900 text-sm font-medium text-white hover:bg-neutral-700 transition-colors duration-150"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neutral-900 text-sm font-medium text-white hover:bg-neutral-800 transition-colors duration-150"
         >
           Főoldal
           <x-icon name="arrow-right" class="w-4 h-4" />

@@ -4,7 +4,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
       <header class="lg:col-span-6">
-        <h1 class="text-5xl md:text-6xl font-semibold tracking-tight text-neutral-900">
+        <h1 class="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900">
           Tappmancs
         </h1>
         <p class="mt-5 text-lg md:text-xl text-neutral-700 leading-8">

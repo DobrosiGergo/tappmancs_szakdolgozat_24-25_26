@@ -27,7 +27,7 @@
 
       <div class="bg-white rounded-2xl shadow-sm border border-neutral-200 p-6 md:p-8">
         <div class="mb-6">
-          <h1 class="text-2xl md:text-3xl font-semibold text-neutral-900">{{ $title }}</h1>
+          <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900">{{ $title }}</h1>
           <p class="mt-2 text-neutral-600">{{ $subtitle }}</p>
         </div>
 

@@ -25,7 +25,7 @@
                     <x-icon name="user" class="h-4 w-4 text-neutral-500" />
                 </div>
                 <div class="min-w-0">
-                    <p class="text-sm font-medium text-neutral-800">{{ $user->name }}</p>
+                    <p class="text-sm font-medium text-neutral-900">{{ $user->name }}</p>
                     <p class="text-xs text-neutral-400">{{ $user->email }}</p>
                 </div>
             </div>
@@ -79,7 +79,7 @@
                         </p>
                         <button type="submit"
                                 data-test-id="contact-send-button"
-                                class="inline-flex shrink-0 items-center gap-2 rounded-full bg-dark-mid px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-dark-soft disabled:opacity-60"
+                                class="inline-flex shrink-0 items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800 disabled:opacity-60"
                                 :disabled="loading">
                             <span x-show="!loading">Üzenet küldése</span>
                             <span x-show="loading" x-cloak>Küldés...</span>
@@ -96,7 +96,7 @@
                 <p class="text-sm font-medium text-neutral-600">Üzenet küldéséhez be kell jelentkezned.</p>
                 <p class="mt-1 text-xs text-neutral-400">Csak regisztrált felhasználók küldhetnek üzenetet a menhelynek.</p>
                 <a href="{{ route('login') }}"
-                   class="mt-5 inline-flex items-center gap-2 rounded-full bg-dark-mid px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-dark-soft">
+                   class="mt-5 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800">
                     Bejelentkezés
                     <x-icon name="arrow-right" class="h-4 w-4 text-white" />
                 </a>

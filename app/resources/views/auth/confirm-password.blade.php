@@ -18,7 +18,7 @@
                     required="true"
                 />
 
-                <x-primary-button class="w-full py-3 text-base rounded-xl !bg-[#333333]">
+                <x-primary-button class="w-full py-3 text-base rounded-xl">
                     Megerősítés
                 </x-primary-button>
             </form>

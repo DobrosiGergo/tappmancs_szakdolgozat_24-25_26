@@ -18,7 +18,7 @@
             <div class="flex flex-col gap-3">
                 <form method="POST" action="{{ route('verification.send') }}">
                     @csrf
-                    <x-primary-button class="w-full py-3 text-base rounded-xl !bg-[#333333]">
+                    <x-primary-button class="w-full py-3 text-base rounded-xl">
                         Hitelesítő e-mail újraküldése
                     </x-primary-button>
                 </form>

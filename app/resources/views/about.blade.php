@@ -40,9 +40,9 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-0">
         @foreach([
-          ['01', 'Kisállatok böngészése', 'Kereshetsz és szűrhetsz faj, fajta, nem és státusz szerint. Minden kisállathoz részletes adatlap tartozik képgalériával.'],
-          ['02', 'Menhelyek és kapcsolatfelvétel', 'A menhelyek publikus adatlapján megtalálod az elérhetőségeket és a kisállatokat. Az oldalon beépített üzenetküldőn keresztül közvetlenül érdeklődhetsz az örökbefogadásról.'],
-          ['03', 'Menhely kezelése', 'Menhely tulajdonosként létrehozhatsz és szerkeszthetsz menhelyet, feltölthetsz kisállatokat, és meghívhatod a munkatársaidat. A munkatársak szintén kezelhetik a kisállatokat.'],
+          ['01', 'Kisállatok böngészése', 'Kereshetsz a kisállat nevére vagy a menhely településére, és szűrhetsz faj, nem és státusz szerint. Minden kisállathoz adatlap tartozik nagyítható képgalériával.'],
+          ['02', 'Menhelyek és kapcsolatfelvétel', 'A menhelyek adatlapján a leírás, a település, a képek és a menhely összes kisállata látható. Bejelentkezve a kisállat adatlapjáról közvetlenül üzenhetsz a menhelynek.'],
+          ['03', 'Menhely kezelése', 'Menhelytulajdonosként létrehozhatod és szerkesztheted a menhelyed, feltölthetsz kisállatokat, és e-mail cím alapján munkatársakat vehetsz fel, akik szintén kezelhetik a kisállatokat.'],
         ] as [$num, $title, $desc])
           <div class="group relative py-10 md:py-0 md:px-10 first:md:pl-0 last:md:pr-0
                        border-t border-white/10 md:border-t-0 first:border-t-0
@@ -68,11 +68,12 @@
         <div class="flex-1 h-px bg-neutral-200"></div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         @foreach([
-          ['Látogató / Felhasználó', 'Regisztráció után böngészhetsz kisállatok és menhelyek között, és üzenetet küldhetsz a menhelyeknek az örökbefogadással kapcsolatban.'],
-          ['Menhely tulajdonos', 'Létrehozhatod és szerkesztheted a menhelyed adatlapját, feltölthetsz kisállatokat, és hívhatsz meg munkatársakat az adminisztrációhoz.'],
-          ['Munkatárs', 'A menhely tulajdonosa által meghívott személy. A menhelyhez tartozó összes kisállatot kezelheti – felveheti, szerkesztheti, és módosíthatja azok státuszát.'],
+          ['Látogató', 'Fiók nélkül böngészhet a kisállatok és a menhelyek között, kereshet és szűrhet.'],
+          ['Örökbefogadó', 'Regisztráció után a kisállat adatlapjáról üzenetet küldhet a menhelynek. Ugyanarról a kisállatról egy üzenetet küldhet.'],
+          ['Menhelytulajdonos', 'Kezeli a saját menhelyét, a kisállatait, a munkatársait és a beérkező üzeneteket.'],
+          ['Munkatárs', 'A tulajdonos e-mail cím alapján veszi fel. A menhely kisállatait kezelheti, a menhely adatait és a munkatársakat nem. A menhelyet maga is elhagyhatja.'],
         ] as [$role, $desc])
           <div class="rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
             <h3 class="text-base font-semibold text-neutral-900 mb-3">{{ $role }}</h3>
@@ -99,9 +100,9 @@
 
       <div class="mt-10 divide-y divide-white/[0.07] rounded-2xl ring-1 ring-white/10">
         @foreach([
-          ['Menhely tulajdonos', 'demo.owner@example.com', 'DemoPassword123'],
+          ['Menhelytulajdonos', 'demo.owner@example.com', 'DemoPassword123'],
           ['Munkatárs', 'demo.worker@example.com', 'DemoPassword123'],
-          ['Felhasználó', 'demo.user@example.com', 'DemoPassword123'],
+          ['Örökbefogadó', 'demo.user@example.com', 'DemoPassword123'],
         ] as [$role, $email, $password])
           <div class="px-5 py-4 flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:gap-6">
             <span class="sm:w-56 sm:shrink-0 font-medium text-white">{{ $role }}</span>
@@ -126,7 +127,7 @@
         @foreach([
           ['Architektúra', 'Szerveroldalon renderelt Laravel MVC alkalmazás. Ahol az oldalnak újratöltés nélkül kell reagálnia (regisztráció, képfeltöltés, szűrés, faj- és fajtaválasztó), Livewire komponens dolgozik, a kisebb böngészőoldali interakciókat Alpine.js kezeli.'],
           ['Adatmodell', 'Felhasználók, menhelyek, fajok és fajták, kisállatok és üzenetek. Az URL-ekben sorszám helyett uuid szerepel, így az azonosítók nem találgathatók. A tulajdonos törlésével törlődik a menhelye, a kisállatai és az üzenetei.'],
-          ['Jogosultságkezelés', 'Három szinten történik: a bejelentkezést az auth middleware, a szerepkört a role middleware, az adott menhelyhez való hozzáférést a ShelterPolicy ellenőrzi. Szerkeszteni csak a tulajdonos tud, kisállatot a tulajdonos és a munkatársak.'],
+          ['Jogosultságkezelés', 'Három szinten történik: a bejelentkezést az auth middleware, a szerepkört az EnsureUserHasRole middleware, az adott menhelyhez való hozzáférést a ShelterPolicy ellenőrzi. A menhely adatait és a munkatársakat csak a tulajdonos kezelheti, a kisállatokat a munkatársak is.'],
           ['Képfeltöltés', 'A képek először ideiglenes mappába kerülnek, és csak az űrlap mentésekor mozognak a végleges helyükre. A félbehagyott feltöltések fájljait egy ütemezett parancs naponta törli.'],
         ] as [$title, $desc])
           <div class="rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
@@ -150,14 +151,17 @@
       <dl class="divide-y divide-white/[0.07] border-y border-white/[0.07]">
         @foreach([
           ['Backend', 'PHP 8.5, Laravel 11'],
+          ['Hitelesítés', 'Laravel Breeze 2'],
           ['Dinamikus komponensek', 'Livewire 3, Alpine.js'],
-          ['Felület', 'Blade, Tailwind CSS 3, Heroicons, Vite 6'],
+          ['Felület', 'Blade, Tailwind CSS 3, Heroicons'],
+          ['Fordítás', 'Vite 6'],
           ['Adatbázis', 'MySQL 8'],
-          ['Backend tesztek', 'Pest 3'],
+          ['Backend tesztek', 'Pest 3, memóriában futó SQLite'],
           ['E2E tesztek', 'Playwright, TypeScript, Chromium és Firefox'],
           ['Kódstílus', 'Laravel Pint, ESLint, Prettier'],
-          ['Szerver', 'DigitalOcean Droplet, Ubuntu 24.04, nginx, PHP-FPM'],
+          ['Szerver', 'DigitalOcean Droplet, Ubuntu 24.04, nginx, PHP-FPM, certbot'],
           ['CI/CD', 'GitHub Actions'],
+          ['Csomagkezelés', 'Composer, npm workspaces'],
           ['AI asszisztens', 'Claude Code'],
         ] as [$layer, $tools])
           <div class="py-4 flex flex-col gap-1 sm:flex-row sm:gap-6">
@@ -295,11 +299,11 @@ Running {{ $e2e['runs'] }} tests using 1 worker
 
       <ol class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         @foreach([
-          ['Build', 'A CSS és a JavaScript lefordítása'],
+          ['Build', 'A CSS és a JavaScript lefordítása a GitHub gépén'],
           ['Tesztek', 'A backend tesztek futtatása, hiba esetén a szerverhez semmi nem nyúl'],
           ['Kód', 'A kód frissítése a szerveren'],
-          ['Assetek', 'A lefordított fájlok feltöltése'],
-          ['Migráció', 'Adatbázis-migráció és a cache-ek újraépítése'],
+          ['Assetek', 'A lefordított fájlok feltöltése a szerverre'],
+          ['Migráció', 'Adatbázis-migráció, a cache-ek újraépítése és a PHP-FPM újratöltése'],
         ] as [$stage, $desc])
           <li class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
             <span class="text-[11px] uppercase tracking-[0.18em] text-neutral-400">{{ $loop->iteration }}. lépés</span>
@@ -325,10 +329,10 @@ Running {{ $e2e['runs'] }} tests using 1 worker
           ['2024. december', 'Laravel projekt, adatmodell, migrációk, Eloquent kapcsolatok'],
           ['2025. február és március', 'Többlépéses regisztráció, nyitóoldal, bejelentkezés'],
           ['2025. június és szeptember', 'Felhasználói oldalak, az e2e tesztkörnyezet alapjai, kódstílus-ellenőrzés'],
-          ['2026. március és április', 'Kisállatlista, adatlap, szerkesztés és törlés, menhely adatlap galériával, hibaoldalak'],
+          ['2026. március és április', 'Kisállatlista, adatlap, szerkesztés és törlés, menhelyadatlap galériával, monorepo, hibaoldalak'],
           ['2026. május', 'Keresés és szűrés, munkatárskezelés'],
-          ['2026. június', 'Üzenetküldés, automatikus kihelyezés, mobilnézet, unit tesztek'],
-          ['2026. október', 'Saját szerver és domain, napi demo-visszaállítás, e2e tesztek az éles oldal ellen, kódtisztítás'],
+          ['2026. június', 'Üzenetküldés, GitHub Actions kihelyezés, mobilnézet'],
+          ['2026. október', 'Saját szerver, domain és TLS, MySQL, napi demo-visszaállítás, e2e tesztek az éles oldal ellen'],
         ] as [$period, $work])
           <div class="py-5 flex flex-col gap-1 sm:flex-row sm:gap-6">
             <span class="sm:w-56 sm:shrink-0 text-sm font-medium text-white">{{ $period }}</span>
@@ -350,12 +354,11 @@ Running {{ $e2e['runs'] }} tests using 1 worker
 
       <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 max-w-4xl">
         @foreach([
-          'Kedvelések, hozzászólások és örökbefogadási folyamat',
+          'Kedvelések, hozzászólások és örökbefogadási folyamat a meglévő táblákra építve',
           'Több menhely kezelése egy tulajdonossal',
-          'Adminisztrátori szerepkör',
-          'A kisállat nemének megjelenítése az adatlapon',
-          'Válasz az üzenetekre az oldalon belül, e-mail értesítés új üzenetről',
-          'Kedvencek listája és értesítés státuszváltozásról',
+          'Adminisztrátori szerepkör (a Developer típus az adatbázisban már létezik, jogosultság nélkül)',
+          'Válasz az üzenetekre az oldalon belül, és értesítés új üzenetről',
+          'Kedvencek listája és értesítés, ha egy kedvenc kisállat státusza megváltozik',
         ] as $item)
           <li class="flex gap-3 text-sm leading-relaxed text-neutral-600">
             <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-300"></span>

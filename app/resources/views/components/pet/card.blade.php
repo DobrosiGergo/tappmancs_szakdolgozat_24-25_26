@@ -49,7 +49,7 @@
 
       @if(!empty($badge))
         <div class="absolute left-3 top-3">
-          <span class="inline-flex items-center rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-neutral-800 shadow-sm backdrop-blur-sm ring-1 ring-white/60">
+          <span class="inline-flex items-center rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-neutral-900 shadow-sm backdrop-blur-sm ring-1 ring-white/60">
             {{ $badge }}
           </span>
         </div>

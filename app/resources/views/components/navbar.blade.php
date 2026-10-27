@@ -26,7 +26,25 @@
     }
 @endphp
 
-<x-navbar.base :dark="$dark" x-data="{ open: null }">
+<x-navbar.base :dark="$dark" x-data="{
+  open: null,
+  timer: null,
+  hover(key) {
+    clearTimeout(this.timer);
+    if (this.open === null) {
+      this.timer = setTimeout(() => this.open = key, 90);
+    } else {
+      this.open = key;
+    }
+  },
+  leave() {
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.open = null, 180);
+  },
+  stay() {
+    clearTimeout(this.timer);
+  },
+}">
 
   <div class="col-span-3 flex items-center">
     <x-navbar.logo :dark="$dark" :href="$logoHref" />
@@ -35,7 +53,7 @@
   @if($isOwner)
 
     <div class="col-start-5 col-span-2 hidden lg:flex items-center gap-1.5"
-         @mouseenter="open = 'shelter'" @focusin="open = 'shelter'">
+         @mouseenter="hover('shelter')" @focusin="open = 'shelter'">
       <x-navbar.menu-item :dark="$dark" label="Menhelyem" :href="$shelterShowUrl" data-test-id="nav-my-shelter" />
       @if($unreadCount > 0)
         <span class="h-2 w-2 rounded-full bg-red-500" title="Olvasatlan üzenet" data-test-id="nav-unread-dot"></span>
@@ -43,17 +61,17 @@
     </div>
 
     <div class="col-start-7 col-span-2 hidden lg:flex items-center"
-         @mouseenter="open = 'pets'" @focusin="open = 'pets'">
+         @mouseenter="hover('pets')" @focusin="open = 'pets'">
       <x-navbar.menu-item :dark="$dark" label="Kisállatok" :href="route('pets.index')" data-test-id="nav-pets" />
     </div>
 
     <div class="col-start-9 col-span-2 hidden lg:flex items-center"
-         @mouseenter="open = 'staff'" @focusin="open = 'staff'">
+         @mouseenter="hover('staff')" @focusin="open = 'staff'">
       <x-navbar.menu-item :dark="$dark" label="Munkatársak" :href="$shelterStaffUrl" data-test-id="nav-staff" />
     </div>
 
     <div class="col-start-11 col-span-1 hidden lg:flex items-center"
-         @mouseenter="open = 'account'" @focusin="open = 'account'">
+         @mouseenter="hover('account')" @focusin="open = 'account'">
       <x-navbar.menu-item :dark="$dark" label="Fiók" :href="route('settings.index')" data-test-id="nav-account" />
     </div>
 
@@ -61,12 +79,12 @@
 
     @if($workerShelter)
       <div class="col-start-7 col-span-2 hidden lg:flex items-center"
-           @mouseenter="open = 'worker-shelter'" @focusin="open = 'worker-shelter'">
+           @mouseenter="hover('worker-shelter')" @focusin="open = 'worker-shelter'">
         <x-navbar.menu-item :dark="$dark" label="Menhely" :href="route('shelters.show', $workerShelter)" data-test-id="nav-worker-shelter" />
       </div>
 
       <div class="col-start-9 col-span-2 hidden lg:flex items-center"
-           @mouseenter="open = 'pets'" @focusin="open = 'pets'">
+           @mouseenter="hover('pets')" @focusin="open = 'pets'">
         <x-navbar.menu-item :dark="$dark" label="Kisállatok" :href="route('pets.index')" data-test-id="nav-pets" />
       </div>
     @else
@@ -79,24 +97,24 @@
     @endif
 
     <div class="col-start-11 col-span-1 hidden lg:flex items-center"
-         @mouseenter="open = 'account'" @focusin="open = 'account'">
+         @mouseenter="hover('account')" @focusin="open = 'account'">
       <x-navbar.menu-item :dark="$dark" label="Fiók" :href="route('settings.index')" data-test-id="nav-account" />
     </div>
 
   @else
 
     <div class="col-start-7 col-span-2 hidden lg:flex items-center"
-         @mouseenter="open = 'shelters-public'" @focusin="open = 'shelters-public'">
+         @mouseenter="hover('shelters-public')" @focusin="open = 'shelters-public'">
       <x-navbar.menu-item :dark="$dark" label="Menhelyek" :href="route('shelters.index')" data-test-id="nav-shelters" />
     </div>
 
     <div class="col-start-9 col-span-2 hidden lg:flex items-center"
-         @mouseenter="open = 'pets-public'" @focusin="open = 'pets-public'">
+         @mouseenter="hover('pets-public')" @focusin="open = 'pets-public'">
       <x-navbar.menu-item :dark="$dark" label="Kisállatok" :href="route('pets.index')" data-test-id="nav-pets" />
     </div>
 
     <div class="col-start-11 col-span-1 hidden lg:flex items-center"
-         @mouseenter="open = 'account'" @focusin="open = 'account'">
+         @mouseenter="hover('account')" @focusin="open = 'account'">
       <x-navbar.menu-item :dark="$dark" label="Fiók" :href="route('login')" data-test-id="nav-account" />
     </div>
 
@@ -116,7 +134,7 @@
 
 <div
       x-show="open !== null && open !== 'mobile'"
-      x-transition:enter="transition-all ease-out duration-300"
+      x-transition:enter="transition-all ease-[cubic-bezier(0.16,1,0.3,1)] duration-500"
       x-transition:enter-start="[clip-path:inset(0_0_100%_0)] opacity-0"
       x-transition:enter-end="[clip-path:inset(0_0_0%_0)] opacity-100"
       x-transition:leave="transition-all ease-in duration-200"
@@ -129,7 +147,8 @@
 
         @if($isOwner)
 
-          <div class="col-start-5 col-span-2" x-show="open === 'shelter'">
+          <div class="col-start-5 col-span-2 transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+               :class="open === 'shelter' ? 'opacity-100 translate-y-0' : 'invisible pointer-events-none opacity-0 -translate-y-1'">
             <x-navbar.section title="Menhelyem">
               <x-navbar.link :href="$shelterShowUrl">Publikus oldal</x-navbar.link>
               <x-navbar.link :href="$shelterEditUrl" data-test-id="nav-edit-shelter">Szerkesztés</x-navbar.link>
@@ -142,7 +161,8 @@
             </x-navbar.section>
           </div>
 
-          <div class="col-start-7 col-span-2" x-show="open === 'pets'">
+          <div class="col-start-7 col-span-2 transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+               :class="open === 'pets' ? 'opacity-100 translate-y-0' : 'invisible pointer-events-none opacity-0 -translate-y-1'">
             <x-navbar.section title="Kisállatok">
               <x-navbar.link :href="route('pets.create')" data-test-id="nav-new-pet">Új kisállat</x-navbar.link>
               <x-navbar.link :href="route('pets.index')">Összes kisállat</x-navbar.link>
@@ -150,13 +170,15 @@
             </x-navbar.section>
           </div>
 
-          <div class="col-start-9 col-span-2" x-show="open === 'staff'">
+          <div class="col-start-9 col-span-2 transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+               :class="open === 'staff' ? 'opacity-100 translate-y-0' : 'invisible pointer-events-none opacity-0 -translate-y-1'">
             <x-navbar.section title="Munkatársak">
               <x-navbar.link :href="$shelterStaffUrl" data-test-id="nav-manage-staff">Kezelés</x-navbar.link>
             </x-navbar.section>
           </div>
 
-          <div class="col-start-11 col-span-2" x-show="open === 'account'">
+          <div class="col-start-11 col-span-2 transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+               :class="open === 'account' ? 'opacity-100 translate-y-0' : 'invisible pointer-events-none opacity-0 -translate-y-1'">
             <x-navbar.section title="Fiók">
               <x-navbar.account />
             </x-navbar.section>
@@ -165,13 +187,15 @@
         @elseif($isWorker)
 
           @if($workerShelter)
-            <div class="col-start-7 col-span-2" x-show="open === 'worker-shelter'">
+            <div class="col-start-7 col-span-2 transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+               :class="open === 'worker-shelter' ? 'opacity-100 translate-y-0' : 'invisible pointer-events-none opacity-0 -translate-y-1'">
               <x-navbar.section title="Menhely">
                 <x-navbar.link :href="route('shelters.show', $workerShelter)">Publikus oldal</x-navbar.link>
               </x-navbar.section>
             </div>
 
-            <div class="col-start-9 col-span-2" x-show="open === 'pets'">
+            <div class="col-start-9 col-span-2 transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+               :class="open === 'pets' ? 'opacity-100 translate-y-0' : 'invisible pointer-events-none opacity-0 -translate-y-1'">
               <x-navbar.section title="Kisállatok">
                 <x-navbar.link :href="route('pets.create')" data-test-id="nav-new-pet">Új kisállat</x-navbar.link>
                 <x-navbar.link :href="route('pets.index')">Összes kisállat</x-navbar.link>
@@ -180,7 +204,8 @@
             </div>
           @endif
 
-          <div class="col-start-11 col-span-2" x-show="open === 'account'">
+          <div class="col-start-11 col-span-2 transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+               :class="open === 'account' ? 'opacity-100 translate-y-0' : 'invisible pointer-events-none opacity-0 -translate-y-1'">
             <x-navbar.section title="Fiók">
               <x-navbar.account />
             </x-navbar.section>
@@ -188,19 +213,22 @@
 
         @else
 
-          <div class="col-start-7 col-span-2" x-show="open === 'shelters-public'">
+          <div class="col-start-7 col-span-2 transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+               :class="open === 'shelters-public' ? 'opacity-100 translate-y-0' : 'invisible pointer-events-none opacity-0 -translate-y-1'">
             <x-navbar.section title="Menhelyek">
               <x-navbar.link :href="route('shelters.index')">Összes menhely</x-navbar.link>
             </x-navbar.section>
           </div>
 
-          <div class="col-start-9 col-span-2" x-show="open === 'pets-public'">
+          <div class="col-start-9 col-span-2 transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+               :class="open === 'pets-public' ? 'opacity-100 translate-y-0' : 'invisible pointer-events-none opacity-0 -translate-y-1'">
             <x-navbar.section title="Kisállatok">
               <x-navbar.link :href="route('pets.index')">Összes kisállat</x-navbar.link>
             </x-navbar.section>
           </div>
 
-          <div class="col-start-11 col-span-2" x-show="open === 'account'">
+          <div class="col-start-11 col-span-2 transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+               :class="open === 'account' ? 'opacity-100 translate-y-0' : 'invisible pointer-events-none opacity-0 -translate-y-1'">
             <x-navbar.section title="Fiók">
               <x-navbar.account />
             </x-navbar.section>

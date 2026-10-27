@@ -10,7 +10,7 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
   <div>
-    <h1 class="text-3xl sm:text-4xl font-bold text-neutral-900">{{ $title }}</h1>
+    <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-900">{{ $title }}</h1>
     @if($description)
       <p class="mt-4 text-neutral-600 text-lg leading-7">{{ $description }}</p>
     @endif
@@ -21,7 +21,7 @@
         </a>
       @endif
       @if($secondaryHref && $secondaryLabel)
-        <a href="{{ $secondaryHref }}" class="inline-flex items-center justify-center rounded-xl border border-neutral-300 text-neutral-800 px-5 py-3 font-medium hover:bg-neutral-100 transition">
+        <a href="{{ $secondaryHref }}" class="inline-flex items-center justify-center rounded-xl border border-neutral-300 text-neutral-900 px-5 py-3 font-medium hover:bg-neutral-100 transition">
           {{ $secondaryLabel }}
         </a>
       @endif

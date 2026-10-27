@@ -12,7 +12,7 @@
 
             <div class="flex gap-16">
                 <div>
-                    <h4 class="font-mono text-[11px] uppercase tracking-widest text-neutral-400 mb-4">Felfedezés</h4>
+                    <h4 class="text-[11px] uppercase tracking-[0.2em] text-neutral-400 mb-4">Felfedezés</h4>
                     <ul class="space-y-2">
                         <li><a href="{{ route('pets.index') }}" class="text-sm text-neutral-700 hover:text-neutral-900 transition-colors">Kisállatok</a></li>
                         <li><a href="{{ route('shelters.index') }}" class="text-sm text-neutral-700 hover:text-neutral-900 transition-colors">Menhelyek</a></li>
@@ -21,7 +21,7 @@
                 </div>
 
                 <div>
-                    <h4 class="font-mono text-[11px] uppercase tracking-widest text-neutral-400 mb-4">Fiók</h4>
+                    <h4 class="text-[11px] uppercase tracking-[0.2em] text-neutral-400 mb-4">Fiók</h4>
                     <ul class="space-y-2">
                         @auth
                             <li><a href="{{ route('dashboard') }}" class="text-sm text-neutral-700 hover:text-neutral-900 transition-colors">Irányítópult</a></li>
@@ -36,7 +36,7 @@
         </div>
 
         <div class="mt-12 border-t border-neutral-100 pt-6">
-            <span class="font-mono text-xs text-neutral-400">© {{ date('Y') }} Tappmancs</span>
+            <span class="text-xs text-neutral-400">© {{ date('Y') }} Tappmancs</span>
         </div>
     </div>
 </footer>

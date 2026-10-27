@@ -1,11 +1,11 @@
 <x-app-layout>
 
-    <section class="relative overflow-hidden bg-[#333333]">
+    <section class="relative overflow-hidden bg-neutral-900">
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
             <div class="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-white opacity-[0.03] blur-3xl"></div>
         </div>
         <div class="relative mx-auto max-w-7xl px-6 py-16 sm:py-20 lg:px-8">
-            <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl">Beérkező üzenetek</h1>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white">Beérkező üzenetek</h1>
             <p class="mt-3 text-neutral-400">{{ $shelter->name }} – felhasználói megkeresések</p>
         </div>
     </section>

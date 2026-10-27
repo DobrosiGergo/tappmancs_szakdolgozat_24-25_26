@@ -3,7 +3,7 @@
 
   <div class="flex flex-col md:flex-row gap-12">
     <div class="w-full md:w-1/2 p-8">
-      <h2 class="text-3xl font-semibold mb-8 tracking-tight text-neutral-900">
+      <h2 class="text-3xl md:text-4xl font-semibold mb-8 tracking-tight text-neutral-900">
         Hozz létre saját fiókot
       </h2>
 
@@ -18,7 +18,7 @@
         src="{{ asset('images/collar-dog.svg') }}"
         alt="Kutya nyakörv"
         w="640" h="420"
-        class="w-full max-w-[440px] lg:max-w-[560px] border-2 border-neutral-800 rounded-full"
+        class="w-full max-w-[440px] lg:max-w-[560px] border-2 border-neutral-900 rounded-full"
       />
     </div>
   </div>

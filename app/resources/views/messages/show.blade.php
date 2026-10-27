@@ -3,9 +3,9 @@
     <div class="mx-auto max-w-3xl px-6 py-10 lg:px-8">
 
         <div class="mb-6 flex items-center gap-2 text-sm text-neutral-500">
-            <a href="{{ route('messages.index') }}" class="transition hover:text-neutral-800">Üzenetek</a>
+            <a href="{{ route('messages.index') }}" class="transition hover:text-neutral-900">Üzenetek</a>
             <x-icon name="arrow-right" class="h-3.5 w-3.5 opacity-40" />
-            <span class="text-neutral-800">Üzenet részletei</span>
+            <span class="text-neutral-900">Üzenet részletei</span>
         </div>
 
         <x-ui.card pad="p-8">
@@ -29,14 +29,14 @@
                     <x-icon name="paw" class="h-4 w-4 shrink-0 text-neutral-400" />
                     <div class="min-w-0">
                         <p class="text-xs text-neutral-400">Kisállattal kapcsolatban</p>
-                        <p class="truncate text-sm font-medium text-neutral-800">{{ $form->pet->name }}</p>
+                        <p class="truncate text-sm font-medium text-neutral-900">{{ $form->pet->name }}</p>
                     </div>
                     <x-icon name="arrow-right" class="ml-auto h-4 w-4 shrink-0 text-neutral-300" />
                 </a>
             @endif
 
             <div class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">Üzenet</div>
-            <p class="whitespace-pre-line text-sm leading-7 text-neutral-800">{{ $form->message }}</p>
+            <p class="whitespace-pre-line text-sm leading-7 text-neutral-900">{{ $form->message }}</p>
 
             <div class="mt-8 flex items-center justify-between gap-4 border-t border-neutral-100 pt-6">
                 <a href="{{ route('messages.index') }}"

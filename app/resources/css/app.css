@@ -2,23 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --dark:      23  23  23;
-    --dark-mid:  51  51  51;
-    --dark-soft: 64  64  64;
-
-    --light:        255 255 255;
-    --light-off:    250 250 250;
-    --light-dim:    245 245 245;
-    --light-border: 229 229 229;
-
-    --muted:       115 115 115;
-    --muted-light: 163 163 163;
-    --muted-dark:   82  82  82;
-  }
-}
-
 [x-cloak] { display: none !important; }
 
 

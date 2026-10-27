@@ -30,7 +30,7 @@
                             @endif
                         </div>
 
-                        <h1 class="text-3xl font-bold tracking-tight text-neutral-900">
+                        <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900">
                             {{ $pet->name }}
                         </h1>
 
@@ -110,7 +110,7 @@
                                     @if($pet->shelter)
                                         <a
                                             href="{{ route('shelters.show', $pet->shelter) }}"
-                                            class="underline underline-offset-4 transition hover:text-black"
+                                            class="underline underline-offset-4 transition hover:text-neutral-900"
                                         >
                                             {{ $pet->shelter->name }}
                                         </a>
@@ -147,7 +147,7 @@
                         @if($pet->shelter)
                             <a
                                 href="{{ route('shelters.show', $pet->shelter) }}"
-                                class="mt-5 inline-flex items-center justify-center rounded-2xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-black"
+                                class="mt-5 inline-flex items-center justify-center rounded-2xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
                             >
                                 Menhely megtekintése
                             </a>
@@ -163,7 +163,7 @@
             @if($relatedPets->count())
                 <div class="mt-10">
                     <div class="mb-5">
-                        <h2 class="text-2xl font-bold text-neutral-900">További kisállatok ettől a menhelytől</h2>
+                        <h2 class="text-xl font-semibold text-neutral-900">További kisállatok ettől a menhelytől</h2>
                     </div>
 
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">

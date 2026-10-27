@@ -16,8 +16,8 @@
 
 <{{ $tag }} @if($href) href="{{ $href }}" @endif
   class="group relative {{ $class }}">
-  <div aria-hidden="true" class="absolute top-2 left-2 md:top-4 md:left-4 w-full h-full bg-muted rounded-2xl md:rounded-3xl"></div>
-  <div class="relative bg-dark-mid group-hover:bg-dark-soft text-white
+  <div aria-hidden="true" class="absolute top-2 left-2 md:top-4 md:left-4 w-full h-full bg-neutral-500 rounded-2xl md:rounded-3xl"></div>
+  <div class="relative bg-neutral-800 group-hover:bg-neutral-700 text-white
               px-6 py-5 md:px-10 md:py-8
               rounded-2xl md:rounded-3xl text-center
               shadow-md transition-all duration-300 ease-out

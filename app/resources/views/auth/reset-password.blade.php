@@ -36,7 +36,7 @@
                     required="true"
                 />
 
-                <x-primary-button class="w-full py-3 text-base rounded-xl !bg-[#333333]">
+                <x-primary-button class="w-full py-3 text-base rounded-xl">
                     Jelszó visszaállítása
                 </x-primary-button>
             </form>

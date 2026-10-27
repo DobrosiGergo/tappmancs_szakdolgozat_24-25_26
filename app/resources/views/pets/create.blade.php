@@ -8,7 +8,7 @@
         <x-icon name="arrow-left" class="h-4 w-4" />
         Vissza
       </a>
-      <h1 class="text-2xl md:text-3xl font-semibold text-neutral-900">Új kisállat felvétele</h1>
+      <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900">Új kisállat felvétele</h1>
       <p class="mt-1 text-sm text-neutral-500">Add meg az alapadatokat, majd töltsd fel a kisállat képeit.</p>
     </div>
 
@@ -97,7 +97,7 @@
             </div>
 
             <div class="px-8 py-6 bg-neutral-50/60">
-              <x-primary-button data-test-id="pet-submit" class="w-full py-3 text-base rounded-xl !bg-[#333333]">
+              <x-primary-button data-test-id="pet-submit" class="w-full py-3 text-base rounded-xl">
                 Kisállat létrehozása
               </x-primary-button>
             </div>

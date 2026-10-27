@@ -1,7 +1,7 @@
 <x-guest-layout>
   <div class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
     <section class="hidden lg:flex items-center justify-center relative">
-      <div class="absolute inset-0 bg-[#333333]"></div>
+      <div class="absolute inset-0 bg-neutral-900"></div>
       <div class="absolute inset-0" style="clip-path: polygon(58% 0,100% 0,100% 100%,30% 100%); background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));"></div>
       <div class="relative z-10 max-w-md text-white px-12">
         <h1 class="text-3xl font-semibold tracking-tight">Üdv újra</h1>
@@ -59,7 +59,7 @@
             <a class="text-sm text-neutral-600 hover:text-neutral-900" href="{{ route('role') }}">Regisztráció</a>
           </div>
 
-          <x-primary-button data-test-id="login-submit" class="w-full py-3 text-base rounded-xl !bg-[#333333]">
+          <x-primary-button data-test-id="login-submit" class="w-full py-3 text-base rounded-xl">
             Bejelentkezés
           </x-primary-button>
         </form>

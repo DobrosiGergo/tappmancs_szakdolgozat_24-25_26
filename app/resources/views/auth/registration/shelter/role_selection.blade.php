@@ -3,9 +3,9 @@
     <x-ui.stepper active="shelterRole" class="mb-12" />
 
     <section>
-      <h1 class="text-4xl md:text-5xl font-semibold text-neutral-900 mb-8">Szerepkörök információ</h1>
+      <h1 class="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-8">Szerepkörök információ</h1>
 
-      <div class="space-y-6 text-neutral-800 text-lg leading-8 mb-12">
+      <div class="space-y-6 text-neutral-900 text-lg leading-8 mb-12">
         <p><strong>Menhely dolgozó:</strong> a képviselt menhely adatait kezeli és karbantartja, ezzel biztosítva a megfelelő működést és nyilvántartást.</p>
         <p><strong>Menhely tulajdonos:</strong> a saját menhely karbantartásáért és kezeléséért felel, valamint a dolgozók felvételéért és adminisztrációjáért.</p>
       </div>

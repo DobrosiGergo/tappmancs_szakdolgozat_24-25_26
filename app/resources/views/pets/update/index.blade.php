@@ -8,7 +8,7 @@
 
   <div class="mb-6 flex items-center justify-between gap-4">
     <div>
-      <h1 class="text-2xl font-bold">Saját feltöltött kisállatok</h1>
+      <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900">Saját feltöltött kisállatok</h1>
       <p class="mt-1 text-sm text-neutral-500">
         Itt tudod megtekinteni és módosítani a saját feltöltött kisállataidat.
       </p>

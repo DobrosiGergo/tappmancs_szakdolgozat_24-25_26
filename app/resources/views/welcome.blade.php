@@ -2,8 +2,8 @@
   @section('title', 'Tappmancs Kezdőlap')
 
   <section class="relative overflow-hidden bg-neutral-900 text-white">
-    <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 items-center">
-      <div class="text-left px-6 sm:px-10 lg:px-16 xl:px-24 py-16 md:py-24">
+    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 items-center">
+      <div class="text-left px-6 sm:px-10 lg:px-16 xl:px-24 py-16 lg:py-24">
           <x-ui.home.h1 class="text-white">Tappmancs</x-ui.home.h1>
 
           <x-ui.home.h2 class="text-white/90">Fogadj örökbe kisállatot vagy indíts el a saját menhelyed!</x-ui.home.h2>
@@ -29,7 +29,7 @@
           </div>
       </div>
 
-      <div class="hidden md:flex items-center justify-center px-8 lg:px-16 py-16 md:py-24">
+      <div class="hidden lg:flex items-center justify-center px-8 xl:px-16 py-16 lg:py-24">
         <x-ui.home.image-frame
           :src="asset('images/collar-dog.svg')"
           alt="Örökbefogadás"
@@ -48,9 +48,9 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3">
         @foreach([
-          ['01', 'Böngéssz', 'Keresd meg az elérhető kisállatokat és menhelyeket a platformon. Szűrj faj, kor és hely szerint.'],
+          ['01', 'Böngéssz', 'Keresd meg az elérhető kisállatokat és menhelyeket. Keress név vagy település szerint, és szűrj faj, nem és státusz szerint.'],
           ['02', 'Vedd fel a kapcsolatot', 'Érdeklődjél a kisállatról közvetlenül a menhelynél az oldal beépített kapcsolati rendszerén keresztül.'],
-          ['03', 'Fogadj örökbe!', 'Teljesítsd az örökbefogadási folyamatot, és vidd haza új barátod – egy életre.'],
+          ['03', 'Fogadj örökbe!', 'Egyeztesd a részleteket a menhellyel, és vidd haza új barátod egy életre.'],
         ] as $i => [$num, $title, $desc])
         <div
           class="group relative py-10 md:py-0 md:px-10 first:md:pl-0 last:md:pr-0

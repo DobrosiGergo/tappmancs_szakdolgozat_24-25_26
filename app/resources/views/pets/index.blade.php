@@ -1,7 +1,7 @@
 <x-app-layout>
   <x-ui.breadcrumbs :items="[['label' => 'Kisállatok']]" />
 
-  <h1 class="text-2xl font-bold mb-6">Elérhető kisállatok</h1>
+  <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900 mb-6">Elérhető kisállatok</h1>
 
   <x-ui.search-filter
     :action="route('pets.index')"

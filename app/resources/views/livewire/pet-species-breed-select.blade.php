@@ -24,7 +24,7 @@
                         <button
                             type="button"
                             @click="selectSpecies(item.id)"
-                            :class="{ 'bg-neutral-900 text-white': speciesId === item.id, 'text-neutral-700 hover:bg-neutral-200 hover:text-neutral-950': speciesId !== item.id }"
+                            :class="{ 'bg-neutral-900 text-white': speciesId === item.id, 'text-neutral-700 hover:bg-neutral-200 hover:text-neutral-900': speciesId !== item.id }"
                             class="flex w-full items-center justify-between px-4 py-2.5 text-sm transition"
                         >
                             <span x-text="item.name"></span>
@@ -63,7 +63,7 @@
                         <button
                             type="button"
                             @click="selectBreed(item.id)"
-                            :class="{ 'bg-neutral-900 text-white': breedId === item.id, 'text-neutral-700 hover:bg-neutral-200 hover:text-neutral-950': breedId !== item.id }"
+                            :class="{ 'bg-neutral-900 text-white': breedId === item.id, 'text-neutral-700 hover:bg-neutral-200 hover:text-neutral-900': breedId !== item.id }"
                             class="flex w-full items-center justify-between px-4 py-2.5 text-sm transition"
                         >
                             <span x-text="item.name"></span>
