@@ -78,6 +78,21 @@ jobs:
     name: Run tests
     needs: build
     runs-on: ubuntu-latest
+    # Ugyanaz a MySQL főverzió, mint a dropleten. A phpunit.xml a
+    # tappmancs_test adatbázisra irányítja a teszteket.
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_DATABASE: tappmancs_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
     defaults:
       run:
         working-directory: app
@@ -88,7 +103,7 @@ jobs:
       - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: '8.5'
-          extensions: pdo_sqlite, mbstring, intl, gd
+          extensions: pdo_mysql, mbstring, intl, gd
           coverage: none
 
       - name: Install Composer dependencies
@@ -101,8 +116,8 @@ jobs:
           name: build
           path: app/public/build
 
-      # A phpunit.xml felülírja az adatbázist in-memory SQLite-ra, a .env-ből
-      # csak az APP_KEY kell.
+      # A .env.example kapcsolati adatai (127.0.0.1:3306, root, jelszó nélkül)
+      # a MySQL service-re mutatnak, az adatbázis nevét a phpunit.xml adja.
       - name: Prepare environment
         run: |
           cp .env.example .env

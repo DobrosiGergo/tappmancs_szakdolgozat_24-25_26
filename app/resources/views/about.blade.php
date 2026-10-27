@@ -156,7 +156,7 @@
           ['Felület', 'Blade, Tailwind CSS 3, Heroicons'],
           ['Fordítás', 'Vite 6'],
           ['Adatbázis', 'MySQL 8'],
-          ['Backend tesztek', 'Pest 3, memóriában futó SQLite'],
+          ['Backend tesztek', 'Pest 3, külön MySQL tesztadatbázis'],
           ['E2E tesztek', 'Playwright, TypeScript, Chromium és Firefox'],
           ['Kódstílus', 'Laravel Pint, ESLint, Prettier'],
           ['Szerver', 'DigitalOcean Droplet, Ubuntu 24.04, nginx, PHP-FPM, certbot'],

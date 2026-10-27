@@ -64,7 +64,7 @@ kihelyezéssel.
 | Felület | Blade, Tailwind CSS 3, Heroicons |
 | Asset build | Vite 6 |
 | Adatbázis | MySQL 8 |
-| Backend tesztek | Pest 3, memóriában futó SQLite adatbázissal |
+| Backend tesztek | Pest 3, külön MySQL tesztadatbázissal |
 | E2E tesztek | Playwright 1.64, TypeScript, Chromium és Firefox |
 | Kódstílus | Laravel Pint, ESLint, Prettier |
 | Szerver | DigitalOcean Droplet, Ubuntu 24.04, nginx, PHP-FPM, MySQL, certbot |
@@ -85,7 +85,7 @@ tartozik, ezért a szakdolgozat ezt is be kívánja mutatni:
 - **Pontos feladatmegadás.** Az eredmény minősége a megfogalmazott célon és a
   megadott kontextuson múlik.
 - **Ellenőrzés.** Az AI által írt kód csak akkor került be, ha a tesztek
-  (274 backend teszt, 23 e2e forgatókönyv) és a kódstílus-ellenőrzés átment,
+  (272 backend teszt, 23 e2e forgatókönyv) és a kódstílus-ellenőrzés átment,
   és a szerző átnézte.
 - **Felelősség.** A tervezési döntések (architektúra, adatmodell,
   jogosultságok, hosting) a szerzőé, az AI ezek kivitelezését gyorsítja.
@@ -159,10 +159,10 @@ A felület magyar nyelvű, a fordítások az `app/lang/hu` mappában vannak.
 
 | Szint | Eszköz | Mit ellenőriz | Darab |
 |---|---|---|---|
-| Unit és feature | Pest | Modellek, policy, middleware, validáció, controllerek, útvonalak, Livewire komponensek, parancsok | 274 teszt |
+| Unit és feature | Pest | Modellek, policy, middleware, validáció, controllerek, útvonalak, Livewire komponensek, parancsok | 272 teszt |
 | E2E | Playwright | Teljes felhasználói folyamatok valódi böngészőben (Chromium, Firefox) | 23 forgatókönyv, 46 futás |
 
-A backend tesztek memóriában futó SQLite adatbázist használnak, és a deploy
+A backend tesztek egy külön MySQL tesztadatbázison futnak, és a deploy
 előfeltételei. Az e2e tesztek három rétegűek (spec, lépések, page objectek), a
 helyi és az éles oldal ellen is futtathatók, és a létrehozott adatokat maguk
 után törlik. Az utolsó futás eredménye az oldal „Tudj meg többet" lapján

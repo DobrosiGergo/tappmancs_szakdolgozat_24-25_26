@@ -69,6 +69,7 @@ php artisan key:generate
 # 5. Adatbázis (ha nem jelszó nélküli root a felhasználód,
 #    írd át a DB_USERNAME és DB_PASSWORD értékét az app/.env fájlban)
 mysql -u root -e 'create database tappmancs'
+mysql -u root -e 'create database tappmancs_test'   # a tesztekhez
 
 # 6. Táblák és alapadatok
 php artisan migrate --seed
@@ -116,9 +117,11 @@ Ebből a mappából:
 | Unit | Modellek, policy, middleware, űrlapvalidáció |
 | Feature | Controllerek, útvonalak, jogosultságok, Livewire komponensek, parancsok |
 
-274 teszt Pesttel. MySQL nem kell hozzájuk, memóriában futó SQLite adatbázist
-használnak (`phpunit.xml`):
+272 teszt Pesttel. Ugyanazon a MySQL szerveren futnak, mint a fejlesztői
+adatbázis, de egy külön `tappmancs_test` adatbázisban (`phpunit.xml`), így a
+helyi adatokat nem törlik. Egyszer létre kell hozni:
 
 ```bash
+mysql -u root -e 'create database tappmancs_test'
 npm run test
 ```
