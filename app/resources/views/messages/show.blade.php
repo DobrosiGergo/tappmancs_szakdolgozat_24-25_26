@@ -2,11 +2,13 @@
 
     <div class="mx-auto max-w-3xl px-6 py-10 lg:px-8">
 
-        <div class="mb-6 flex items-center gap-2 text-sm text-neutral-500">
-            <a href="{{ route('messages.index') }}" class="transition hover:text-neutral-900">Üzenetek</a>
-            <x-icon name="arrow-right" class="h-3.5 w-3.5 opacity-40" />
-            <span class="text-neutral-900">Üzenet részletei</span>
-        </div>
+        <x-ui.breadcrumbs
+            class="mb-6"
+            :items="[
+                ['href' => route('messages.index'), 'label' => 'Üzenetek'],
+                ['label' => 'Üzenet részletei'],
+            ]"
+        />
 
         <x-ui.card pad="p-8">
 

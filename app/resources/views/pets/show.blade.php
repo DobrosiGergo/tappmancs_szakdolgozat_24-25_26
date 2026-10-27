@@ -1,190 +1,188 @@
 <x-app-layout>
 
-    <div class="py-10">
-        <x-ui.container>
-            <div class="mb-6">
-                <x-ui.breadcrumbs
-                    homeHref="{{ route('home') }}"
-                    homeLabel="Főoldal"
-                    :items="[
-                        ['href' => route('pets.index'), 'label' => 'Kisállatok'],
-                        ['label' => $pet->name],
-                    ]"
-                />
-            </div>
+    <div>
+        <div class="mb-6">
+            <x-ui.breadcrumbs
+                homeHref="{{ route('home') }}"
+                homeLabel="Főoldal"
+                :items="[
+                    ['href' => route('pets.index'), 'label' => 'Kisállatok'],
+                    ['label' => $pet->name],
+                ]"
+            />
+        </div>
 
-            <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-                <div class="space-y-6 lg:col-span-2">
-                    <x-ui.image-gallery :images="$pet->images_safe" :alt="$pet->name" />
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div class="space-y-6 lg:col-span-2">
+                <x-ui.image-gallery :images="$pet->images_safe" :alt="$pet->name" />
 
-                    <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
-                        <div class="mb-4 flex flex-wrap items-center gap-3">
-                            <span class="inline-flex rounded-full px-3 py-1 text-sm font-medium {{ $pet->status_badge_class }}">
-                                {{ $pet->status_label }}
+                <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
+                    <div class="mb-4 flex flex-wrap items-center gap-3">
+                        <span class="inline-flex rounded-full px-3 py-1 text-sm font-medium {{ $pet->status_badge_class }}">
+                            {{ $pet->status_label }}
+                        </span>
+
+                        @if($pet->arrival_date)
+                            <span class="text-sm text-neutral-500">
+                                Beérkezés: {{ $pet->arrival_date->format('Y.m.d.') }}
                             </span>
-
-                            @if($pet->arrival_date)
-                                <span class="text-sm text-neutral-500">
-                                    Beérkezés: {{ $pet->arrival_date->format('Y.m.d.') }}
-                                </span>
-                            @endif
-                        </div>
-
-                        <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900">
-                            {{ $pet->name }}
-                        </h1>
-
-                        <p class="mt-4 text-base leading-7 text-neutral-700">
-                            {{ $pet->description }}
-                        </p>
-                    </div>
-                </div>
-
-                <div class="space-y-6">
-                    @if($pet->shelter)
-                        @can('managePets', $pet->shelter)
-                            <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
-                                <h2 class="mb-4 text-sm font-semibold uppercase tracking-widest text-neutral-400">Státusz</h2>
-                                <div class="flex flex-col gap-2">
-                                    @foreach(\App\Models\Pet::STATUSES as $value => $label)
-                                        @php
-                                            $isActive = $pet->status === $value;
-                                            if ($isActive) {
-                                                $btnType  = 'button';
-                                                $btnClass = 'bg-neutral-900 text-white cursor-default';
-                                            } else {
-                                                $btnType  = 'submit';
-                                                $btnClass = 'bg-neutral-50 text-neutral-700 hover:bg-neutral-100';
-                                            }
-                                        @endphp
-                                        <form method="POST" action="{{ route('pets.update.status', $pet) }}">
-                                            @csrf
-                                            @method('PATCH')
-                                            <input type="hidden" name="status" value="{{ $value }}">
-                                            <button
-                                                type="{{ $btnType }}"
-                                                data-test-id="pet-status-{{ $value }}"
-                                                class="w-full rounded-xl px-4 py-2.5 text-sm font-medium text-left transition {{ $btnClass }}"
-                                            >
-                                                {{ $label }}
-                                            </button>
-                                        </form>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endcan
-                    @endif
-
-                    <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
-                        <h2 class="text-lg font-semibold text-neutral-900">Alapadatok</h2>
-
-                        <dl class="mt-5 space-y-4">
-                            <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
-                                <dt class="text-sm text-neutral-500">Faj</dt>
-                                <dd class="text-right text-sm font-medium text-neutral-900">
-                                    {{ $pet->species->name }}
-                                </dd>
-                            </div>
-
-                            @if($pet->breed)
-                            <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
-                                <dt class="text-sm text-neutral-500">Fajta</dt>
-                                <dd class="text-right text-sm font-medium text-neutral-900">
-                                    {{ $pet->breed->name }}
-                                </dd>
-                            </div>
-                            @endif
-
-                            @if($pet->age_label)
-                            <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
-                                <dt class="text-sm text-neutral-500">Kor</dt>
-                                <dd class="text-right text-sm font-medium text-neutral-900">
-                                    {{ $pet->age_label }}
-                                </dd>
-                            </div>
-                            @endif
-
-                            <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
-                                <dt class="text-sm text-neutral-500">Menhely</dt>
-                                <dd class="text-right text-sm font-medium text-neutral-900">
-                                    @if($pet->shelter)
-                                        <a
-                                            href="{{ route('shelters.show', $pet->shelter) }}"
-                                            class="underline underline-offset-4 transition hover:text-neutral-900"
-                                        >
-                                            {{ $pet->shelter->name }}
-                                        </a>
-                                    @else
-                                        Nincs hozzárendelve
-                                    @endif
-                                </dd>
-                            </div>
-
-                            @if($pet->shelter && $pet->shelter->location)
-                            <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
-                                <dt class="text-sm text-neutral-500">Helyszín</dt>
-                                <dd class="text-right text-sm font-medium text-neutral-900">
-                                    {{ $pet->shelter->location }}
-                                </dd>
-                            </div>
-                            @endif
-
-                            <div class="flex items-start justify-between gap-4">
-                                <dt class="text-sm text-neutral-500">Feltöltötte</dt>
-                                <dd class="text-right text-sm font-medium text-neutral-900">
-                                    {{ $pet->employee_name }}
-                                </dd>
-                            </div>
-                        </dl>
-                    </div>
-
-                    <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
-                        <h2 class="text-lg font-semibold text-neutral-900">Érdekel az örökbefogadás?</h2>
-                        <p class="mt-3 text-sm leading-6 text-neutral-600">
-                            Vedd fel a kapcsolatot a menhellyel, és érdeklődj a kisállat örökbefogadásának menetéről.
-                        </p>
-
-                        @if($pet->shelter)
-                            <a
-                                href="{{ route('shelters.show', $pet->shelter) }}"
-                                class="mt-5 inline-flex items-center justify-center rounded-2xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
-                            >
-                                Menhely megtekintése
-                            </a>
                         @endif
                     </div>
+
+                    <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900">
+                        {{ $pet->name }}
+                    </h1>
+
+                    <p class="mt-4 text-base leading-7 text-neutral-700">
+                        {{ $pet->description }}
+                    </p>
                 </div>
             </div>
 
-            @if($pet->shelter)
-                <x-ui.contact-form :shelter="$pet->shelter" :pet="$pet" />
-            @endif
+            <div class="space-y-6">
+                @if($pet->shelter)
+                    @can('managePets', $pet->shelter)
+                        <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
+                            <h2 class="mb-4 text-sm font-semibold uppercase tracking-widest text-neutral-400">Státusz</h2>
+                            <div class="flex flex-col gap-2">
+                                @foreach(\App\Models\Pet::STATUSES as $value => $label)
+                                    @php
+                                        $isActive = $pet->status === $value;
+                                        if ($isActive) {
+                                            $btnType  = 'button';
+                                            $btnClass = 'bg-neutral-900 text-white cursor-default';
+                                        } else {
+                                            $btnType  = 'submit';
+                                            $btnClass = 'bg-neutral-50 text-neutral-700 hover:bg-neutral-100';
+                                        }
+                                    @endphp
+                                    <form method="POST" action="{{ route('pets.update.status', $pet) }}">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="hidden" name="status" value="{{ $value }}">
+                                        <button
+                                            type="{{ $btnType }}"
+                                            data-test-id="pet-status-{{ $value }}"
+                                            class="w-full rounded-xl px-4 py-2.5 text-sm font-medium text-left transition {{ $btnClass }}"
+                                        >
+                                            {{ $label }}
+                                        </button>
+                                    </form>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endcan
+                @endif
 
-            @if($relatedPets->count())
-                <div class="mt-10">
-                    <div class="mb-5">
-                        <h2 class="text-xl font-semibold text-neutral-900">További kisállatok ettől a menhelytől</h2>
-                    </div>
+                <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
+                    <h2 class="text-lg font-semibold text-neutral-900">Alapadatok</h2>
 
-                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                        @foreach($relatedPets as $relatedPet)
-                            <x-pet.card
-                                :href="route('pets.show', $relatedPet)"
-                                :name="$relatedPet->name"
-                                :description="$relatedPet->excerpt"
-                                :image="$relatedPet->first_image_path"
-                                :badge="$relatedPet->status_label"
-                                :shelterName="$relatedPet->shelter?->name"
-                                :meta="['Faj' => $relatedPet->species?->name, 'Fajta' => $relatedPet->breed?->name, 'Kor' => $relatedPet->age_label]"
-                            />
-                        @endforeach
-                    </div>
+                    <dl class="mt-5 space-y-4">
+                        <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
+                            <dt class="text-sm text-neutral-500">Faj</dt>
+                            <dd class="text-right text-sm font-medium text-neutral-900">
+                                {{ $pet->species->name }}
+                            </dd>
+                        </div>
 
-                    <div class="mt-8">
-                        {{ $relatedPets->onEachSide(1)->links() }}
-                    </div>
+                        @if($pet->breed)
+                        <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
+                            <dt class="text-sm text-neutral-500">Fajta</dt>
+                            <dd class="text-right text-sm font-medium text-neutral-900">
+                                {{ $pet->breed->name }}
+                            </dd>
+                        </div>
+                        @endif
+
+                        @if($pet->age_label)
+                        <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
+                            <dt class="text-sm text-neutral-500">Kor</dt>
+                            <dd class="text-right text-sm font-medium text-neutral-900">
+                                {{ $pet->age_label }}
+                            </dd>
+                        </div>
+                        @endif
+
+                        <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
+                            <dt class="text-sm text-neutral-500">Menhely</dt>
+                            <dd class="text-right text-sm font-medium text-neutral-900">
+                                @if($pet->shelter)
+                                    <a
+                                        href="{{ route('shelters.show', $pet->shelter) }}"
+                                        class="underline underline-offset-4 transition hover:text-neutral-900"
+                                    >
+                                        {{ $pet->shelter->name }}
+                                    </a>
+                                @else
+                                    Nincs hozzárendelve
+                                @endif
+                            </dd>
+                        </div>
+
+                        @if($pet->shelter && $pet->shelter->location)
+                        <div class="flex items-start justify-between gap-4 border-b border-neutral-100 pb-4">
+                            <dt class="text-sm text-neutral-500">Helyszín</dt>
+                            <dd class="text-right text-sm font-medium text-neutral-900">
+                                {{ $pet->shelter->location }}
+                            </dd>
+                        </div>
+                        @endif
+
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-sm text-neutral-500">Feltöltötte</dt>
+                            <dd class="text-right text-sm font-medium text-neutral-900">
+                                {{ $pet->employee_name }}
+                            </dd>
+                        </div>
+                    </dl>
                 </div>
-            @endif
-        </x-ui.container>
+
+                <div class="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
+                    <h2 class="text-lg font-semibold text-neutral-900">Érdekel az örökbefogadás?</h2>
+                    <p class="mt-3 text-sm leading-6 text-neutral-600">
+                        Vedd fel a kapcsolatot a menhellyel, és érdeklődj a kisállat örökbefogadásának menetéről.
+                    </p>
+
+                    @if($pet->shelter)
+                        <a
+                            href="{{ route('shelters.show', $pet->shelter) }}"
+                            class="mt-5 inline-flex items-center justify-center rounded-2xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
+                        >
+                            Menhely megtekintése
+                        </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        @if($pet->shelter)
+            <x-ui.contact-form :shelter="$pet->shelter" :pet="$pet" />
+        @endif
+
+        @if($relatedPets->count())
+            <div class="mt-10">
+                <div class="mb-5">
+                    <h2 class="text-xl font-semibold text-neutral-900">További kisállatok ettől a menhelytől</h2>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                    @foreach($relatedPets as $relatedPet)
+                        <x-pet.card
+                            :href="route('pets.show', $relatedPet)"
+                            :name="$relatedPet->name"
+                            :description="$relatedPet->excerpt"
+                            :image="$relatedPet->first_image_path"
+                            :badge="$relatedPet->status_label"
+                            :shelterName="$relatedPet->shelter?->name"
+                            :meta="['Faj' => $relatedPet->species?->name, 'Fajta' => $relatedPet->breed?->name, 'Kor' => $relatedPet->age_label]"
+                        />
+                    @endforeach
+                </div>
+
+                <div class="mt-8">
+                    {{ $relatedPets->onEachSide(1)->links() }}
+                </div>
+            </div>
+        @endif
     </div>
 </x-app-layout>

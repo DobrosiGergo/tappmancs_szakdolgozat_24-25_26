@@ -1,8 +1,8 @@
 @props(['label' => '', 'href' => '#', 'dark' => false])
 <a
   href="{{ $href }}"
-  {{ $attributes->merge(['class' => 'text-sm font-medium transition-colors duration-300 ease-out']) }}
-  :class="{ 'text-white/70 hover:text-white': @json($dark) || open !== null, 'text-neutral-700 hover:text-neutral-900': !@json($dark) && open === null }"
+  {{ $attributes->merge(['class' => 'text-sm font-medium transition-colors ease-out']) }}
+  :class="{ 'text-white/70 hover:text-white duration-75': @json($dark) || shaded, 'text-neutral-700 hover:text-neutral-900 duration-200': !@json($dark) && !shaded }"
 >
   {{ $label }}
 </a>

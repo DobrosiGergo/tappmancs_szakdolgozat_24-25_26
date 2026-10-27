@@ -9,19 +9,15 @@
 
         <div class="relative mx-auto max-w-7xl px-6 py-16 sm:py-20 lg:px-8">
 
-            <nav class="mb-10 flex items-center gap-2 text-xs font-medium" aria-label="Breadcrumb">
-                <a href="{{ route('shelters.index') }}"
-                   class="text-neutral-500 transition-colors hover:text-neutral-300">
-                    Menhelyek
-                </a>
-                <x-icon name="arrow-right" class="h-3 w-3 opacity-50" />
-                <a href="{{ route('shelters.show', $shelter) }}"
-                   class="text-neutral-500 transition-colors hover:text-neutral-300">
-                    {{ $shelter->name }}
-                </a>
-                <x-icon name="arrow-right" class="h-3 w-3 opacity-50" />
-                <span class="text-neutral-400">Munkatársak</span>
-            </nav>
+            <x-ui.breadcrumbs
+                dark
+                class="mb-10"
+                :items="[
+                    ['href' => route('shelters.index'), 'label' => 'Menhelyek'],
+                    ['href' => route('shelters.show', $shelter), 'label' => $shelter->name],
+                    ['label' => 'Munkatársak'],
+                ]"
+            />
 
             <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white">
                 Munkatársak kezelése

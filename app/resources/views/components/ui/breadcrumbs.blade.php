@@ -1,30 +1,45 @@
 @props([
   'items' => [],
-  'homeHref' => route('dashboard'),  
+  'homeHref' => auth()->check() ? route('dashboard') : route('home'),
   'homeLabel' => '',
+  'dark' => false,
 ])
 
-<nav aria-label="Breadcrumb">
-  <ol class="flex flex-wrap items-center gap-2 text-sm text-neutral-500">
-    <li>
-      <a href="{{ $homeHref }}" class="inline-flex items-center gap-2 hover:text-neutral-700">
-        <x-icon name="home" class="h-4 w-4" />
-        <span>{{ $homeLabel }}</span>
+@php
+  if ($dark) {
+      $base = 'text-white/50';
+      $hover = 'hover:text-white';
+      $current = 'text-white';
+      $separator = 'text-white/30';
+  } else {
+      $base = 'text-neutral-500';
+      $hover = 'hover:text-neutral-900';
+      $current = 'text-neutral-900';
+      $separator = 'text-neutral-300';
+  }
+@endphp
+
+<nav aria-label="Breadcrumb" {{ $attributes }}>
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm leading-5 {{ $base }}">
+    <li class="flex items-center">
+      <a href="{{ $homeHref }}" class="flex items-center gap-1.5 transition-colors {{ $hover }}">
+        <x-icon name="home" class="h-4 w-4 shrink-0" />
+        @if($homeLabel)
+          <span>{{ $homeLabel }}</span>
+        @endif
       </a>
     </li>
 
     @foreach($items as $i => $item)
+      @php $isLast = $i === count($items) - 1; @endphp
       <li class="flex items-center gap-2">
-       /
-        @php $isLast = $i === count($items) - 1; @endphp
-
-        @if(!empty($item['href']))
-          <a href="{{ $item['href'] }}" 
-             @class(['hover:text-neutral-700', 'text-neutral-700 font-medium' => $isLast])>
-            {{ $item['label'] }}
-          </a>
+        <span aria-hidden="true" class="{{ $separator }}">/</span>
+        @if($isLast)
+          <span class="font-medium {{ $current }}" aria-current="page">{{ $item['label'] }}</span>
+        @elseif(!empty($item['href']))
+          <a href="{{ $item['href'] }}" class="transition-colors {{ $hover }}">{{ $item['label'] }}</a>
         @else
-          <span class="text-neutral-700 font-medium">{{ $item['label'] }}</span>
+          <span>{{ $item['label'] }}</span>
         @endif
       </li>
     @endforeach

@@ -28,21 +28,40 @@
 
 <x-navbar.base :dark="$dark" x-data="{
   open: null,
+  shaded: false,
   timer: null,
+  shadeTimer: null,
+  lastKey: null,
+  closedAt: 0,
+  init() {
+    this.$watch('open', value => {
+      clearTimeout(this.shadeTimer);
+      if (value !== null) {
+        this.shaded = true;
+      } else {
+        this.shadeTimer = setTimeout(() => this.shaded = false, 300);
+      }
+    });
+  },
   hover(key) {
     clearTimeout(this.timer);
-    if (this.open === null) {
-      this.timer = setTimeout(() => this.open = key, 90);
-    } else {
-      this.open = key;
-    }
+    this.open = key;
   },
   leave() {
     clearTimeout(this.timer);
-    this.timer = setTimeout(() => this.open = null, 180);
+    this.timer = setTimeout(() => {
+      if (this.open !== 'mobile') {
+        this.lastKey = this.open;
+        this.closedAt = Date.now();
+        this.open = null;
+      }
+    }, 180);
   },
   stay() {
     clearTimeout(this.timer);
+    if (this.open === null && this.lastKey && Date.now() - this.closedAt < 300) {
+      this.open = this.lastKey;
+    }
   },
 }">
 
@@ -124,7 +143,7 @@
     <button type="button"
       @click="if (open === 'mobile') { open = null } else { open = 'mobile' }"
       class="text-sm font-medium transition-colors duration-200"
-      :class="{ 'text-white/70 hover:text-white': @json($dark) || open !== null, 'text-neutral-700 hover:text-neutral-900': !@json($dark) && open === null }">
+      :class="{ 'text-white/70 hover:text-white': @json($dark) || shaded, 'text-neutral-700 hover:text-neutral-900': !@json($dark) && !shaded }">
       <span x-show="open !== 'mobile'">Menü</span>
       <span x-show="open === 'mobile'" x-cloak>✕</span>
     </button>
@@ -133,15 +152,11 @@
   <x-slot:dropdown>
 
 <div
-      x-show="open !== null && open !== 'mobile'"
-      x-transition:enter="transition-all ease-[cubic-bezier(0.16,1,0.3,1)] duration-500"
-      x-transition:enter-start="[clip-path:inset(0_0_100%_0)] opacity-0"
-      x-transition:enter-end="[clip-path:inset(0_0_0%_0)] opacity-100"
-      x-transition:leave="transition-all ease-in duration-200"
-      x-transition:leave-start="[clip-path:inset(0_0_0%_0)] opacity-100"
-      x-transition:leave-end="[clip-path:inset(0_0_100%_0)] opacity-0"
-      class="absolute inset-x-0 top-full bg-neutral-900 text-white shadow-xl ring-1 ring-black/5"
-      style="display: none;"
+      x-cloak
+      class="absolute inset-x-0 top-full bg-neutral-900 text-white shadow-xl ring-1 ring-black/5 transition-[clip-path,visibility]"
+      :class="open !== null && open !== 'mobile'
+        ? '[clip-path:inset(0_0_0%_0)] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]'
+        : 'invisible pointer-events-none [clip-path:inset(0_0_100%_0)] duration-300 ease-in-out'"
     >
       <div class="grid grid-cols-12 gap-8 px-6 py-6 lg:px-8">
 
