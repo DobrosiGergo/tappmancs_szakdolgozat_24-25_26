@@ -8,9 +8,9 @@
     $workerShelter = $authUser->worksAt;
 
     $roleLabel = match($authUser->type) {
-      'Shelterowner'  => 'Menhely tulajdonos',
+      'Shelterowner'  => 'Menhelytulajdonos',
       'Shelterworker' => 'Munkatárs',
-      default         => 'Felhasználó',
+      default         => 'Örökbefogadó',
     };
     $roleColor = match($authUser->type) {
       'Shelterowner'  => 'bg-blue-100 text-blue-700',

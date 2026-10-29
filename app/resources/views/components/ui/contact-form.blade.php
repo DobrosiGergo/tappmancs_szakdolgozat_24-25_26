@@ -94,7 +94,7 @@
             <div class="rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-8 py-10 text-center">
                 <x-icon name="mail" class="mx-auto mb-3 h-8 w-8 text-neutral-300" />
                 <p class="text-sm font-medium text-neutral-600">Üzenet küldéséhez be kell jelentkezned.</p>
-                <p class="mt-1 text-xs text-neutral-400">Csak regisztrált felhasználók küldhetnek üzenetet a menhelynek.</p>
+                <p class="mt-1 text-xs text-neutral-400">Csak bejelentkezett örökbefogadók küldhetnek üzenetet a menhelynek.</p>
                 <a href="{{ route('login') }}"
                    class="mt-5 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800">
                     Bejelentkezés

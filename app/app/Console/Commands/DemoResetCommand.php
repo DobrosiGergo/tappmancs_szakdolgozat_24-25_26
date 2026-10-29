@@ -74,10 +74,10 @@ class DemoResetCommand extends Command
 
         $this->info('A demo állapot visszaállt.');
         $this->line('');
-        $this->line('  Tulajdonos:  ' . DemoSeeder::OWNER_EMAIL);
-        $this->line('  Munkatárs:   ' . DemoSeeder::WORKER_EMAIL);
-        $this->line('  Felhasználó: ' . DemoSeeder::USER_EMAIL);
-        $this->line('  Jelszó:      ' . DemoSeeder::PASSWORD);
+        $this->line('  Tulajdonos:   ' . DemoSeeder::OWNER_EMAIL);
+        $this->line('  Munkatárs:    ' . DemoSeeder::WORKER_EMAIL);
+        $this->line('  Örökbefogadó: ' . DemoSeeder::USER_EMAIL);
+        $this->line('  Jelszó:       ' . DemoSeeder::PASSWORD);
 
         return Command::SUCCESS;
     }

@@ -6,7 +6,7 @@
         </div>
         <div class="relative mx-auto max-w-7xl px-6 py-16 sm:py-20 lg:px-8">
             <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white">Beérkező üzenetek</h1>
-            <p class="mt-3 text-neutral-400">{{ $shelter->name }} – felhasználói megkeresések</p>
+            <p class="mt-3 text-neutral-400">{{ $shelter->name }} – örökbefogadói megkeresések</p>
         </div>
     </section>
 
@@ -16,7 +16,7 @@
             <div class="rounded-2xl border border-dashed border-neutral-200 bg-neutral-50 px-8 py-16 text-center">
                 <x-icon name="mail" class="mx-auto mb-4 h-10 w-10 text-neutral-300" />
                 <p class="text-sm font-medium text-neutral-500">Még nem érkezett üzenet.</p>
-                <p class="mt-1 text-xs text-neutral-400">Ha a felhasználók üzenetet küldenek a menhelyednek, itt fognak megjelenni.</p>
+                <p class="mt-1 text-xs text-neutral-400">Ha az örökbefogadók üzenetet küldenek a menhelyednek, itt fognak megjelenni.</p>
             </div>
         @else
             <div class="flex flex-col gap-3">

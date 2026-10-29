@@ -9,9 +9,9 @@ export const PET_STATUSES: Record<PetStatus, PetStatus> = {
 };
 
 export const ROLE_LABELS = {
-    user: 'Felhasználó',
+    user: 'Örökbefogadó',
     shelterWorker: 'Munkatárs',
-    shelterOwner: 'Menhely tulajdonos',
+    shelterOwner: 'Menhelytulajdonos',
 };
 
 export const HEADINGS = {

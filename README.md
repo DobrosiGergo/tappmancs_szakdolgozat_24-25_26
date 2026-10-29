@@ -2,6 +2,7 @@
 
 Webalkalmazás állatmenhelyek és örökbefogadható kisállatok kezelésére.
 Éles oldal: **https://tappmancs-szakdolgozat.hu**
+A szakdolgozat: [docs/szakdolgozat.pdf](docs/szakdolgozat.pdf)
 
 A projekt 2024 decemberében indult, a leírás a 2026. októberi állapotot rögzíti.
 
@@ -39,20 +40,20 @@ kihelyezéssel.
 | Terület | Mit tud |
 |---|---|
 | Böngészés | Kisállatok és menhelyek listája, keresés név és település szerint, szűrés faj, nem és státusz szerint |
-| Adatlapok | Kisállat és menhely adatlap képgalériával |
+| Adatlapok | Kisállat- és menhelyadatlap képgalériával |
 | Regisztráció | Többlépéses folyamat szerepkörválasztással, élő e-mail-ellenőrzéssel |
 | Menhelykezelés | Menhely létrehozása és szerkesztése, képek kezelése |
 | Kisállatkezelés | Felvétel, szerkesztés, törlés, státuszváltás |
 | Munkatársak | A tulajdonos e-mail cím alapján vesz fel munkatársat, aki ki is léphet |
-| Üzenetek | A felhasználó üzen a menhelynek egy kisállatról, a tulajdonos listázza és törli az üzeneteket, az olvasatlanokat a navbar jelzi |
+| Üzenetek | Az örökbefogadó üzen a menhelynek egy kisállatról, a tulajdonos listázza és törli az üzeneteket, az olvasatlanokat a navbar jelzi |
 | Fiókbeállítások | Profil és jelszó módosítása, fiók törlése |
 | Tudj meg többet | A projekt bemutatása és a legutóbbi e2e futás eredménye |
 
 | Szerepkör | Adatbázis-érték | Jogosultság |
 |---|---|---|
 | Látogató | nincs fiók | Böngészés |
-| Felhasználó | `User` | Böngészés és üzenetküldés |
-| Menhely tulajdonos | `Shelterowner` | Saját menhely, kisállatok, munkatársak, üzenetek |
+| Örökbefogadó | `User` | Böngészés és üzenetküldés |
+| Menhelytulajdonos | `Shelterowner` | Saját menhely, kisállatok, munkatársak, üzenetek |
 | Munkatárs | `Shelterworker` | A menhelye kisállatainak kezelése |
 
 ## 3. Technológiák
@@ -175,8 +176,8 @@ ezeket használják):
 
 | Szerepkör | E-mail | Jelszó |
 |---|---|---|
-| Felhasználó | `user@example.com` | `RegularUserPassword123` |
-| Menhely tulajdonos | `shelterowner@example.com` | `ShelterOwnerPassword123` |
+| Örökbefogadó | `user@example.com` | `RegularUserPassword123` |
+| Menhelytulajdonos | `shelterowner@example.com` | `ShelterOwnerPassword123` |
 | Munkatárs | `shelterworker@example.com` | `ShelterWorkerPassword123` |
 | Fejlesztő | `developer@example.com` | `DeveloperPassword123` |
 
@@ -184,9 +185,9 @@ Demo fiókok (`DemoSeeder`, helyben a `demo:seed` vagy a `demo:reset` tölti be)
 
 | Szerepkör | E-mail | Jelszó |
 |---|---|---|
-| Menhely tulajdonos | `demo.owner@example.com` | `DemoPassword123` |
+| Menhelytulajdonos | `demo.owner@example.com` | `DemoPassword123` |
 | Munkatárs | `demo.worker@example.com` | `DemoPassword123` |
-| Felhasználó | `demo.user@example.com` | `DemoPassword123` |
+| Örökbefogadó | `demo.user@example.com` | `DemoPassword123` |
 
 Mindkét készlet az éles oldalon is elérhető. A munkatárs alapfiók nincs
 menhelyhez rendelve, a fejlesztő fiókhoz nem tartozik külön jogosultság. A demo
@@ -280,7 +281,7 @@ Kézi indítás: Actions fül, Deploy workflow, „Run workflow".
 | 2025. február és március | Többlépéses regisztráció, nyitóoldal, bejelentkezés |
 | 2025. június és szeptember | Felhasználói oldalak, az e2e tesztkörnyezet alapjai, kódstílus-ellenőrzés |
 | 2026. február | A 2024/25-ös tanév kódállapotának rögzítése |
-| 2026. március és április | Kisállatlista, adatlap, szerkesztés és törlés, menhely adatlap galériával, monorepo, hibaoldalak |
+| 2026. március és április | Kisállatlista, adatlap, szerkesztés és törlés, menhelyadatlap galériával, monorepo, hibaoldalak |
 | 2026. május | Keresés és szűrés, munkatárskezelés |
 | 2026. június | Üzenetküldés, GitHub Actions deploy, mobilnézet, unit tesztek |
 | 2026. október | DigitalOcean Droplet, saját domain és TLS, MySQL, napi demo-visszaállítás, e2e az éles oldal ellen, szakaszokra bontott deploy tesztkapuval, kódtisztítás |
@@ -291,6 +292,5 @@ Kézi indítás: Actions fül, Deploy workflow, „Run workflow".
   már léteznek).
 - Több menhely kezelése egy tulajdonossal.
 - Adminisztrátori szerepkör (a `Developer` típus létezik, jogosultság nélkül).
-- A kisállat nemének megjelenítése az adatlapon.
-- Válasz az üzenetekre az oldalon belül, e-mail értesítés új üzenetről.
-- Kedvencek listája és értesítés státuszváltozásról.
+- Válasz az üzenetekre az oldalon belül, és értesítés új üzenetről.
+- Kedvencek listája és értesítés, ha egy kedvenc kisállat státusza megváltozik.
