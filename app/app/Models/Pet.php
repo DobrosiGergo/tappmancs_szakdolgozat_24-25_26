@@ -155,9 +155,6 @@ class Pet extends Model
         return self::selectOptions(self::STATUSES);
     }
 
-    /**
-     * Turns a value => label list into the option format of the select inputs.
-     */
     private static function selectOptions(array $labels): array
     {
         $options = [];

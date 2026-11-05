@@ -6,7 +6,6 @@ use App\Policies\ShelterPolicy;
 
 $policy = new ShelterPolicy();
 
-
 it('owner can manage staff', function () {
     $owner   = User::factory()->make(['id' => 1]);
     $shelter = Shelter::factory()->make(['owner_id' => 1]);
@@ -27,7 +26,6 @@ it('manageStaff casts ids to int before comparing', function () {
 
     expect((new ShelterPolicy())->manageStaff($user, $shelter))->toBeTrue();
 });
-
 
 it('owner can update shelter', function () {
     $owner   = User::factory()->make(['id' => 5]);

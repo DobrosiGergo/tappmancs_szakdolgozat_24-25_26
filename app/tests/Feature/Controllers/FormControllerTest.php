@@ -10,8 +10,6 @@ use function Pest\Laravel\delete;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 
-// ─── store ────────────────────────────────────────────────────────────────────
-
 it('store redirects guests to login', function () {
     post(route('messages.store'), [])->assertRedirect(route('login'));
 });
@@ -98,8 +96,6 @@ it('store prevents duplicate message for the same pet', function () {
     ])->assertSessionHasErrors('message');
 });
 
-// ─── index ────────────────────────────────────────────────────────────────────
-
 it('index redirects guests to login', function () {
     get(route('messages.index'))->assertRedirect(route('login'));
 });
@@ -137,8 +133,6 @@ it('index only shows messages belonging to the owners shelter', function () {
     get(route('messages.index'))
         ->assertViewHas('messages', fn ($msgs) => $msgs->contains($ownMessage) && ! $msgs->contains($otherMessage));
 });
-
-// ─── show ─────────────────────────────────────────────────────────────────────
 
 it('show redirects guests to login', function () {
     $form = Form::factory()->create();
@@ -202,8 +196,6 @@ it('navbar hides the unread marker when every message is read', function () {
         ->assertDontSee('data-test-id="nav-unread-dot"', false)
         ->assertDontSee('data-test-id="nav-unread-count"', false);
 });
-
-// ─── destroy ──────────────────────────────────────────────────────────────────
 
 it('destroy redirects guests to login', function () {
     $form = Form::factory()->create();

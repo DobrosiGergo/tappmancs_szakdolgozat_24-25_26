@@ -5,8 +5,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-// ─── helper ──────────────────────────────────────────────────────────────────
-
 function makeRequest(?User $user): Request
 {
     $request = Request::create('/test');
@@ -14,8 +12,6 @@ function makeRequest(?User $user): Request
 
     return $request;
 }
-
-// ─── passing cases ────────────────────────────────────────────────────────────
 
 it('allows request through when user has the required role', function () {
     $user    = User::factory()->make(['type' => 'Shelterworker']);
@@ -59,8 +55,6 @@ it('allows Shelterworker when both shelter roles are accepted', function () {
     expect($called)->toBeTrue();
 });
 
-// ─── blocking cases ───────────────────────────────────────────────────────────
-
 it('aborts with 403 when user has wrong role', function () {
     $user    = User::factory()->make(['type' => 'User']);
     $request = makeRequest($user);
@@ -95,8 +89,6 @@ it('does not allow empty roles list (no role matches)', function () {
         expect($e->getStatusCode())->toBe(403);
     }
 });
-
-// ─── strict matching ─────────────────────────────────────────────────────────
 
 it('role check is case-sensitive (strict)', function () {
     $user    = User::factory()->make(['type' => 'shelterworker']);

@@ -1,12 +1,7 @@
 <?php
 
-/**
- * Patches Laravel framework vendor files for PHP 8.5 compatibility.
- * PDO::MYSQL_ATTR_SSL_CA was deprecated in PHP 8.5; the replacement
- * is Pdo\Mysql::ATTR_SSL_CA, available since PHP 8.4.
- *
- * Run automatically via composer post-install-cmd / post-update-cmd.
- */
+// Laravel 11 uses PDO::MYSQL_ATTR_SSL_CA, deprecated in PHP 8.5. Composer runs
+// this after every install, because each install restores the vendor files.
 
 if (PHP_VERSION_ID < 80500) {
     exit(0);
@@ -14,27 +9,21 @@ if (PHP_VERSION_ID < 80500) {
 
 $root = dirname(__DIR__);
 
-$replacements = [
-    $root . '/vendor/laravel/framework/config/database.php' => [
-        'PDO::MYSQL_ATTR_SSL_CA' =>
-            '(PHP_VERSION_ID >= 80500 ? \\Pdo\\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA)',
-    ],
-    $root . '/vendor/laravel/framework/src/Illuminate/Database/Schema/MySqlSchemaState.php' => [
-        '\PDO::MYSQL_ATTR_SSL_CA' =>
-            '(PHP_VERSION_ID >= 80500 ? \\Pdo\\Mysql::ATTR_SSL_CA : \\PDO::MYSQL_ATTR_SSL_CA)',
-    ],
+$files = [
+    $root . '/vendor/laravel/framework/config/database.php',
+    $root . '/vendor/laravel/framework/src/Illuminate/Database/Schema/MySqlSchemaState.php',
 ];
 
-foreach ($replacements as $file => $pairs) {
+foreach ($files as $file) {
     if (! file_exists($file)) {
         continue;
     }
 
     $content = file_get_contents($file);
-    $fixed   = str_replace(array_keys($pairs), array_values($pairs), $content);
+    $fixed   = preg_replace('/\\\\?PDO::MYSQL_ATTR_SSL_CA/', '\\Pdo\\Mysql::ATTR_SSL_CA', $content);
 
     if ($fixed !== $content) {
         file_put_contents($file, $fixed);
-        echo "Patched: " . basename(dirname($file)) . '/' . basename($file) . PHP_EOL;
+        echo 'Patched: ' . basename($file) . PHP_EOL;
     }
 }

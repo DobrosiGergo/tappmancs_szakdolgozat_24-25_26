@@ -8,8 +8,6 @@ use function Pest\Laravel\delete;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 
-// ─── index ────────────────────────────────────────────────────────────────────
-
 it('guest cannot view staffing page', function () {
     $shelter = Shelter::factory()->create();
 
@@ -46,8 +44,6 @@ it('workers of other shelters do not appear on the staffing page', function () {
     get(route('shelter.staffing.index', $shelter))
         ->assertViewHas('workers', fn ($ws) => ! $ws->contains($stranger));
 });
-
-// ─── store ────────────────────────────────────────────────────────────────────
 
 it('guest cannot add worker', function () {
     $shelter = Shelter::factory()->create();
@@ -137,8 +133,6 @@ it('assigns an unattached Shelterworker to the shelter', function () {
         ->and($worker->type)->toBe('Shelterworker');
 });
 
-// ─── destroy ──────────────────────────────────────────────────────────────────
-
 it('guest cannot remove worker', function () {
     $shelter = Shelter::factory()->create();
     $worker  = User::factory()->shelterWorker()->create(['shelter_id' => $shelter->id]);
@@ -177,8 +171,6 @@ it('owner removes worker: shelter_id becomes null, type stays Shelterworker', fu
     expect($worker->shelter_id)->toBeNull()
         ->and($worker->type)->toBe('Shelterworker');
 });
-
-// ─── leave ────────────────────────────────────────────────────────────────────
 
 it('guest cannot use leave route', function () {
     delete(route('staffing.leave'))->assertRedirect(route('login'));

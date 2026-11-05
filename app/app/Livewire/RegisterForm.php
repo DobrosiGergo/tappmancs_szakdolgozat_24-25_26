@@ -91,9 +91,6 @@ class RegisterForm extends Component
         $this->redirect(route('dashboard'));
     }
 
-    /**
-     * The account type that belongs to the role chosen on the previous steps.
-     */
     private function userType(): string
     {
         if ($this->role !== 'shelter') {

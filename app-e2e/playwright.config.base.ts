@@ -1,12 +1,7 @@
 import { devices, type PlaywrightTestConfig } from '@playwright/test';
 import { env } from './src/config/env';
 
-/**
- * The settings shared by the local and the production config.
- */
 export function configFor(target: 'local' | 'production'): PlaywrightTestConfig {
-    // The worker processes inherit the environment, and src/config/env.ts
-    // reads the target from it to resolve the base URL in each of them.
     process.env.E2E_TARGET = target;
 
     return {

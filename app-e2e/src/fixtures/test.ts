@@ -29,10 +29,6 @@ import { ShelterSteps } from '../ui/steps/shelter.steps';
 import { StaffingSteps } from '../ui/steps/staffing.steps';
 import { uniqueUser, type NewUser, type UserPrefix } from '../utils/users';
 
-/**
- * The fixtures the specs can ask for. A spec only uses step objects; the page
- * objects behind them are created here.
- */
 type StepFixtures = {
     commonSteps: CommonSteps;
     aboutSteps: AboutSteps;
@@ -46,11 +42,6 @@ type StepFixtures = {
     shelterSteps: ShelterSteps;
     staffingSteps: StaffingSteps;
 
-    /**
-     * Returns the data of a new user for the test to register. When the test
-     * ends, the fixture signs in as that user and deletes the account on the
-     * site's own delete page, so the specs need no cleanup steps.
-     */
     createUser: (prefix: UserPrefix) => NewUser;
 };
 
@@ -98,7 +89,6 @@ export const test = base.extend<StepFixtures>({
         });
 
         for (const user of users) {
-            // The test may have ended signed in as a different user.
             await page.context().clearCookies();
             await authSteps.login(user.email, user.password);
             await settingsSteps.deleteAccount(user.password);

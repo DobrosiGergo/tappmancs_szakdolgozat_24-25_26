@@ -30,8 +30,6 @@ function petPayload(): array
     ];
 }
 
-// ─── index ────────────────────────────────────────────────────────────────────
-
 it('index is publicly accessible', function () {
     get(route('pets.index'))->assertOk()->assertViewIs('pets.index');
 });
@@ -74,8 +72,6 @@ it('index filters by status', function () {
         ->assertViewHas('pets', fn ($pets) => $pets->contains($matching) && ! $pets->contains($nonMatching));
 });
 
-// ─── show ─────────────────────────────────────────────────────────────────────
-
 it('show is publicly accessible and returns the correct pet', function () {
     $pet = Pet::factory()->create();
 
@@ -94,8 +90,6 @@ it('show passes related pets from the same shelter excluding the current pet', f
     get(route('pets.show', $pet))
         ->assertViewHas('relatedPets', fn ($rp) => $rp->contains($related) && ! $rp->contains($unrelated) && ! $rp->contains($pet));
 });
-
-// ─── create ───────────────────────────────────────────────────────────────────
 
 it('create redirects guests to login', function () {
     get(route('pets.create'))->assertRedirect(route('login'));
@@ -126,8 +120,6 @@ it('create is accessible for shelter worker assigned to a shelter', function () 
 
     get(route('pets.create'))->assertOk();
 });
-
-// ─── store ────────────────────────────────────────────────────────────────────
 
 it('store redirects guests to login', function () {
     post(route('pets.store'), [])->assertRedirect(route('login'));
@@ -191,8 +183,6 @@ it('store moves temp images from session to permanent storage', function () {
     expect(session()->has('pet_temp_images'))->toBeFalse();
 });
 
-// ─── update.index ─────────────────────────────────────────────────────────────
-
 it('update index redirects guests to login', function () {
     get(route('pets.update.index'))->assertRedirect(route('login'));
 });
@@ -219,8 +209,6 @@ it('update index shows pets assigned to shelter worker', function () {
 
     get(route('pets.update.index'))->assertViewHas('pets', fn ($pets) => $pets->contains($pet));
 });
-
-// ─── edit ─────────────────────────────────────────────────────────────────────
 
 it('edit redirects guests to login', function () {
     $pet = Pet::factory()->create();
@@ -253,8 +241,6 @@ it('edit is accessible for a worker assigned to the pets shelter', function () {
 
     get(route('pets.edit', $pet))->assertOk();
 });
-
-// ─── update ───────────────────────────────────────────────────────────────────
 
 it('update redirects guests to login', function () {
     $pet = Pet::factory()->create();
@@ -294,8 +280,6 @@ it('update redirects to update index with success flash', function () {
         ->assertRedirect(route('pets.update.index'))
         ->assertSessionHas('flash', fn ($f) => $f['type'] === 'success');
 });
-
-// ─── destroy ──────────────────────────────────────────────────────────────────
 
 it('destroy redirects guests to login', function () {
     $pet = Pet::factory()->create();

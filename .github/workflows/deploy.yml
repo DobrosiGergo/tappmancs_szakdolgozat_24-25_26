@@ -9,7 +9,6 @@ on:
         type: boolean
         default: false
 
-# A jobok csak olvassák a repót; a droplethez az SSH-kulcs ad hozzáférést.
 permissions:
   contents: read
 
@@ -32,19 +31,8 @@ jobs:
         with:
           node-version: '20'
           cache: npm
-
-      # A repo npm workspaces monorepo (gyoker package.json -> app, app-e2e),
-      # ezert a telepites a gyokerben fut: minden workspace fuggosege a gyoker
-      # node_modules-aba hoistolodik, az app/package-lock.json mar nem hasznalt.
       - name: Install dependencies
         run: npm install --no-audit --no-fund
-
-      # A gyoker lockfile win32-on keszult, es csak a win32 nativ binarisokat
-      # rogziti (@esbuild/win32-x64, @rollup/rollup-win32-*), az npm pedig nem
-      # tolti be utolag a hianyzo opcionalis fuggosegeket (npm/cli#4828). Ezert
-      # a linuxos runneren kezzel huzzuk be a nativ csomagokat, pontosan a mar
-      # telepitett verzioval, hogy a build ne terjen el a lockfile-tol.
-      # Ha a gyoker lockfile ujrageneralasra kerul, ez a lepes torolheto.
       - name: Install linux-native build binaries
         run: |
           set -e
@@ -71,15 +59,10 @@ jobs:
           path: app/public/build
           retention-days: 1
 
-  # A Pest tesztek (Unit + Feature) kapuzzák a deployt: ha egy is elhasal, a
-  # droplethez egyik későbbi job sem nyúl. Az e2e tesztek szándékosan nincsenek
-  # itt, mert azok a már kihelyezett oldal ellen futnak (npm run test:e2e:prod).
   test:
     name: Run tests
     needs: build
     runs-on: ubuntu-latest
-    # Ugyanaz a MySQL főverzió, mint a dropleten. A phpunit.xml a
-    # tappmancs_test adatbázisra irányítja a teszteket.
     services:
       mysql:
         image: mysql:8.0
@@ -99,7 +82,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Ugyanaz a PHP, mint a dropleten (php8.5-fpm).
       - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: '8.5'
@@ -109,15 +91,11 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 
-      # A Feature tesztek nézeteket renderelnek, a @vite direktíva pedig a
-      # manifestet keresi, ezért kell a build job eredménye.
       - uses: actions/download-artifact@v4
         with:
           name: build
           path: app/public/build
 
-      # A .env.example kapcsolati adatai (127.0.0.1:3306, root, jelszó nélkül)
-      # a MySQL service-re mutatnak, az adatbázis nevét a phpunit.xml adja.
       - name: Prepare environment
         run: |
           cp .env.example .env
@@ -210,7 +188,6 @@ jobs:
       - name: Reload PHP-FPM
         run: ssh "$SSH_TARGET" "sudo systemctl reload php8.5-fpm"
 
-  # Push-ra kimarad (a gráfon "skipped"), csak kézi indításnál, seed: true mellett fut.
   seed:
     name: Seed demo data
     needs: migrate
@@ -224,8 +201,6 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
 
-      # A --force kell: a demo:reset production alatt megerősítést kér, az
-      # SSH-munkamenetnek pedig nincs terminálja, ahol válaszolni lehetne.
       - name: Seed and reset demo data
         run: |
           ssh "$SSH_TARGET" "

@@ -1,6 +1,6 @@
 # Tappmancs: szakdolgozat (2024-2026)
 
-Webalkalmazás állatmenhelyek és örökbefogadható kisállatok kezelésére.
+A szakdolgozat címe: **Webalkalmazás állatmenhelyek és örökbefogadni kívánók részére**.
 Éles oldal: **https://tappmancs-szakdolgozat.hu**
 A szakdolgozat: [docs/szakdolgozat.pdf](docs/szakdolgozat.pdf)
 

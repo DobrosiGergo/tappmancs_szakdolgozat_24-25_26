@@ -202,10 +202,6 @@ class PetController extends Controller
             ]);
     }
 
-    /**
-     * The shelter the signed-in user adds pets to: their own shelter for an
-     * owner, the shelter they work at for a worker.
-     */
     private function currentShelter(): Shelter
     {
         $user = auth()->user();
@@ -219,9 +215,6 @@ class PetController extends Controller
         return $user->worksAt;
     }
 
-    /**
-     * Only the owner and the workers of the pet's shelter may change the pet.
-     */
     private function authorizePet(Pet $pet): void
     {
         abort_if(! $pet->shelter, 403);
